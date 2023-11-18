@@ -1,0 +1,30 @@
+name: GitHub Actions Prettier
+run-name: ${{ github.actor }} is runing Prettier 💅
+
+# This action works with pull requests and pushes
+on: [push]
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  prettier:
+    runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        node-version: [18]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          # Make sure the actual branch is checked out when running on pull requests
+          ref: ${{ github.head_ref }}
+
+      - name: Prettify code
+        uses: creyD/prettier_action@v4.3
+        with:
+          # This part is also where you can pass other options, for example:
+          prettier_options: --write **/*.{ts,tsx,js,md,mdx,css,yaml}
+          same_commit: false
+          github_token: ${{ secrets.GITHUB_TOKEN }}

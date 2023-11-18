@@ -1,0 +1,16 @@
+.github/
+.vscode/
+coverage/
+examples/
+node_modules/
+src/
+test/
+.env
+.gitignore
+.prettierrc
+Dockerfile
+jest.config.ts
+rollup.config.ts
+TODO.md
+tsconfig.build.json
+tsconfig.json

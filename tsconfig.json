@@ -1,0 +1,35 @@
+// This tsconfig is not ment to be used to compile the code, just to type check.
+{
+	"compilerOptions": {
+		"lib": ["es2022", "DOM"],
+		"target": "es2018",
+		"types": ["node"],
+		"module": "esnext",
+		"moduleResolution": "node",
+		"esModuleInterop": false,
+		"allowSyntheticDefaultImports": true,
+
+		"strict": true,
+		"forceConsistentCasingInFileNames": true,
+		"strictFunctionTypes": true,
+		"allowJs": false,
+		"noImplicitReturns": true,
+		"noImplicitThis": true,
+
+		"baseUrl": ".",
+		"paths": {
+			"@/*": ["src/*"]
+		},
+
+		"noEmit": true,
+
+		"plugins": [
+			// This is for .js files
+			{ "transform": "typescript-transform-paths" },
+			// This is for .d.ts files (declaration: true)
+			{ "transform": "typescript-transform-paths", "afterDeclarations": true }
+		]
+	},
+	"include": ["src/**/*", "test/**/*", "rollup.config.ts"],
+	"exclude": ["node_modules"]
+}

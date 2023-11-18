@@ -1,0 +1,42 @@
+name: Jest Test
+run-name: ${{ github.actor }} is runing Tests
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+env:
+  OVERPASS_QL_TS_URL: "http://localhost/api/interpreter"
+  OVERPASS_QL_BUNDLING: "Yes"
+
+jobs:
+  runtests:
+    runs-on: ubuntu-latest
+
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+      cancel-in-progress: true
+
+    services:
+      overpasstestapi:
+        image: juancouste/overpass-test-api:1.0
+        ports:
+          - 80:80
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Use Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Run Jest Tests
+        run: npm test

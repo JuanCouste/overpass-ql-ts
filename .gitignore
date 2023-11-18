@@ -1,0 +1,7 @@
+.vscode/
+coverage/
+lib/
+node_modules/
+test/bundle/puppeteer/
+test/bundle/output/
+.env
