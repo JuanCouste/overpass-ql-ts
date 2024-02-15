@@ -1,4 +1,6 @@
 import {
+	CompileUtils,
+	CompiledItem,
 	ComposableOverpassStatement,
 	OverpassBoundingBox,
 	OverpassExpression,
@@ -53,6 +55,7 @@ export interface OverpassStateMethods {
 	 * Avoid using if possible
 	 */
 	statement(statement: string): OverpassStatement;
+	statement(compile: (utils: CompileUtils) => CompiledItem): OverpassStatement;
 
 	/**
 	 * Fallback for things that are not currently implemented
@@ -60,6 +63,7 @@ export interface OverpassStateMethods {
 	 * This statement is expected to be usable within unions and such.
 	 */
 	composableStatement(statement: string): ComposableOverpassStatement;
+	composableStatement(compile: (utils: CompileUtils) => CompiledItem): OverpassStatement;
 
 	/** The contents of {@link set} */
 	set(

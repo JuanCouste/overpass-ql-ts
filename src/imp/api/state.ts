@@ -1,9 +1,10 @@
 import { OverpassChainableIntersectStatement } from "@/imp/api/target/intersect";
 import { OverpassTargetMapStateImp } from "@/imp/api/target/target";
-import { OverpassComposableStringStatement, OverpassStringStatement } from "@/imp/statement";
+import { OverpassComposableRawStatement, OverpassRawStatement } from "@/imp/statement";
 import { OverpassStatementTargetImp } from "@/imp/statement/target";
 import {
 	CompileUtils,
+	CompiledItem,
 	ComposableOverpassStatement,
 	OverpassExpression,
 	OverpassQueryTarget,
@@ -62,10 +63,7 @@ export class OverpassStateImp implements OverpassStateMethods {
 	private readonly targets: Map<OverpassQueryTarget, OverpassTargetMapState> = new Map();
 	private readonly functions: Functions = {};
 
-	constructor(
-		private readonly utils: CompileUtils,
-		private readonly filterBuilder: OverpassFilterBuilder,
-	) {
+	constructor(private readonly utils: CompileUtils, private readonly filterBuilder: OverpassFilterBuilder) {
 		const stateProxy = new Proxy<OverpassStateImp>(this, { get: this.proxyGet });
 		this.proxy = stateProxy as unknown as OverpassState;
 	}
@@ -114,12 +112,18 @@ export class OverpassStateImp implements OverpassStateMethods {
 		return state[prop as keyof OverpassStateImp];
 	}
 
-	statement(statement: string): OverpassStatement {
-		return new OverpassStringStatement(statement);
+	statement(statement: string): OverpassStatement;
+	statement(compile: (utils: CompileUtils) => CompiledItem): OverpassStatement;
+	statement(input: string | ((utils: CompileUtils) => CompiledItem)): OverpassStatement {
+		return typeof input == "string" ? OverpassRawStatement.FromString(input) : new OverpassRawStatement(input);
 	}
 
-	composableStatement(statement: string): ComposableOverpassStatement {
-		return new OverpassComposableStringStatement(statement);
+	composableStatement(statement: string): ComposableOverpassStatement;
+	composableStatement(compile: (utils: CompileUtils) => CompiledItem): ComposableOverpassStatement;
+	composableStatement(input: string | ((utils: CompileUtils) => CompiledItem)): ComposableOverpassStatement {
+		return typeof input == "string"
+			? OverpassComposableRawStatement.FromString(input)
+			: new OverpassComposableRawStatement(input);
 	}
 
 	set(

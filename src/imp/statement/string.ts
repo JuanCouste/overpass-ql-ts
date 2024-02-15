@@ -10,28 +10,32 @@ function removeLastSemicolon(statement: string) {
 	}
 }
 
-export class OverpassStringStatement extends OverpassStatementBase {
-	private readonly statement: string;
-
-	constructor(statement: string) {
+export class OverpassRawStatement extends OverpassStatementBase {
+	constructor(private readonly compileFn: (u: CompileUtils) => CompiledItem) {
 		super();
-		this.statement = removeLastSemicolon(statement);
+	}
+
+	public static FromString(statement: string) {
+		statement = removeLastSemicolon(statement);
+		return new OverpassRawStatement((u) => u.raw(statement));
 	}
 
 	compile(u: CompileUtils): CompiledItem {
-		return u.raw(this.statement);
+		return this.compileFn(u);
 	}
 }
 
-export class OverpassComposableStringStatement extends ComposableOverpassStatementBase {
-	private readonly statement: string;
-
-	constructor(statement: string) {
+export class OverpassComposableRawStatement extends ComposableOverpassStatementBase {
+	constructor(private readonly compileFn: (u: CompileUtils) => CompiledItem) {
 		super();
-		this.statement = removeLastSemicolon(statement);
+	}
+
+	public static FromString(statement: string) {
+		statement = removeLastSemicolon(statement);
+		return new OverpassComposableRawStatement((u) => u.raw(statement));
 	}
 
 	compile(u: CompileUtils): CompiledItem {
-		return u.raw(this.statement);
+		return this.compileFn(u);
 	}
 }
