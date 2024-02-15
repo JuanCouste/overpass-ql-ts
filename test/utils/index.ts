@@ -6,7 +6,7 @@ export const memoryExhaustionRemark =
 export const noAtticRemark = "runtime error: Tried to use museum file but no museum files available on this instance.";
 export const unknownRemark = "This is an unexpected remark, it should return a generic error";
 
-type ErrorFile = "rateLimited.html" | "badRequest.html" | "duplicateQuery.html";
+type ErrorFile = "rateLimited.html" | "badRequest.html" | "duplicateQuery.html" | "unexpected.html";
 
 export async function getErrorFile(error: ErrorFile): Promise<string> {
 	return await readFile(`./test/utils/${error}`, "utf-8");

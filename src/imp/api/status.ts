@@ -94,7 +94,7 @@ export class OverpassStatusValidatorImp implements OverpassStatusValidator {
 	private static REGEXP_HANDLERS: RegExpHandler[] = this.GetRegExpHandlers();
 
 	private validateStatusResponse({ status, contentType, response }: HttpResponse) {
-		if (status != 200 || !contentType.startsWith("text/plain")) {
+		if (status != 200 || !contentType?.startsWith("text/plain")) {
 			throw new OverpassApiError(OverpassErrorType.UnknownError, status, this.statusUrl, undefined, {
 				cause: response,
 			});

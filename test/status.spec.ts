@@ -31,6 +31,10 @@ function validateStatusStr(statusStr: string): OverpassStatus {
 	});
 }
 
+async function erroringValidateStatusStr(result: HttpResponse): Promise<OverpassStatus> {
+	return validateResult(result);
+}
+
 describe("Status", () => {
 	it("Should fetch status without queries", async () => {
 		const status = validateStatusStr(noQueriesStr);
@@ -101,14 +105,31 @@ Currently running queries (pid, space limit, time limit, start time):`;
 	});
 
 	it("Should handle unexpected status code", async () => {
-		const statusPromise = (async () => validateResult({ status: 400, contentType: TEXT_PLAIN, response: "" }))();
+		const statusPromise = erroringValidateStatusStr({ status: 400, contentType: TEXT_PLAIN, response: "" });
 
 		await expect(statusPromise).rejects.toThrow(OverpassApiError);
 		await expect(statusPromise).rejects.toHaveProperty("type", OverpassErrorType.UnknownError);
 	});
 
 	it("Should handle unexpected content type", async () => {
-		const statusPromise = (async () => validateResult({ status: 200, contentType: APP_OSM_XML, response: "" }))();
+		const statusPromise = erroringValidateStatusStr({ status: 200, contentType: APP_OSM_XML, response: "" });
+
+		await expect(statusPromise).rejects.toThrow(OverpassApiError);
+		await expect(statusPromise).rejects.toHaveProperty("type", OverpassErrorType.UnknownError);
+	});
+
+	it("Should handle unexpected lines", () => {
+		const status = validateResult({
+			status: 200,
+			contentType: TEXT_PLAIN,
+			response: `${noQueriesStr}\nunexpected`,
+		});
+
+		expect(status).toEqual(noQueriesObj);
+	});
+
+	it("Should handle unexpected missing content type", async () => {
+		const statusPromise = erroringValidateStatusStr({ status: 200, contentType: undefined, response: "" });
 
 		await expect(statusPromise).rejects.toThrow(OverpassApiError);
 		await expect(statusPromise).rejects.toHaveProperty("type", OverpassErrorType.UnknownError);

@@ -25,4 +25,22 @@ describe("Api", () => {
 	it("Should expect a status url if interpreter is custom", () => {
 		expect(() => OverpassApiObjectImp.Build(null!, "http://localhost/custom")).toThrow(Error);
 	});
+
+	it("Should create status url from string", () => {
+		const url = OverpassApiObjectImp.StatusUrlFrom(null!, "http://localhost");
+
+		expect(url).toEqual(new URL("http://localhost"));
+	});
+
+	it("Should create status url from url", () => {
+		const url = OverpassApiObjectImp.StatusUrlFrom(null!, new URL("http://localhost"));
+
+		expect(url).toEqual(new URL("http://localhost"));
+	});
+
+	it("Should default to main instance", () => {
+		const url = OverpassApiObjectImp.InterpreterUrlFrom();
+
+		expect(url.host).toEqual("overpass-api.de");
+	});
 });
