@@ -3,16 +3,17 @@
 This package aims to make creating dynamic overpassql queries easier by providing a query builder.  
 You wont need to worry about making small mistakes with syntax, and neither about changing existing queries.
 
+[![npm version](https://badgen.net/npm/v/overpass-ql-ts)](https://npmjs.org/package/overpass-ql-ts)
+[![install size](https://packagephobia.com/badge?p=overpass-ql-ts)](https://packagephobia.com/result?p=overpass-ql-ts)
+[![tests](https://github.com/JuanCouste/overpass-ql-ts/actions/workflows/testing.yml/badge.svg)](https://github.com/JuanCouste/overpass-ql-ts/actions/workflows/testing.yml)
+
 ```typescript
 import { DefaultOverpassApi, OverpassOutputVerbosity } from "overpass-ql-ts";
 
-...
-const result = await api.execJson((s) => [
-		s.node.query({
-			name: /^Hospital/,
-			amenity: "hospital",
-		}),
-	],
+const api = DefaultOverpassApi();
+
+const result = await api.execJson(
+	(s) => [ s.node.query({ name: /^Hospital/, amenity: "hospital" }) ],
 	{ verbosity: OverpassOutputVerbosity.Geometry }
 );
 
