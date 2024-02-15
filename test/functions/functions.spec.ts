@@ -40,6 +40,20 @@ describe("Statement", () => {
 		expect(element.type).toBe("node");
 	});
 
+	it("Should allow single statement create function", async () => {
+		const api: OverpassApiObject = buildApi();
+
+		const getMdeo = api.createFunction([], (s) => s.node.byId(montevideoId));
+
+		const result = (await getMdeo()) as OverpassJsonOutput;
+
+		expect(result.elements.length).toBe(1);
+		const [element] = result.elements;
+
+		expect(element.id).toEqual(montevideoId);
+		expect(element.type).toBe("node");
+	});
+
 	it("Should allow prepared functions with params", async () => {
 		const api: OverpassApiObject = buildApi();
 

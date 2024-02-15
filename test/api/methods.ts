@@ -29,4 +29,13 @@ export function apiMethodsTests() {
 
 		expectUruguay(result);
 	});
+
+	it("Should handle multiple or single statements in buildQuery", () => {
+		const api: OverpassApiObject = buildApi();
+
+		const single = api.buildQuery((s) => s.relation.byId(0), onlyIds, jsonFormat);
+		const multi = api.buildQuery((s) => [s.relation.byId(0)], onlyIds, jsonFormat);
+
+		expect(single).toEqual(multi);
+	});
 }
