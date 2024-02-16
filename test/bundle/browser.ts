@@ -1,7 +1,7 @@
 import { afterAll, beforeAll, expect, it } from "@jest/globals";
 import { Browser } from "puppeteer-core";
 import { OverpassApiObject, OverpassJsonOutput, OverpassSettingsNoFormat, OverpassState } from "../../src";
-import { montevideoBBox, uruguayId } from "../testContext";
+import { MDEO_BBOX, URUGUAY_ID } from "../utils";
 import { cleanupBrowser, runTestInBrowser, setupBrowser } from "./setupBrowser";
 
 export function browserTests() {
@@ -35,14 +35,14 @@ export function browserTests() {
 				);
 				return result as OverpassJsonOutput;
 			},
-			montevideoBBox,
+			MDEO_BBOX,
 		);
 
 		expect(elements.length).toEqual(1);
 
 		const [element] = elements;
 
-		expect(element.id).toEqual(uruguayId);
+		expect(element.id).toEqual(URUGUAY_ID);
 		expect(element.type).toBe("relation");
 	}, 5000);
 

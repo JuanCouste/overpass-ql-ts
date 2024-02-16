@@ -18,7 +18,10 @@ interface RegExpHandler {
 }
 
 export class OverpassStatusValidatorImp implements OverpassStatusValidator {
-	constructor(private readonly statusUrl: URL) {}
+	constructor(
+		private readonly statusUrl: URL,
+		private readonly rejectOnUnexpected: boolean = false,
+	) {}
 
 	private static ConnectedAs(status: TempOverpassStatus, value: string) {
 		status.connectedAs = +value;
@@ -94,7 +97,7 @@ export class OverpassStatusValidatorImp implements OverpassStatusValidator {
 	private static REGEXP_HANDLERS: RegExpHandler[] = this.GetRegExpHandlers();
 
 	private validateStatusResponse({ status, contentType, response }: HttpResponse) {
-		if (status != 200 || !contentType.startsWith("text/plain")) {
+		if (status != 200 || !contentType?.startsWith("text/plain")) {
 			throw new OverpassApiError(OverpassErrorType.UnknownError, status, this.statusUrl, undefined, {
 				cause: response,
 			});
@@ -131,8 +134,8 @@ export class OverpassStatusValidatorImp implements OverpassStatusValidator {
 					const handler = OverpassStatusValidatorImp.REGEXP_HANDLERS.find(({ regExp }) => regExp.test(line));
 					if (handler != null) {
 						handler.handle(status, line, state, handler.regExp);
-					} else {
-						console.info(`Unexpected line from overpass status`, line);
+					} else if (this.rejectOnUnexpected) {
+						throw new Error(`Unexpected line from overpass status\n${line}`);
 					}
 				}
 			}

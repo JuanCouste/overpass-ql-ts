@@ -110,13 +110,19 @@ export class OverpassApiObjectImp implements OverpassApiObject {
 	}
 
 	public buildQuery(
-		statementBuilder: (state: OverpassState) => OverpassStatement[],
+		statementBuilder: (state: OverpassState) => OverpassStatement[] | OverpassStatement,
 		options?: OverpassOutputOptions,
 		settings?: OverpassSettings,
 	): string {
 		const state = OverpassStateImp.Build(this.compileUtils, this.filterBuilder);
 
-		const queryParts = this.compileParts(statementBuilder(state), options, settings);
+		const statements = statementBuilder(state);
+
+		const queryParts = this.compileParts(
+			statements instanceof Array ? statements : [statements],
+			options,
+			settings,
+		);
 
 		if (queryParts.some((part) => typeof part != "string")) {
 			throw new Error(`Unexpected parameter in static query, how did this happen ??`);
@@ -134,7 +140,7 @@ export class OverpassApiObjectImp implements OverpassApiObject {
 
 	public async exec<S extends OverpassSettings, O extends OverpassOutputOptions>(
 		settings: S,
-		statementBuilder: (state: OverpassState) => OverpassStatement[],
+		statementBuilder: (state: OverpassState) => OverpassStatement[] | OverpassStatement,
 		options?: O | undefined,
 	): Promise<OverpassApiOutput<S, O>> {
 		const query = this.buildQuery(statementBuilder, { ...options }, settings);
@@ -145,7 +151,7 @@ export class OverpassApiObjectImp implements OverpassApiObject {
 	}
 
 	public execJson<S extends OverpassSettingsNoFormat, O extends OverpassOutputOptions>(
-		statementBuilder: (state: OverpassState) => OverpassStatement[],
+		statementBuilder: (state: OverpassState) => OverpassStatement[] | OverpassStatement,
 		options?: O | undefined,
 		settings?: S | undefined,
 	): Promise<OverpassApiOutput<OverpassJsonSettings<S>, O>> {
@@ -174,14 +180,16 @@ export class OverpassApiObjectImp implements OverpassApiObject {
 	}
 
 	private static NormalizeOutput<S extends OverpassSettingsNoFormat, O extends OverpassOutputOptions>(
-		output: OverpassStatement[] | CreateFunctionContext<S, O>,
+		output: OverpassStatement[] | OverpassStatement | CreateFunctionContext<S, O>,
 		outpOptions: O | undefined,
 		settings: S | undefined,
 	): CreateFunctionContext<S, O> {
 		if (output instanceof Array) {
 			return { statements: output, outpOptions, settings };
-		} else {
+		} else if ("statements" in output) {
 			return output;
+		} else {
+			return { statements: [output], outpOptions, settings };
 		}
 	}
 
@@ -191,7 +199,10 @@ export class OverpassApiObjectImp implements OverpassApiObject {
 		O extends OverpassOutputOptions,
 	>(
 		argTypes: ArgTypes<Args>,
-		statementBuilder: (state: OverpassState, ...args: CreateFunctionArgs<Args>) => OverpassStatement[],
+		statementBuilder: (
+			state: OverpassState,
+			...args: CreateFunctionArgs<Args>
+		) => OverpassStatement[] | OverpassStatement,
 		options?: O,
 		settings?: S,
 	): OverpassApiFunction<Args, S, O>;
@@ -212,7 +223,7 @@ export class OverpassApiObjectImp implements OverpassApiObject {
 		statementBuilder: (
 			state: OverpassState,
 			...args: CreateFunctionArgs<Args>
-		) => OverpassStatement[] | CreateFunctionContext<S, O>,
+		) => OverpassStatement[] | OverpassStatement | CreateFunctionContext<S, O>,
 		optionsInput?: O,
 		settingsInput?: S,
 	): OverpassApiFunction<Args, S, O> {

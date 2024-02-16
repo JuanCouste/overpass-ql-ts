@@ -28,7 +28,7 @@ export type OverpassApiFunction<
 export interface OverpassApiObject {
 	/** Build a query string from a list of statements */
 	buildQuery(
-		statementBuilder: (state: OverpassState) => OverpassStatement[],
+		statementBuilder: (state: OverpassState) => OverpassStatement[] | OverpassStatement,
 		options?: OverpassOutputOptions,
 		settings?: OverpassSettings,
 	): string;
@@ -36,13 +36,13 @@ export interface OverpassApiObject {
 	/** Execute a query with custom output format  */
 	exec<S extends OverpassSettings, O extends OverpassOutputOptions>(
 		settings: S,
-		statementBuilder: (state: OverpassState) => OverpassStatement[],
+		statementBuilder: (state: OverpassState) => OverpassStatement[] | OverpassStatement,
 		options?: O,
 	): Promise<OverpassApiOutput<S, O>>;
 
 	/** Execute a query with json output format */
 	execJson<S extends OverpassSettingsNoFormat, O extends OverpassOutputOptions>(
-		statementBuilder: (state: OverpassState) => OverpassStatement[],
+		statementBuilder: (state: OverpassState) => OverpassStatement[] | OverpassStatement,
 		options?: O,
 		settings?: S,
 	): Promise<OverpassApiOutput<OverpassJsonSettings<S>, O>>;
@@ -56,7 +56,10 @@ export interface OverpassApiObject {
 	 */
 	createFunction<Args extends AnyParamValue[], S extends OverpassSettingsNoFormat, O extends OverpassOutputOptions>(
 		argTypes: ArgTypes<Args>,
-		statementBuilder: (state: OverpassState, ...args: CreateFunctionArgs<Args>) => OverpassStatement[],
+		statementBuilder: (
+			state: OverpassState,
+			...args: CreateFunctionArgs<Args>
+		) => OverpassStatement[] | OverpassStatement,
 		options?: O,
 		settings?: S,
 	): OverpassApiFunction<Args, S, O>;

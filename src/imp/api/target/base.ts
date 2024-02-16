@@ -11,6 +11,7 @@ import {
 	OverpassExpression,
 	OverpassFilter,
 	OverpassGeoPos,
+	OverpassParameterError,
 	OverpassStatementTarget,
 	ParamType,
 } from "@/model";
@@ -39,7 +40,9 @@ export abstract class OverpassTargetStateBase implements OverpassTargetState {
 	}
 
 	private anyFilterToHelper(anyFilter: AnyOverpassFilter): OverpassFilterHelper {
-		if (typeof anyFilter == "string" || this.utils.isSpecificParam<string>(anyFilter, ParamType.String)) {
+		if (anyFilter == null) {
+			throw new OverpassParameterError(`Unexpected query filter value null`);
+		} else if (typeof anyFilter == "string" || this.utils.isSpecificParam<string>(anyFilter, ParamType.String)) {
 			return this.filterBuilder.equals(anyFilter);
 		} else if (anyFilter instanceof RegExp || this.utils.isSpecificParam<RegExp>(anyFilter, ParamType.RegExp)) {
 			return this.filterBuilder.regExp(anyFilter);

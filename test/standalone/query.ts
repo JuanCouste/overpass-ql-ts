@@ -1,18 +1,17 @@
 import { expect, it } from "@jest/globals";
 import { OverpassApiObject, OverpassQueryTarget } from "../../src";
-import { buildApi } from "../setup/apiBuilder";
-import { montevideoBBox, montevideoId, uruguayId } from "../testContext";
+import { BuildApi, MDEO_BBOX, MDEO_ID, URUGUAY_ID } from "../utils";
 import { fetchFormsOfStatementWithBBox } from "./target";
 
 export function standaloneQueryTests() {
 	it("Should fetch relation queries", async () => {
-		const api: OverpassApiObject = buildApi();
+		const api: OverpassApiObject = BuildApi();
 
 		const forms = await fetchFormsOfStatementWithBBox(
 			api,
 			"query",
 			["relation", OverpassQueryTarget.Relation],
-			montevideoBBox,
+			MDEO_BBOX,
 			{ name: "Uruguay" },
 		);
 
@@ -21,44 +20,36 @@ export function standaloneQueryTests() {
 
 			const [element] = elements;
 
-			expect(element.id).toEqual(uruguayId);
+			expect(element.id).toEqual(URUGUAY_ID);
 			expect(element.type).toBe("relation");
 		});
 	});
 
 	it("Should fetch node queries", async () => {
-		const api: OverpassApiObject = buildApi();
+		const api: OverpassApiObject = BuildApi();
 
-		const forms = await fetchFormsOfStatementWithBBox(
-			api,
-			"query",
-			["node", OverpassQueryTarget.Node],
-			montevideoBBox,
-			{ capital: "yes" },
-		);
+		const forms = await fetchFormsOfStatementWithBBox(api, "query", ["node", OverpassQueryTarget.Node], MDEO_BBOX, {
+			capital: "yes",
+		});
 
 		forms.forEach(({ elements }) => {
 			expect(elements.length).toEqual(1);
 
 			const [element] = elements;
 
-			expect(element.id).toEqual(montevideoId);
+			expect(element.id).toEqual(MDEO_ID);
 			expect(element.type).toBe("node");
 		});
 	});
 
 	it("Should fetch way queries", async () => {
-		const api: OverpassApiObject = buildApi();
+		const api: OverpassApiObject = BuildApi();
 
 		const paranaId = 78119509;
 
-		const forms = await fetchFormsOfStatementWithBBox(
-			api,
-			"query",
-			["way", OverpassQueryTarget.Way],
-			montevideoBBox,
-			{ name: "Paraná" },
-		);
+		const forms = await fetchFormsOfStatementWithBBox(api, "query", ["way", OverpassQueryTarget.Way], MDEO_BBOX, {
+			name: "Paraná",
+		});
 
 		forms.forEach(({ elements }) => {
 			expect(elements.length).toEqual(1);

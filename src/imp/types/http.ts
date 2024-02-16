@@ -10,7 +10,7 @@ export interface HttpRequest {
 
 export interface HttpResponse {
 	readonly status: number;
-	readonly contentType: string;
+	readonly contentType?: string;
 	readonly response: string;
 }
 

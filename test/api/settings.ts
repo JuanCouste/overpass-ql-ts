@@ -7,15 +7,14 @@ import {
 	OverpassSettings,
 	OverpassState,
 } from "../../src";
-import { buildApi } from "../setup/apiBuilder";
-import { montevideoBBox, montevideoId, onlyIds } from "../testContext";
+import { BuildApi, MDEO_BBOX, MDEO_ID, ONLY_IDS } from "../utils";
 import { expectUruguay, uruguayStatementBuilder } from "./uruguay";
 
 export function apiSettingsTests() {
 	it("Should run timeout queries", async () => {
-		const api: OverpassApiObject = buildApi();
+		const api: OverpassApiObject = BuildApi();
 
-		const query = api.buildQuery(uruguayStatementBuilder, onlyIds, {
+		const query = api.buildQuery(uruguayStatementBuilder, ONLY_IDS, {
 			timeout: 12345,
 			format: OverpassFormat.JSON,
 		});
@@ -28,9 +27,9 @@ export function apiSettingsTests() {
 	});
 
 	it("Should run date queries", async () => {
-		const api: OverpassApiObject = buildApi();
+		const api: OverpassApiObject = BuildApi();
 
-		const query = api.buildQuery(uruguayStatementBuilder, onlyIds, { date: new Date(Date.UTC(2000, 1, 2)) });
+		const query = api.buildQuery(uruguayStatementBuilder, ONLY_IDS, { date: new Date(Date.UTC(2000, 1, 2)) });
 
 		expect(query).toMatch(/\[[\s\n]*date[\s\n]*:[\s\n]*"2000-02-02T00:00:00\.000Z"[\s\n]*\]/);
 
@@ -41,9 +40,9 @@ export function apiSettingsTests() {
 	});
 
 	it("Should run diff queries", async () => {
-		const api: OverpassApiObject = buildApi();
+		const api: OverpassApiObject = BuildApi();
 
-		const query = api.buildQuery(uruguayStatementBuilder, onlyIds, {
+		const query = api.buildQuery(uruguayStatementBuilder, ONLY_IDS, {
 			format: OverpassFormat.XML,
 			diff: [new Date(Date.UTC(2000, 1, 2)), new Date(Date.UTC(2003, 4, 5))],
 		});
@@ -59,9 +58,9 @@ export function apiSettingsTests() {
 	});
 
 	it("Should run queries with no settings", async () => {
-		const api: OverpassApiObject = buildApi();
+		const api: OverpassApiObject = BuildApi();
 
-		const result = await api.exec({}, uruguayStatementBuilder, onlyIds);
+		const result = await api.exec({}, uruguayStatementBuilder, ONLY_IDS);
 
 		expect(typeof result).toBe("string");
 
@@ -69,9 +68,9 @@ export function apiSettingsTests() {
 	});
 
 	it("Should run queries with maxSize", async () => {
-		const api: OverpassApiObject = buildApi();
+		const api: OverpassApiObject = BuildApi();
 
-		const query = api.buildQuery(uruguayStatementBuilder, onlyIds, {
+		const query = api.buildQuery(uruguayStatementBuilder, ONLY_IDS, {
 			maxSize: 500,
 			format: OverpassFormat.JSON,
 		});
@@ -84,9 +83,9 @@ export function apiSettingsTests() {
 	});
 
 	it("Should run queries with globalBoundingBox", async () => {
-		const api: OverpassApiObject = buildApi();
+		const api: OverpassApiObject = BuildApi();
 
-		const settings: OverpassSettings = { globalBoundingBox: montevideoBBox };
+		const settings: OverpassSettings = { globalBoundingBox: MDEO_BBOX };
 
 		const result = await api.execJson(
 			(s: OverpassState) => [
@@ -95,14 +94,14 @@ export function apiSettingsTests() {
 					["capital", b.equals("yes")],
 				]),
 			],
-			onlyIds,
+			ONLY_IDS,
 			settings,
 		);
 
 		expect(result.elements.length).toBe(1);
 		const [element] = result.elements;
 
-		expect(element.id).toEqual(montevideoId);
+		expect(element.id).toEqual(MDEO_ID);
 		expect(element.type).toBe("node");
 	});
 }

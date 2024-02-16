@@ -10,28 +10,27 @@ import {
 	OverpassSettings,
 	OverpassState,
 } from "../src";
-import { buildApi } from "./setup/apiBuilder";
-import { mdeoCityId, mdeoDeparmentId, montevideoBBox, montevideoId, onlyIds, uruguayId } from "./testContext";
+import { BuildApi, MDEO_BBOX, MDEO_CITY_ID, MDEO_DEP_ID, MDEO_ID, ONLY_IDS, URUGUAY_ID } from "./utils";
 
 async function queryAlternatives(
 	api: OverpassApiObject,
 	query: OverpassQueryFilterObject,
 ): Promise<OverpassJsonOutput[]> {
-	const settings: OverpassSettings = { globalBoundingBox: montevideoBBox };
+	const settings: OverpassSettings = { globalBoundingBox: MDEO_BBOX };
 
 	const tupleArray = Object.entries(query) as OverpassQueryFilterTuple[];
 
 	return await Promise.all<OverpassJsonOutput>([
-		api.execJson((s: OverpassState) => [s.node.query(query)], onlyIds, settings),
-		api.execJson((s: OverpassState) => [s.node.query(tupleArray)], onlyIds, settings),
-		api.execJson((s: OverpassState) => [s.node.query(() => query)], onlyIds, settings),
-		api.execJson((s: OverpassState) => [s.node.query(() => tupleArray)], onlyIds, settings),
+		api.execJson((s: OverpassState) => [s.node.query(query)], ONLY_IDS, settings),
+		api.execJson((s: OverpassState) => [s.node.query(tupleArray)], ONLY_IDS, settings),
+		api.execJson((s: OverpassState) => [s.node.query(() => query)], ONLY_IDS, settings),
+		api.execJson((s: OverpassState) => [s.node.query(() => tupleArray)], ONLY_IDS, settings),
 	]);
 }
 
 describe("Query", () => {
 	it("Should fetch queries with string values", async () => {
-		const api: OverpassApiObject = buildApi();
+		const api: OverpassApiObject = BuildApi();
 
 		const forms = await queryAlternatives(api, { name: "Montevideo", capital: "yes" });
 
@@ -39,14 +38,14 @@ describe("Query", () => {
 			expect(elements.length).toBe(1);
 			const [element] = elements;
 
-			expect(element.id).toEqual(montevideoId);
+			expect(element.id).toEqual(MDEO_ID);
 			expect(element.type).toBe("node");
 		});
 	});
 
 	it("Should fetch queries with filter objects", async () => {
-		const api: OverpassApiObject = buildApi();
-		const settings: OverpassSettings = { globalBoundingBox: montevideoBBox };
+		const api: OverpassApiObject = BuildApi();
+		const settings: OverpassSettings = { globalBoundingBox: MDEO_BBOX };
 
 		const result = await api.execJson(
 			(s: OverpassState) => [
@@ -55,20 +54,20 @@ describe("Query", () => {
 					capital: b.equals("yes"),
 				})),
 			],
-			onlyIds,
+			ONLY_IDS,
 			settings,
 		);
 
 		expect(result.elements.length).toBe(1);
 		const [element] = result.elements;
 
-		expect(element.id).toEqual(montevideoId);
+		expect(element.id).toEqual(MDEO_ID);
 		expect(element.type).toBe("node");
 	});
 
 	it("Should fetch queries with filter objects as tuples", async () => {
-		const api: OverpassApiObject = buildApi();
-		const settings: OverpassSettings = { globalBoundingBox: montevideoBBox };
+		const api: OverpassApiObject = BuildApi();
+		const settings: OverpassSettings = { globalBoundingBox: MDEO_BBOX };
 
 		const result = await api.execJson(
 			(s: OverpassState) => [
@@ -77,19 +76,19 @@ describe("Query", () => {
 					["capital", b.equals("yes")],
 				]),
 			],
-			onlyIds,
+			ONLY_IDS,
 			settings,
 		);
 
 		expect(result.elements.length).toBe(1);
 		const [element] = result.elements;
 
-		expect(element.id).toEqual(montevideoId);
+		expect(element.id).toEqual(MDEO_ID);
 		expect(element.type).toBe("node");
 	});
 
 	it("Should fetch regexp queries", async () => {
-		const api: OverpassApiObject = buildApi();
+		const api: OverpassApiObject = BuildApi();
 
 		const forms = await queryAlternatives(api, { name: /^Montevideo$/, capital: /^yes$/ });
 
@@ -97,13 +96,13 @@ describe("Query", () => {
 			expect(elements.length).toBe(1);
 			const [element] = elements;
 
-			expect(element.id).toEqual(montevideoId);
+			expect(element.id).toEqual(MDEO_ID);
 			expect(element.type).toBe("node");
 		});
 	});
 
 	it("Should fetch half regexp queries", async () => {
-		const api: OverpassApiObject = buildApi();
+		const api: OverpassApiObject = BuildApi();
 
 		const forms = await queryAlternatives(api, { name: /ontevide/, capital: /es$/ });
 
@@ -111,14 +110,14 @@ describe("Query", () => {
 			expect(elements.length).toBe(1);
 			const [element] = elements;
 
-			expect(element.id).toEqual(montevideoId);
+			expect(element.id).toEqual(MDEO_ID);
 			expect(element.type).toBe("node");
 		});
 	});
 
 	it("Should fetch regexp tuples", async () => {
-		const api: OverpassApiObject = buildApi();
-		const settings: OverpassSettings = { globalBoundingBox: montevideoBBox };
+		const api: OverpassApiObject = BuildApi();
+		const settings: OverpassSettings = { globalBoundingBox: MDEO_BBOX };
 
 		const result = await api.execJson(
 			(s: OverpassState) => [
@@ -127,20 +126,20 @@ describe("Query", () => {
 					["capital", b.regExp(/es$/)],
 				]),
 			],
-			onlyIds,
+			ONLY_IDS,
 			settings,
 		);
 
 		expect(result.elements.length).toBe(1);
 		const [element] = result.elements;
 
-		expect(element.id).toEqual(montevideoId);
+		expect(element.id).toEqual(MDEO_ID);
 		expect(element.type).toBe("node");
 	});
 
 	it("Should fetch regexp in keys", async () => {
-		const api: OverpassApiObject = buildApi();
-		const settings: OverpassSettings = { globalBoundingBox: montevideoBBox };
+		const api: OverpassApiObject = BuildApi();
+		const settings: OverpassSettings = { globalBoundingBox: MDEO_BBOX };
 
 		const result = await api.execJson(
 			(s: OverpassState) => [
@@ -149,20 +148,20 @@ describe("Query", () => {
 					[/^capita/, /es$/],
 				]),
 			],
-			onlyIds,
+			ONLY_IDS,
 			settings,
 		);
 
 		expect(result.elements.length).toBe(1);
 		const [element] = result.elements;
 
-		expect(element.id).toEqual(montevideoId);
+		expect(element.id).toEqual(MDEO_ID);
 		expect(element.type).toBe("node");
 	});
 
 	it("Should fetch exists query", async () => {
-		const api: OverpassApiObject = buildApi();
-		const settings: OverpassSettings = { globalBoundingBox: montevideoBBox };
+		const api: OverpassApiObject = BuildApi();
+		const settings: OverpassSettings = { globalBoundingBox: MDEO_BBOX };
 
 		const result = await api.execJson(
 			(s: OverpassState) => [
@@ -171,20 +170,20 @@ describe("Query", () => {
 					admin_level: b.exists(),
 				})),
 			],
-			onlyIds,
+			ONLY_IDS,
 			settings,
 		);
 
 		expect(result.elements.length).toBe(1);
 		const [element] = result.elements;
 
-		expect(element.id).toEqual(montevideoId);
+		expect(element.id).toEqual(MDEO_ID);
 		expect(element.type).toBe("node");
 	});
 
 	it("Should fetch queries with negated equals", async () => {
-		const api: OverpassApiObject = buildApi();
-		const settings: OverpassSettings = { globalBoundingBox: montevideoBBox };
+		const api: OverpassApiObject = BuildApi();
+		const settings: OverpassSettings = { globalBoundingBox: MDEO_BBOX };
 
 		const result = await api.execJson(
 			(s: OverpassState) => [
@@ -193,20 +192,20 @@ describe("Query", () => {
 					["capital", b.equals("yes").not()],
 				]),
 			],
-			onlyIds,
+			ONLY_IDS,
 			settings,
 		);
 
 		expect(result.elements.length).toBe(1);
 		const [element] = result.elements;
 
-		expect(element.id).toEqual(uruguayId);
+		expect(element.id).toEqual(URUGUAY_ID);
 		expect(element.type).toBe("relation");
 	});
 
 	it("Should fetch queries with reversed negated equals", async () => {
-		const api: OverpassApiObject = buildApi();
-		const settings: OverpassSettings = { globalBoundingBox: montevideoBBox };
+		const api: OverpassApiObject = BuildApi();
+		const settings: OverpassSettings = { globalBoundingBox: MDEO_BBOX };
 
 		const result = await api.execJson(
 			(s: OverpassState) => [
@@ -215,20 +214,20 @@ describe("Query", () => {
 					["capital", b.not.equals("yes")],
 				]),
 			],
-			onlyIds,
+			ONLY_IDS,
 			settings,
 		);
 
 		expect(result.elements.length).toBe(1);
 		const [element] = result.elements;
 
-		expect(element.id).toEqual(uruguayId);
+		expect(element.id).toEqual(URUGUAY_ID);
 		expect(element.type).toBe("relation");
 	});
 
 	it("Should fetch queries with negated exists", async () => {
-		const api: OverpassApiObject = buildApi();
-		const settings: OverpassSettings = { globalBoundingBox: montevideoBBox };
+		const api: OverpassApiObject = BuildApi();
+		const settings: OverpassSettings = { globalBoundingBox: MDEO_BBOX };
 
 		const result = await api.execJson(
 			(s: OverpassState) => [
@@ -237,20 +236,20 @@ describe("Query", () => {
 					["capital", b.exists().not()],
 				]),
 			],
-			onlyIds,
+			ONLY_IDS,
 			settings,
 		);
 
 		expect(result.elements.length).toBe(1);
 		const [element] = result.elements;
 
-		expect(element.id).toEqual(uruguayId);
+		expect(element.id).toEqual(URUGUAY_ID);
 		expect(element.type).toBe("relation");
 	});
 
 	it("Should fetch queries with reversed negated exists", async () => {
-		const api: OverpassApiObject = buildApi();
-		const settings: OverpassSettings = { globalBoundingBox: montevideoBBox };
+		const api: OverpassApiObject = BuildApi();
+		const settings: OverpassSettings = { globalBoundingBox: MDEO_BBOX };
 
 		const result = await api.execJson(
 			(s: OverpassState) => [
@@ -259,20 +258,20 @@ describe("Query", () => {
 					["capital", b.not.exists()],
 				]),
 			],
-			onlyIds,
+			ONLY_IDS,
 			settings,
 		);
 
 		expect(result.elements.length).toBe(1);
 		const [element] = result.elements;
 
-		expect(element.id).toEqual(uruguayId);
+		expect(element.id).toEqual(URUGUAY_ID);
 		expect(element.type).toBe("relation");
 	});
 
 	it("Should fetch queries with negated regexp", async () => {
-		const api: OverpassApiObject = buildApi();
-		const settings: OverpassSettings = { globalBoundingBox: montevideoBBox };
+		const api: OverpassApiObject = BuildApi();
+		const settings: OverpassSettings = { globalBoundingBox: MDEO_BBOX };
 
 		const result = await api.execJson(
 			(s: OverpassState) => [
@@ -282,7 +281,7 @@ describe("Query", () => {
 					["admin_level", b.regExp(/^2$/).not()],
 				]),
 			],
-			onlyIds,
+			ONLY_IDS,
 			settings,
 		);
 
@@ -291,12 +290,12 @@ describe("Query", () => {
 		const ids = result.elements.map((el) => el.id);
 		ids.sort();
 
-		expect(ids).toEqual([mdeoDeparmentId, mdeoCityId]);
+		expect(ids).toEqual([MDEO_DEP_ID, MDEO_CITY_ID]);
 	});
 
 	it("Should fetch queries with reversed negated regexp", async () => {
-		const api: OverpassApiObject = buildApi();
-		const settings: OverpassSettings = { globalBoundingBox: montevideoBBox };
+		const api: OverpassApiObject = BuildApi();
+		const settings: OverpassSettings = { globalBoundingBox: MDEO_BBOX };
 
 		const result = await api.execJson(
 			(s: OverpassState) => [
@@ -306,7 +305,7 @@ describe("Query", () => {
 					["admin_level", b.not.regExp(/^2$/)],
 				]),
 			],
-			onlyIds,
+			ONLY_IDS,
 			settings,
 		);
 
@@ -315,16 +314,16 @@ describe("Query", () => {
 		const ids = result.elements.map((el) => el.id);
 		ids.sort();
 
-		expect(ids).toEqual([mdeoDeparmentId, mdeoCityId]);
+		expect(ids).toEqual([MDEO_DEP_ID, MDEO_CITY_ID]);
 	});
 
 	it("Should fetch queries with multi filters", async () => {
-		const api: OverpassApiObject = buildApi();
-		const settings: OverpassSettings = { globalBoundingBox: montevideoBBox };
+		const api: OverpassApiObject = BuildApi();
+		const settings: OverpassSettings = { globalBoundingBox: MDEO_BBOX };
 
 		const result = await api.execJson(
 			(s: OverpassState) => [s.relation.query(() => ({ name: [/^Monte/, /tevi/, /video$/] }))],
-			onlyIds,
+			ONLY_IDS,
 			settings,
 		);
 
@@ -333,6 +332,6 @@ describe("Query", () => {
 		const ids = result.elements.map((el) => el.id);
 		ids.sort();
 
-		expect(ids).toEqual([mdeoDeparmentId, mdeoCityId]);
+		expect(ids).toEqual([MDEO_DEP_ID, MDEO_CITY_ID]);
 	});
 });

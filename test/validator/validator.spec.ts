@@ -1,5 +1,3 @@
-import "../setup/checkConnection";
-//
 import { describe } from "@jest/globals";
 import { apiValidatorErrorTests } from "./error";
 import { apiValidatorJsonTests } from "./json";

@@ -9,12 +9,11 @@ import {
 	OverpassState,
 } from "@/query";
 import { expect, it } from "@jest/globals";
-import { buildApi } from "../setup/apiBuilder";
-import { mdeoDeparmentId } from "../testContext";
+import { BuildApi, MDEO_DEP_ID } from "../utils";
 
 export function apiOutOptionsTests() {
 	it("Should run queries with limit", async () => {
-		const api: OverpassApiObject = buildApi();
+		const api: OverpassApiObject = BuildApi();
 
 		const result = (await api.execJson((s: OverpassState) => [s.node.query({ name: "Montevideo" })], {
 			limit: 1,
@@ -24,7 +23,7 @@ export function apiOutOptionsTests() {
 	});
 
 	it("Should run queries with bounding box", () => {
-		const api: OverpassApiObject = buildApi();
+		const api: OverpassApiObject = BuildApi();
 
 		const boundingBox: OverpassBoundingBox = [-34.9, -56.2, -34.9, -56.2];
 
@@ -34,9 +33,9 @@ export function apiOutOptionsTests() {
 	});
 
 	it("Should run queries with geometry", async () => {
-		const api: OverpassApiObject = buildApi();
+		const api: OverpassApiObject = BuildApi();
 
-		const result = (await api.execJson((s: OverpassState) => [s.relation.byId(mdeoDeparmentId)], {
+		const result = (await api.execJson((s: OverpassState) => [s.relation.byId(MDEO_DEP_ID)], {
 			geoInfo: OverpassOutputGeoInfo.BoundingBox,
 			verbosity: OverpassOutputVerbosity.Ids,
 		})) as OverpassJsonOutput;
@@ -47,7 +46,7 @@ export function apiOutOptionsTests() {
 	});
 
 	it("Should run queries with sort", () => {
-		const api: OverpassApiObject = buildApi();
+		const api: OverpassApiObject = BuildApi();
 
 		const query = api.buildQuery((s: OverpassState) => [s.node.byId(0)], {
 			sortOrder: OverpassSortOrder.QuadtileIndex,
@@ -57,7 +56,7 @@ export function apiOutOptionsTests() {
 	});
 
 	it("Should run queries with target set", () => {
-		const api: OverpassApiObject = buildApi();
+		const api: OverpassApiObject = BuildApi();
 
 		const query = api.buildQuery((s: OverpassState) => [s.node.byId(0)], { targetSet: "someset" });
 

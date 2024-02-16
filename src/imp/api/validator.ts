@@ -54,9 +54,9 @@ export class OverpassQueryValidatorImp implements OverpassQueryValidator {
 		httpCode: number,
 		overpassQuery: string,
 		response: string,
-		responseType: string,
+		responseType?: string,
 	): void {
-		if (httpCode != 200) {
+		if (httpCode != 200 || responseType == null) {
 			let message: string;
 			if (responseType?.startsWith("text/html")) {
 				message = this.parseErrorsFromHtml(response).join("\n");

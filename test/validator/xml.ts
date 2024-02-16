@@ -8,7 +8,7 @@ import {
 	OverpassSettingsBase,
 } from "../../src";
 import { OverpassQueryValidatorImp } from "../../src/imp/api/validator";
-import { APP_OSM_XML, memoryExhaustionRemark, noAtticRemark, timeoutRemark, unknownRemark } from "../utils";
+import { APP_OSM_XML, MEMORY_EXHAUSTION_REMARK, NO_ATTIC_REMARK, TIMEOUT_REMARK, UNKNOWN_REMARK } from "../utils";
 
 function validateXml(xmlNodes: string[]): string {
 	const validator = new OverpassQueryValidatorImp(null!);
@@ -52,28 +52,28 @@ export function apiValidatorXmlTests() {
 	});
 
 	it("Should handle timeout remark", async () => {
-		const resultPromise = validateXmlRemark(timeoutRemark);
+		const resultPromise = validateXmlRemark(TIMEOUT_REMARK);
 
 		await expect(resultPromise).rejects.toThrow(OverpassRemarkError);
 		await expect(resultPromise).rejects.toHaveProperty("type", OverpassErrorType.QueryTimeout);
 	});
 
 	it("Should handle memory exhaustion remark", async () => {
-		const resultPromise = validateXmlRemark(memoryExhaustionRemark);
+		const resultPromise = validateXmlRemark(MEMORY_EXHAUSTION_REMARK);
 
 		await expect(resultPromise).rejects.toThrow(OverpassRemarkError);
 		await expect(resultPromise).rejects.toHaveProperty("type", OverpassErrorType.MemoryExhaustionError);
 	});
 
 	it("Should handle no attic data remark", async () => {
-		const resultPromise = validateXmlRemark(noAtticRemark);
+		const resultPromise = validateXmlRemark(NO_ATTIC_REMARK);
 
 		await expect(resultPromise).rejects.toThrow(OverpassRemarkError);
 		await expect(resultPromise).rejects.toHaveProperty("type", OverpassErrorType.NoAtticData);
 	});
 
 	it("Should handle unknown remark", async () => {
-		const resultPromise = validateXmlRemark(unknownRemark);
+		const resultPromise = validateXmlRemark(UNKNOWN_REMARK);
 
 		await expect(resultPromise).rejects.toThrow(OverpassRemarkError);
 		await expect(resultPromise).rejects.toHaveProperty("type", OverpassErrorType.QueryError);

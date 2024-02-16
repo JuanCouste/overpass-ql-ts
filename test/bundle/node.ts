@@ -1,6 +1,6 @@
 import { beforeAll, expect, it } from "@jest/globals";
 import { OverpassApiObject, OverpassJsonOutput, OverpassSettingsNoFormat, OverpassState } from "../../src";
-import { montevideoBBox, uruguayId } from "../testContext";
+import { MDEO_BBOX, URUGUAY_ID } from "../utils";
 import { CJS_BUNDLE, OverpassQlTsModule } from "./setupBundles";
 
 export function nodeTests() {
@@ -22,7 +22,7 @@ export function nodeTests() {
 
 	it("Should run query with cjs bundle", async () => {
 		const api: OverpassApiObject = module.DefaultOverpassApi(process.env.OVERPASS_QL_TS_URL!);
-		const settings: OverpassSettingsNoFormat = { globalBoundingBox: montevideoBBox };
+		const settings: OverpassSettingsNoFormat = { globalBoundingBox: MDEO_BBOX };
 
 		const result = await api.execJson(
 			(s: OverpassState) => [s.relation.query({ name: "Uruguay" })],
@@ -36,7 +36,7 @@ export function nodeTests() {
 
 		const [element] = elements;
 
-		expect(element.id).toEqual(uruguayId);
+		expect(element.id).toEqual(URUGUAY_ID);
 		expect(element.type).toBe("relation");
 	});
 }

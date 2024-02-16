@@ -8,7 +8,7 @@ import {
 	OverpassStatement,
 	OverpassTargetState,
 } from "../../src";
-import { onlyIds } from "../testContext";
+import { ONLY_IDS } from "../utils";
 
 type TargetMapStatementFunction<Method extends keyof OverpassTargetState> = (
 	...args: Parameters<OverpassTargetState[Method]>
@@ -30,7 +30,7 @@ async function fetchTargetMap<Method extends keyof OverpassTargetState>(
 
 	const result = await api.execJson(
 		(s: OverpassState) => [(s[target][method] as TargetMapStatementFunction<Method>)(...params)],
-		onlyIds,
+		ONLY_IDS,
 		settings,
 	);
 
@@ -51,7 +51,7 @@ async function fetchTargetState<Method extends keyof OverpassTargetState>(
 			const statement = (s[method] as TargetStateStatementFunction<Method>)(target, ...params);
 			return [statement];
 		},
-		onlyIds,
+		ONLY_IDS,
 		settings,
 	);
 
