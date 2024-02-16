@@ -1,41 +1,41 @@
 import { expect, it } from "@jest/globals";
 import { OverpassApiObject, OverpassQueryTarget } from "../../src";
-import { buildApi, montevideoId, uruguayId } from "../utils";
+import { BuildApi, MDEO_ID, URUGUAY_ID } from "../utils";
 import { fetchFormsOfStatement } from "./target";
 
 export function standaloneByIdTests() {
 	it("Should fetch relations by id", async () => {
-		const api: OverpassApiObject = buildApi();
+		const api: OverpassApiObject = BuildApi();
 
-		const forms = await fetchFormsOfStatement(api, "byId", ["relation", OverpassQueryTarget.Relation], uruguayId);
+		const forms = await fetchFormsOfStatement(api, "byId", ["relation", OverpassQueryTarget.Relation], URUGUAY_ID);
 
 		forms.forEach(({ elements }) => {
 			expect(elements.length).toEqual(1);
 
 			const [element] = elements;
 
-			expect(element.id).toEqual(uruguayId);
+			expect(element.id).toEqual(URUGUAY_ID);
 			expect(element.type).toBe("relation");
 		});
 	});
 
 	it("Should fetch node by id", async () => {
-		const api: OverpassApiObject = buildApi();
+		const api: OverpassApiObject = BuildApi();
 
-		const forms = await fetchFormsOfStatement(api, "byId", ["node", OverpassQueryTarget.Node], montevideoId);
+		const forms = await fetchFormsOfStatement(api, "byId", ["node", OverpassQueryTarget.Node], MDEO_ID);
 
 		forms.forEach(({ elements }) => {
 			expect(elements.length).toEqual(1);
 
 			const [element] = elements;
 
-			expect(element.id).toEqual(montevideoId);
+			expect(element.id).toEqual(MDEO_ID);
 			expect(element.type).toBe("node");
 		});
 	});
 
 	it("Should fetch way by id", async () => {
-		const api: OverpassApiObject = buildApi();
+		const api: OverpassApiObject = BuildApi();
 
 		const av18deJulio1 = 179061655;
 

@@ -1,6 +1,6 @@
 import { expect } from "@jest/globals";
 import { HttpResponse, OverpassJsonOutput, OverpassParameterError, RequestAdapter } from "../../src";
-import { APP_JSON, JSON_OUTPUT, buildApi } from "../utils";
+import { APP_JSON, BuildApi, JSON_OUTPUT } from "../utils";
 
 const staticResponse: HttpResponse = {
 	status: 200,
@@ -18,7 +18,7 @@ const sanitizationAdapter: RequestAdapter = {
 };
 
 export function SanitizationAdapter() {
-	return buildApi(() => sanitizationAdapter);
+	return BuildApi(() => sanitizationAdapter);
 }
 
 export async function ExpectParamteterError(result: Promise<OverpassJsonOutput>): Promise<void> {

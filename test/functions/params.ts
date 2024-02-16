@@ -7,50 +7,42 @@ import {
 	ParamItem,
 	ParamType,
 } from "../../src";
-import {
-	palacLegId as PAL_LEG_ID,
-	buildApi,
-	mdeoLabelId,
-	montevideoBBox,
-	montevideoId,
-	onlyIds,
-	plazaIndepId,
-} from "../utils";
+import { BuildApi, MDEO_BBOX, MDEO_ID, MDEO_LABEL_ID, ONLY_IDS, PAL_LEG_ID, PLAZA_INDEP_ID } from "../utils";
 
 export function functionsParamTests() {
 	it("Should allow number params", async () => {
-		const api: OverpassApiObject = buildApi();
+		const api: OverpassApiObject = BuildApi();
 
 		const getById = api.createFunction(
 			[ParamType.Number],
 			(state, id: ParamItem<number>) => [state.node.byId(id)],
-			onlyIds,
+			ONLY_IDS,
 		);
 
-		const mdeoRes = await getById(montevideoId);
+		const mdeoRes = await getById(MDEO_ID);
 
 		expect(mdeoRes.elements.length).toBe(1);
 		const [mdeo] = mdeoRes.elements;
 
-		expect(mdeo.id).toEqual(montevideoId);
+		expect(mdeo.id).toEqual(MDEO_ID);
 		expect(mdeo.type).toBe("node");
 
-		const mdeoLabelRes = await getById(mdeoLabelId);
+		const mdeoLabelRes = await getById(MDEO_LABEL_ID);
 
 		expect(mdeoLabelRes.elements.length).toBe(1);
 		const [mdeoLabel] = mdeoLabelRes.elements;
 
-		expect(mdeoLabel.id).toEqual(mdeoLabelId);
+		expect(mdeoLabel.id).toEqual(MDEO_LABEL_ID);
 		expect(mdeoLabel.type).toBe("node");
 	});
 
 	it("Should allow regexp params", async () => {
-		const api: OverpassApiObject = buildApi();
+		const api: OverpassApiObject = BuildApi();
 
 		const getByName = api.createFunction(
 			[ParamType.Target, ParamType.RegExp],
 			(state, target: ParamItem<OverpassQueryTarget>, name: ParamItem<RegExp>) => [state.query(target, { name })],
-			onlyIds,
+			ONLY_IDS,
 		);
 
 		const resPIndep = await getByName(OverpassQueryTarget.Relation, /Plaza Independ/);
@@ -58,7 +50,7 @@ export function functionsParamTests() {
 		expect(resPIndep.elements.length).toBe(1);
 		const [pIndep] = resPIndep.elements;
 
-		expect(pIndep.id).toEqual(plazaIndepId);
+		expect(pIndep.id).toEqual(PLAZA_INDEP_ID);
 		expect(pIndep.type).toBe("relation");
 
 		const resPalLeg = await getByName(OverpassQueryTarget.Way, /Palacio Leg/);
@@ -71,14 +63,14 @@ export function functionsParamTests() {
 	});
 
 	it("Should allow regexp props", async () => {
-		const api: OverpassApiObject = buildApi();
+		const api: OverpassApiObject = BuildApi();
 
 		const getByName = api.createFunction(
 			[ParamType.Target, ParamType.RegExp, ParamType.RegExp],
 			(state, target: ParamItem<OverpassQueryTarget>, prop: ParamItem<RegExp>, value: ParamItem<RegExp>) => [
 				state.query(target, [[prop, value]]),
 			],
-			onlyIds,
+			ONLY_IDS,
 		);
 
 		const resPIndep = await getByName(OverpassQueryTarget.Relation, /^nam.$/, /Plaza Independ/);
@@ -86,7 +78,7 @@ export function functionsParamTests() {
 		expect(resPIndep.elements.length).toBe(1);
 		const [pIndep] = resPIndep.elements;
 
-		expect(pIndep.id).toEqual(plazaIndepId);
+		expect(pIndep.id).toEqual(PLAZA_INDEP_ID);
 		expect(pIndep.type).toBe("relation");
 
 		const resPalLeg = await getByName(OverpassQueryTarget.Way, /^nam.$/, /Palacio Leg/);
@@ -99,15 +91,15 @@ export function functionsParamTests() {
 	});
 
 	it("Should allow string params", async () => {
-		const api: OverpassApiObject = buildApi();
+		const api: OverpassApiObject = BuildApi();
 
 		const containsProp = api.createFunction(
 			[ParamType.String],
 			(state, prop: ParamItem<string>) => [
 				state.query(OverpassQueryTarget.NodeWayRelation, (b) => [[prop, b.exists()]]),
 			],
-			onlyIds,
-			{ globalBoundingBox: montevideoBBox },
+			ONLY_IDS,
+			{ globalBoundingBox: MDEO_BBOX },
 		);
 
 		const containsCapRes = await containsProp("capital");
@@ -115,7 +107,7 @@ export function functionsParamTests() {
 		expect(containsCapRes.elements.length).toBe(1);
 		const [cap] = containsCapRes.elements;
 
-		expect(cap.id).toEqual(montevideoId);
+		expect(cap.id).toEqual(MDEO_ID);
 		expect(cap.type).toBe("node");
 
 		const containsCapCityRes = await containsProp("capital_city");
@@ -123,17 +115,17 @@ export function functionsParamTests() {
 		expect(containsCapCityRes.elements.length).toBe(1);
 		const [capCity] = containsCapCityRes.elements;
 
-		expect(capCity.id).toEqual(mdeoLabelId);
+		expect(capCity.id).toEqual(MDEO_LABEL_ID);
 		expect(capCity.type).toBe("node");
 	});
 
 	it("Should allow bbox params", async () => {
-		const api: OverpassApiObject = buildApi();
+		const api: OverpassApiObject = BuildApi();
 
 		const inBbox = api.createFunction(
 			[ParamType.BoundingBox],
 			(state, bbox: ParamItem<OverpassBoundingBox>) => [state.node.bbox(bbox)],
-			onlyIds,
+			ONLY_IDS,
 		);
 
 		const mdeoLabelBbox: OverpassBoundingBox = [-34.8652724, -56.1819512, -34.8652724, -56.1819512];
@@ -143,7 +135,7 @@ export function functionsParamTests() {
 		expect(mdeoLabelRes.elements.length).toBe(1);
 		const [mdeoLabel] = mdeoLabelRes.elements;
 
-		expect(mdeoLabel.id).toBe(mdeoLabelId);
+		expect(mdeoLabel.id).toBe(MDEO_LABEL_ID);
 		expect(mdeoLabel.type).toBe("node");
 
 		const mdeoBbox: OverpassBoundingBox = [-34.9058916, -56.1913095, -34.9058916, -56.1913095];
@@ -153,17 +145,17 @@ export function functionsParamTests() {
 		expect(mdeoRes.elements.length).toBe(1);
 		const [mdeo] = mdeoRes.elements;
 
-		expect(mdeo.id).toBe(montevideoId);
+		expect(mdeo.id).toBe(MDEO_ID);
 		expect(mdeo.type).toBe("node");
 	});
 
 	it("Should allow geopos params", async () => {
-		const api: OverpassApiObject = buildApi();
+		const api: OverpassApiObject = BuildApi();
 
 		const inside = api.createFunction(
 			[ParamType.GeoPos],
 			(state, pos: ParamItem<OverpassGeoPos>) => [state.node.inside([pos, pos, pos])],
-			onlyIds,
+			ONLY_IDS,
 		);
 
 		const mdeoLabelGeoPos: OverpassGeoPos = { lat: -34.8652724, lon: -56.1819512 };
@@ -173,7 +165,7 @@ export function functionsParamTests() {
 		expect(mdeoLabelRes.elements.length).toBe(1);
 		const [mdeoLabel] = mdeoLabelRes.elements;
 
-		expect(mdeoLabel.id).toBe(mdeoLabelId);
+		expect(mdeoLabel.id).toBe(MDEO_LABEL_ID);
 		expect(mdeoLabel.type).toBe("node");
 
 		const mdeoBboxGeoPos: OverpassGeoPos = { lat: -34.9058916, lon: -56.1913095 };
@@ -183,7 +175,7 @@ export function functionsParamTests() {
 		expect(mdeoRes.elements.length).toBe(1);
 		const [mdeo] = mdeoRes.elements;
 
-		expect(mdeo.id).toBe(montevideoId);
+		expect(mdeo.id).toBe(MDEO_ID);
 		expect(mdeo.type).toBe("node");
 	});
 }

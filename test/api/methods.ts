@@ -7,7 +7,7 @@ import {
 	ParamType,
 	RequestAdapter,
 } from "../../src";
-import { TEXT_CSV, buildApi, jsonFormat, onlyIds } from "../utils";
+import { BuildApi, JSON_FORMAT, ONLY_IDS, TEXT_CSV } from "../utils";
 import { expectUruguay, uruguayStatementBuilder } from "./uruguay";
 
 function getUnknownFormat(contentType: string | undefined): Promise<OverpassFormat | undefined> {
@@ -28,41 +28,41 @@ function getUnknownFormat(contentType: string | undefined): Promise<OverpassForm
 
 export function apiMethodsTests() {
 	it("Should run queries with exec", async () => {
-		const api: OverpassApiObject = buildApi();
+		const api: OverpassApiObject = BuildApi();
 
-		const result = await api.exec(jsonFormat, uruguayStatementBuilder, onlyIds);
+		const result = await api.exec(JSON_FORMAT, uruguayStatementBuilder, ONLY_IDS);
 
 		expectUruguay(result);
 	});
 
 	it("Should run queries with execJson", async () => {
-		const api: OverpassApiObject = buildApi();
+		const api: OverpassApiObject = BuildApi();
 
-		const result = await api.execJson(uruguayStatementBuilder, onlyIds);
+		const result = await api.execJson(uruguayStatementBuilder, ONLY_IDS);
 
 		expectUruguay(result);
 	});
 
 	it("Should run queries with execQuery", async () => {
-		const api: OverpassApiObject = buildApi();
+		const api: OverpassApiObject = BuildApi();
 
-		const query = api.buildQuery(uruguayStatementBuilder, onlyIds, jsonFormat);
+		const query = api.buildQuery(uruguayStatementBuilder, ONLY_IDS, JSON_FORMAT);
 		const result = await api.execQuery(query);
 
 		expectUruguay(result);
 	});
 
 	it("Should handle multiple or single statements in buildQuery", () => {
-		const api: OverpassApiObject = buildApi();
+		const api: OverpassApiObject = BuildApi();
 
-		const single = api.buildQuery((s) => s.relation.byId(0), onlyIds, jsonFormat);
-		const multi = api.buildQuery((s) => [s.relation.byId(0)], onlyIds, jsonFormat);
+		const single = api.buildQuery((s) => s.relation.byId(0), ONLY_IDS, JSON_FORMAT);
+		const multi = api.buildQuery((s) => [s.relation.byId(0)], ONLY_IDS, JSON_FORMAT);
 
 		expect(single).toEqual(multi);
 	});
 
 	it("Should not allow params in buildQuery", () => {
-		const api: OverpassApiObject = buildApi();
+		const api: OverpassApiObject = BuildApi();
 
 		const fn = () => api.buildQuery((s) => ({ compile: (u) => u.number({ index: 0, type: ParamType.Number }) }));
 

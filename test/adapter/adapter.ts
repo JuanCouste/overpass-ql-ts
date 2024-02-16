@@ -1,7 +1,7 @@
 import { HttpMethod, OverpassError, OverpassErrorType, OverpassJsonOutput, RequestAdapter } from "@/index";
 import { expect, it } from "@jest/globals";
 import { createServer } from "http";
-import { APP_JSON, TEXT_HTML_CH, TEXT_PLAIN, getErrorFile } from "../utils";
+import { APP_JSON, GetErrorFile, TEXT_HTML_CH, TEXT_PLAIN } from "../utils";
 import { setupServerForJson, setupServerResponse, waitForServer } from "./mockServer";
 
 export function adapterSpecificTests(adapterBuilder: () => RequestAdapter) {
@@ -52,7 +52,7 @@ export function adapterSpecificTests(adapterBuilder: () => RequestAdapter) {
 	});
 
 	it("Should handle too many requests error", async () => {
-		const rateLimited = await getErrorFile(`rateLimited.html`);
+		const rateLimited = await GetErrorFile(`rateLimited.html`);
 
 		const port = await setupServerResponse(429, TEXT_HTML_CH, rateLimited);
 
@@ -67,7 +67,7 @@ export function adapterSpecificTests(adapterBuilder: () => RequestAdapter) {
 	});
 
 	it("Should handle query error", async () => {
-		const badRequest = await getErrorFile(`badRequest.html`);
+		const badRequest = await GetErrorFile(`badRequest.html`);
 
 		const port = await setupServerResponse(400, TEXT_HTML_CH, badRequest);
 
@@ -112,7 +112,7 @@ export function adapterSpecificTests(adapterBuilder: () => RequestAdapter) {
 	});
 
 	it("Should handle duplicate queries error", async () => {
-		const duplicate = await getErrorFile(`duplicateQuery.html`);
+		const duplicate = await GetErrorFile(`duplicateQuery.html`);
 
 		const port = await setupServerResponse(200, TEXT_HTML_CH, duplicate);
 

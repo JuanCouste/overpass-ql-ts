@@ -1,6 +1,6 @@
 import { expect, it } from "@jest/globals";
 import { OverpassApiObject, OverpassBoundingBox, OverpassPolygonCoordExpression, OverpassQueryTarget } from "../../src";
-import { buildApi } from "../utils";
+import { BuildApi } from "../utils";
 import { fetchFormsOfStatement } from "./target";
 
 function polygonFromBoundingBox([s, w, n, e]: OverpassBoundingBox): OverpassPolygonCoordExpression[] {
@@ -14,7 +14,7 @@ function polygonFromBoundingBox([s, w, n, e]: OverpassBoundingBox): OverpassPoly
 
 export function standalonePolygonTests() {
 	it("Should fetch relations in polygon", async () => {
-		const api: OverpassApiObject = buildApi();
+		const api: OverpassApiObject = BuildApi();
 
 		const plazaZabalaId = 1219932;
 		const plazaZabalaPolygon = polygonFromBoundingBox([-34.90712, -56.20743, -34.90711, -56.20741]);
@@ -35,7 +35,7 @@ export function standalonePolygonTests() {
 	});
 
 	it("Should fetch nodes in polygon", async () => {
-		const api: OverpassApiObject = buildApi();
+		const api: OverpassApiObject = BuildApi();
 
 		const plazaZabalaHouseId = 944153833;
 		const plazaZabalaPolygon = polygonFromBoundingBox([-34.90712, -56.20743, -34.90711, -56.20741]);
@@ -56,7 +56,7 @@ export function standalonePolygonTests() {
 	});
 
 	it("Should fetch ways in poygon", async () => {
-		const api: OverpassApiObject = buildApi();
+		const api: OverpassApiObject = BuildApi();
 
 		const plazaZabalaWayId = 455181244;
 		const plazaZabalaWayPolygon = polygonFromBoundingBox([-34.907121, -56.207423, -34.907116, -56.207418]);

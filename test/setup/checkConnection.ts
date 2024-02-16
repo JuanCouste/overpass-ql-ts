@@ -1,6 +1,6 @@
 import { afterAll, beforeAll } from "@jest/globals";
 import { baseConfig } from "../../jest.config";
-import { buildApi } from "../utils";
+import { BuildApi } from "../utils";
 
 let promises: Promise<void>[];
 
@@ -13,7 +13,7 @@ beforeAll(async () => {
 
 	try {
 		promises = [
-			buildApi()
+			BuildApi()
 				.status()
 				.then(() => {}),
 			new Promise<void>((_, reject) => setTimeout(reject, baseConfig.testTimeout! * 0.9)),

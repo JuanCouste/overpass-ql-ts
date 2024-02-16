@@ -1,6 +1,6 @@
 import { expect, it } from "@jest/globals";
 import { OverpassApiObject, OverpassBoundingBox, OverpassQueryTarget } from "../../src";
-import { buildApi } from "../utils";
+import { BuildApi } from "../utils";
 import { fetchFormsOfStatement } from "./target";
 
 const circDurangoRelId = 1221561;
@@ -9,7 +9,7 @@ const circDurangoNodeId = 7001716357;
 
 export function standaloneAnyTests() {
 	it("Should fetch any in bbox", async () => {
-		const api: OverpassApiObject = buildApi();
+		const api: OverpassApiObject = BuildApi();
 
 		const plazaZabalaBBox: OverpassBoundingBox = [
 			-34.907353650482534, -56.20776158492537, -34.90724438201883, -56.207662660721624,

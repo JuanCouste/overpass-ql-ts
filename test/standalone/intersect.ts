@@ -1,10 +1,10 @@
 import { expect, it } from "@jest/globals";
 import { OverpassApiObject, OverpassState } from "../../src";
-import { buildApi, mdeoLabelId, onlyIds } from "../utils";
+import { BuildApi, MDEO_LABEL_ID, ONLY_IDS } from "../utils";
 
 export function standaloneIntersectTests() {
 	it("Should intersect elements", async () => {
-		const api: OverpassApiObject = buildApi();
+		const api: OverpassApiObject = BuildApi();
 
 		const result = await api.execJson(
 			(s: OverpassState) => [
@@ -17,10 +17,10 @@ export function standaloneIntersectTests() {
 					.toSet("mdeo"),
 				s.node.intersect("cap", "mdeo"),
 			],
-			onlyIds,
+			ONLY_IDS,
 		);
 
-		const montevideoLabel = result.elements.find((el) => el.id == mdeoLabelId);
+		const montevideoLabel = result.elements.find((el) => el.id == MDEO_LABEL_ID);
 
 		expect(montevideoLabel).toBeDefined();
 		expect(montevideoLabel!.type).toBe("node");

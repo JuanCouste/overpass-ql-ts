@@ -7,19 +7,19 @@ import {
 	OverpassSettings,
 } from "@/query";
 
-export const montevideoId = 296140043;
-export const uruguayId = 287072;
-export const mdeoDeparmentId = 1634207;
-export const mdeoCityId = 2929054;
-export const mdeoLabelId = 313943109;
-export const plazaIndepId = 1219079;
-export const palacLegId = 81683741;
+export const MDEO_ID = 296140043;
+export const MDEO_DEP_ID = 1634207;
+export const MDEO_CITY_ID = 2929054;
+export const MDEO_LABEL_ID = 313943109;
+export const URUGUAY_ID = 287072;
+export const PLAZA_INDEP_ID = 1219079;
+export const PAL_LEG_ID = 81683741;
 
-export const onlyIds: OverpassOutputOptions = { verbosity: OverpassOutputVerbosity.Ids };
+export const ONLY_IDS: OverpassOutputOptions = { verbosity: OverpassOutputVerbosity.Ids };
 
-export const jsonFormat: OverpassSettings = { format: OverpassFormat.JSON };
+export const JSON_FORMAT: OverpassSettings = { format: OverpassFormat.JSON };
 
-export const montevideoBBox: OverpassBoundingBox = [
+export const MDEO_BBOX: OverpassBoundingBox = [
 	-34.95946903427187, -56.336210858065294, -34.70252226444532, -56.090943633590476,
 ];
 

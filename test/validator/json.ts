@@ -10,7 +10,14 @@ import {
 	OverpassSettings,
 } from "../../src";
 import { OverpassQueryValidatorImp } from "../../src/imp/api/validator";
-import { APP_JSON, JSON_OUTPUT, memoryExhaustionRemark, noAtticRemark, timeoutRemark, unknownRemark } from "../utils";
+import {
+	APP_JSON,
+	JSON_OUTPUT,
+	MEMORY_EXHAUSTION_REMARK,
+	NO_ATTIC_REMARK,
+	TIMEOUT_REMARK,
+	UNKNOWN_REMARK,
+} from "../utils";
 
 function validateJson(output: OverpassJsonOutput) {
 	const validator = new OverpassQueryValidatorImp(null!);
@@ -44,28 +51,28 @@ export function apiValidatorJsonTests() {
 	});
 
 	it("Should handle timeout remark", async () => {
-		const resultPromise = validateJsonRemark(timeoutRemark);
+		const resultPromise = validateJsonRemark(TIMEOUT_REMARK);
 
 		await expect(resultPromise).rejects.toThrow(OverpassRemarkError);
 		await expect(resultPromise).rejects.toHaveProperty("type", OverpassErrorType.QueryTimeout);
 	});
 
 	it("Should handle memory exhaustion remark", async () => {
-		const resultPromise = validateJsonRemark(memoryExhaustionRemark);
+		const resultPromise = validateJsonRemark(MEMORY_EXHAUSTION_REMARK);
 
 		await expect(resultPromise).rejects.toThrow(OverpassRemarkError);
 		await expect(resultPromise).rejects.toHaveProperty("type", OverpassErrorType.MemoryExhaustionError);
 	});
 
 	it("Should handle no attic data remark", async () => {
-		const resultPromise = validateJsonRemark(noAtticRemark);
+		const resultPromise = validateJsonRemark(NO_ATTIC_REMARK);
 
 		await expect(resultPromise).rejects.toThrow(OverpassRemarkError);
 		await expect(resultPromise).rejects.toHaveProperty("type", OverpassErrorType.NoAtticData);
 	});
 
 	it("Should handle unknown remark", async () => {
-		const resultPromise = validateJsonRemark(unknownRemark);
+		const resultPromise = validateJsonRemark(UNKNOWN_REMARK);
 
 		await expect(resultPromise).rejects.toThrow(OverpassRemarkError);
 		await expect(resultPromise).rejects.toHaveProperty("type", OverpassErrorType.QueryError);

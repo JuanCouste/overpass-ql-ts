@@ -1,13 +1,13 @@
 import { describe, expect, it } from "@jest/globals";
 import { CSVField, OverpassApiObject, OverpassCSVSettings, OverpassFormat } from "../../src";
-import { buildApi, onlyIds, uruguayId } from "../utils";
+import { BuildApi, ONLY_IDS, URUGUAY_ID } from "../utils";
 import { uruguayStatementBuilder } from "./uruguay";
 
 export function apiFormatTests() {
 	it("Should run xml queries", async () => {
-		const api: OverpassApiObject = buildApi();
+		const api: OverpassApiObject = BuildApi();
 
-		const result = await api.exec({ format: OverpassFormat.XML }, uruguayStatementBuilder, onlyIds);
+		const result = await api.exec({ format: OverpassFormat.XML }, uruguayStatementBuilder, ONLY_IDS);
 
 		expect(typeof result).toBe("string");
 
@@ -16,7 +16,7 @@ export function apiFormatTests() {
 
 	describe("CSV", () => {
 		it("Should run csv queries", async () => {
-			const api: OverpassApiObject = buildApi();
+			const api: OverpassApiObject = BuildApi();
 			const delimiter = "|-|";
 			const settings: OverpassCSVSettings = {
 				format: OverpassFormat.CSV,
@@ -27,7 +27,7 @@ export function apiFormatTests() {
 				},
 			};
 
-			const result = await api.exec(settings, uruguayStatementBuilder, onlyIds);
+			const result = await api.exec(settings, uruguayStatementBuilder, ONLY_IDS);
 
 			expect(typeof result).toBe("string");
 
@@ -37,11 +37,11 @@ export function apiFormatTests() {
 				.map((line) => line.trim().split(delimiter));
 
 			expect(labels).toEqual(["@id", "name"]);
-			expect(+uruguayRow[0]).toEqual(uruguayId);
+			expect(+uruguayRow[0]).toEqual(URUGUAY_ID);
 		});
 
 		it("Should run csv queries without delimiter", async () => {
-			const api: OverpassApiObject = buildApi();
+			const api: OverpassApiObject = BuildApi();
 			const settings: OverpassCSVSettings = {
 				format: OverpassFormat.CSV,
 				csvSettings: {
@@ -50,7 +50,7 @@ export function apiFormatTests() {
 				},
 			};
 
-			const result = await api.exec(settings, uruguayStatementBuilder, onlyIds);
+			const result = await api.exec(settings, uruguayStatementBuilder, ONLY_IDS);
 
 			expect(typeof result).toBe("string");
 
@@ -60,17 +60,17 @@ export function apiFormatTests() {
 				.map((line) => line.trim().split("\t"));
 
 			expect(labels).toEqual(["@id", "name"]);
-			expect(+uruguayRow[0]).toEqual(uruguayId);
+			expect(+uruguayRow[0]).toEqual(URUGUAY_ID);
 		});
 
 		it("Should run csv queries without delimiter and headerline", async () => {
-			const api: OverpassApiObject = buildApi();
+			const api: OverpassApiObject = BuildApi();
 			const settings: OverpassCSVSettings = {
 				format: OverpassFormat.CSV,
 				csvSettings: { fields: [CSVField.Id, "name"] },
 			};
 
-			const result = await api.exec(settings, uruguayStatementBuilder, onlyIds);
+			const result = await api.exec(settings, uruguayStatementBuilder, ONLY_IDS);
 
 			expect(typeof result).toBe("string");
 
@@ -80,17 +80,17 @@ export function apiFormatTests() {
 				.map((line) => line.trim().split("\t"));
 
 			expect(labels).toEqual(["@id", "name"]);
-			expect(+uruguayRow[0]).toEqual(uruguayId);
+			expect(+uruguayRow[0]).toEqual(URUGUAY_ID);
 		});
 
 		it("Should run csv queries with headerline false", async () => {
-			const api: OverpassApiObject = buildApi();
+			const api: OverpassApiObject = BuildApi();
 			const settings: OverpassCSVSettings = {
 				format: OverpassFormat.CSV,
 				csvSettings: { fields: [CSVField.Id, "name"], headerLine: false },
 			};
 
-			const result = await api.exec(settings, uruguayStatementBuilder, onlyIds);
+			const result = await api.exec(settings, uruguayStatementBuilder, ONLY_IDS);
 
 			expect(typeof result).toBe("string");
 
@@ -99,18 +99,18 @@ export function apiFormatTests() {
 				.split("\n")
 				.map((line) => line.trim().split("\t"));
 
-			expect(+uruguayRow[0]).toEqual(uruguayId);
+			expect(+uruguayRow[0]).toEqual(URUGUAY_ID);
 		});
 
 		it("Should run csv queries with delimiter", async () => {
-			const api: OverpassApiObject = buildApi();
+			const api: OverpassApiObject = BuildApi();
 			const delimiter = "|-|";
 			const settings: OverpassCSVSettings = {
 				format: OverpassFormat.CSV,
 				csvSettings: { fields: [CSVField.Id, "name"], delimiterCharacter: delimiter },
 			};
 
-			const result = await api.exec(settings, uruguayStatementBuilder, onlyIds);
+			const result = await api.exec(settings, uruguayStatementBuilder, ONLY_IDS);
 
 			expect(typeof result).toBe("string");
 
@@ -120,14 +120,14 @@ export function apiFormatTests() {
 				.map((line) => line.trim().split(delimiter));
 
 			expect(labels).toEqual(["@id", "name"]);
-			expect(+uruguayRow[0]).toEqual(uruguayId);
+			expect(+uruguayRow[0]).toEqual(URUGUAY_ID);
 		});
 
 		it("Should not run csv queries with csvSettings", async () => {
-			const api: OverpassApiObject = buildApi();
+			const api: OverpassApiObject = BuildApi();
 			const settings: OverpassCSVSettings = { format: OverpassFormat.CSV } as OverpassCSVSettings;
 
-			const result = api.exec(settings, uruguayStatementBuilder, onlyIds);
+			const result = api.exec(settings, uruguayStatementBuilder, ONLY_IDS);
 
 			expect(result).rejects.toThrow();
 		});

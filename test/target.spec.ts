@@ -4,11 +4,11 @@ import { OverpassQueryTarget } from "@/model";
 import { OverpassApiObject } from "@/query";
 import { describe, it } from "@jest/globals";
 import expect from "expect";
-import { buildApi, mdeoLabelId, montevideoId, uruguayId } from "./utils";
+import { BuildApi, MDEO_ID, MDEO_LABEL_ID, URUGUAY_ID } from "./utils";
 
 describe("Target", () => {
 	it("Should handle intersections", async () => {
-		const api: OverpassApiObject = buildApi();
+		const api: OverpassApiObject = BuildApi();
 
 		const result = await api.execJson((s) => [
 			s.node.query({ name: "Montevideo" }).toSet("mdeo"),
@@ -21,11 +21,11 @@ describe("Target", () => {
 		const ids = result.elements.map((element) => element.id);
 		ids.sort();
 
-		expect(ids).toEqual([montevideoId, mdeoLabelId]);
+		expect(ids).toEqual([MDEO_ID, MDEO_LABEL_ID]);
 	});
 
 	it("Should handle intersections with chained statements", async () => {
-		const api: OverpassApiObject = buildApi();
+		const api: OverpassApiObject = BuildApi();
 
 		const result = await api.execJson((s) => [
 			s.node.query({ name: "Montevideo" }).toSet("mdeo"),
@@ -39,17 +39,17 @@ describe("Target", () => {
 
 		const element = result.elements[0];
 
-		expect(element.id).toBe(montevideoId);
+		expect(element.id).toBe(MDEO_ID);
 		expect(element.type).toBe("node");
 	});
 
 	it("Should handle intersection union", async () => {
-		const api: OverpassApiObject = buildApi();
+		const api: OverpassApiObject = BuildApi();
 
 		const result = await api.execJson((s) => [
 			s.node.query({ name: "Montevideo" }).toSet("mdeo"),
 			s.node.query((b) => ({ population: b.exists() })).toSet("pop"),
-			s.node.intersect("mdeo", "pop").union(s.relation.byId(uruguayId)),
+			s.node.intersect("mdeo", "pop").union(s.relation.byId(URUGUAY_ID)),
 		]);
 
 		expect(result.elements.length).toBe(3);
@@ -57,28 +57,28 @@ describe("Target", () => {
 		const ids = result.elements.map((element) => element.id);
 		ids.sort();
 
-		expect(ids).toEqual([uruguayId, montevideoId, mdeoLabelId]);
+		expect(ids).toEqual([URUGUAY_ID, MDEO_ID, MDEO_LABEL_ID]);
 	});
 
 	it("Should handle intersection difference", async () => {
-		const api: OverpassApiObject = buildApi();
+		const api: OverpassApiObject = BuildApi();
 
 		const result = await api.execJson((s) => [
 			s.node.query({ name: "Montevideo" }).toSet("mdeo"),
 			s.node.query((b) => ({ population: b.exists() })).toSet("pop"),
-			s.node.intersect("mdeo", "pop").difference(s.node.byId(mdeoLabelId)),
+			s.node.intersect("mdeo", "pop").difference(s.node.byId(MDEO_LABEL_ID)),
 		]);
 
 		expect(result.elements.length).toBe(1);
 
 		const element = result.elements[0];
 
-		expect(element.id).toBe(montevideoId);
+		expect(element.id).toBe(MDEO_ID);
 		expect(element.type).toBe("node");
 	});
 
 	it("Should handle intersection to set", async () => {
-		const api: OverpassApiObject = buildApi();
+		const api: OverpassApiObject = BuildApi();
 
 		const result = await api.execJson(
 			(s) => [
@@ -94,11 +94,11 @@ describe("Target", () => {
 		const ids = result.elements.map((element) => element.id);
 		ids.sort();
 
-		expect(ids).toEqual([montevideoId, mdeoLabelId]);
+		expect(ids).toEqual([MDEO_ID, MDEO_LABEL_ID]);
 	});
 
 	it("Should handle plain set", async () => {
-		const api: OverpassApiObject = buildApi();
+		const api: OverpassApiObject = BuildApi();
 
 		const result = await api.execJson((s) => [
 			s.node.query((b) => ({ name: "Montevideo", population: b.exists() })).toSet("mdeo"),
@@ -110,6 +110,6 @@ describe("Target", () => {
 		const ids = result.elements.map((element) => element.id);
 		ids.sort();
 
-		expect(ids).toEqual([montevideoId, mdeoLabelId]);
+		expect(ids).toEqual([MDEO_ID, MDEO_LABEL_ID]);
 	});
 });
