@@ -1,7 +1,6 @@
 import { expect, it } from "@jest/globals";
 import { OverpassApiObject, OverpassQueryTarget } from "../../src";
-import { buildApi } from "../setup/apiBuilder";
-import { montevideoBBox, montevideoId, uruguayId } from "../testContext";
+import { buildApi, montevideoBBox, montevideoId, uruguayId } from "../utils";
 import { fetchFormsOfStatementWithBBox } from "./target";
 
 export function standaloneQueryTests() {
@@ -34,7 +33,9 @@ export function standaloneQueryTests() {
 			"query",
 			["node", OverpassQueryTarget.Node],
 			montevideoBBox,
-			{ capital: "yes" },
+			{
+				capital: "yes",
+			},
 		);
 
 		forms.forEach(({ elements }) => {
@@ -57,7 +58,9 @@ export function standaloneQueryTests() {
 			"query",
 			["way", OverpassQueryTarget.Way],
 			montevideoBBox,
-			{ name: "Paraná" },
+			{
+				name: "Paraná",
+			},
 		);
 
 		forms.forEach(({ elements }) => {

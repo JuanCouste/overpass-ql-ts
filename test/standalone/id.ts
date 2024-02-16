@@ -1,7 +1,6 @@
 import { expect, it } from "@jest/globals";
 import { OverpassApiObject, OverpassQueryTarget } from "../../src";
-import { buildApi } from "../setup/apiBuilder";
-import { montevideoId, uruguayId } from "../testContext";
+import { buildApi, montevideoId, uruguayId } from "../utils";
 import { fetchFormsOfStatement } from "./target";
 
 export function standaloneByIdTests() {

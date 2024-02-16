@@ -9,8 +9,7 @@ import {
 	OverpassState,
 } from "@/query";
 import { expect, it } from "@jest/globals";
-import { buildApi } from "../setup/apiBuilder";
-import { mdeoDeparmentId } from "../testContext";
+import { buildApi, mdeoDeparmentId } from "../utils";
 
 export function apiOutOptionsTests() {
 	it("Should run queries with limit", async () => {

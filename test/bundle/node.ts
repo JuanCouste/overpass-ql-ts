@@ -1,6 +1,6 @@
 import { beforeAll, expect, it } from "@jest/globals";
 import { OverpassApiObject, OverpassJsonOutput, OverpassSettingsNoFormat, OverpassState } from "../../src";
-import { montevideoBBox, uruguayId } from "../testContext";
+import { montevideoBBox, uruguayId } from "../utils";
 import { CJS_BUNDLE, OverpassQlTsModule } from "./setupBundles";
 
 export function nodeTests() {

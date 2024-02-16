@@ -15,13 +15,8 @@ export class OverpassRawStatement extends OverpassStatementBase {
 		super();
 	}
 
-	public static FromString(statement: string) {
-		statement = removeLastSemicolon(statement);
-		return new OverpassRawStatement((u) => u.raw(statement));
-	}
-
 	compile(u: CompileUtils): CompiledItem {
-		return this.compileFn(u);
+		return this.compileFn(u).withManipulation(removeLastSemicolon);
 	}
 }
 
@@ -30,12 +25,7 @@ export class OverpassComposableRawStatement extends ComposableOverpassStatementB
 		super();
 	}
 
-	public static FromString(statement: string) {
-		statement = removeLastSemicolon(statement);
-		return new OverpassComposableRawStatement((u) => u.raw(statement));
-	}
-
 	compile(u: CompileUtils): CompiledItem {
-		return this.compileFn(u);
+		return this.compileFn(u).withManipulation(removeLastSemicolon);
 	}
 }

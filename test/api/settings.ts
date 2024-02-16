@@ -7,8 +7,7 @@ import {
 	OverpassSettings,
 	OverpassState,
 } from "../../src";
-import { buildApi } from "../setup/apiBuilder";
-import { montevideoBBox, montevideoId, onlyIds } from "../testContext";
+import { buildApi, montevideoBBox, montevideoId, onlyIds } from "../utils";
 import { expectUruguay, uruguayStatementBuilder } from "./uruguay";
 
 export function apiSettingsTests() {

@@ -10,7 +10,7 @@ import {
 	OverpassSettings,
 } from "../../src";
 import { OverpassQueryValidatorImp } from "../../src/imp/api/validator";
-import { APP_JSON, memoryExhaustionRemark, noAtticRemark, timeoutRemark, unknownRemark } from "../utils";
+import { APP_JSON, JSON_OUTPUT, memoryExhaustionRemark, noAtticRemark, timeoutRemark, unknownRemark } from "../utils";
 
 function validateJson(output: OverpassJsonOutput) {
 	const validator = new OverpassQueryValidatorImp(null!);
@@ -23,30 +23,11 @@ function validateJson(output: OverpassJsonOutput) {
 }
 
 function validateJsonResult(elements: AnyOverpassElement[]): OverpassJsonOutput {
-	return validateJson({
-		version: 0.6,
-		generator: "Overpass API 0.7.61.5 4133829e",
-		osm3s: {
-			timestamp_osm_base: "2024-02-08T04:29:26Z",
-			copyright:
-				"The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.",
-		},
-		elements,
-	});
+	return validateJson({ ...JSON_OUTPUT, elements });
 }
 
 async function validateJsonRemark(remark: string) {
-	return validateJson({
-		version: 0.6,
-		generator: "Overpass API 0.7.61.5 4133829e",
-		osm3s: {
-			timestamp_osm_base: "2024-02-08T04:29:26Z",
-			copyright:
-				"The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.",
-		},
-		elements: [],
-		remark,
-	});
+	return validateJson({ ...JSON_OUTPUT, elements: [], remark });
 }
 
 export function apiValidatorJsonTests() {

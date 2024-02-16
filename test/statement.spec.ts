@@ -2,8 +2,7 @@ import "./setup/checkConnection";
 //
 import { describe, expect, it } from "@jest/globals";
 import { ComposableOverpassStatement, OverpassApiObject, OverpassState } from "../src";
-import { buildApi } from "./setup/apiBuilder";
-import { montevideoId, onlyIds, uruguayId } from "./testContext";
+import { buildApi, montevideoId, onlyIds, uruguayId } from "./utils";
 
 describe("Statement", () => {
 	it("Should fetch statement unions", async () => {
@@ -58,6 +57,24 @@ describe("Statement", () => {
 		expect(ids).toEqual([uruguayId, montevideoId]);
 	});
 
+	it("Should allow fallback composable statements with compile utils", async () => {
+		const api: OverpassApiObject = buildApi();
+
+		const result = await api.execJson((s: OverpassState) => {
+			const composable: ComposableOverpassStatement = s.composableStatement(
+				(u) => u.template`node(${u.number(montevideoId)})`,
+			);
+			return [composable.union(s.relation.byId(uruguayId))];
+		}, onlyIds);
+
+		expect(result.elements.length).toBe(2);
+
+		const ids = result.elements.map((el) => el.id);
+		ids.sort();
+
+		expect(ids).toEqual([uruguayId, montevideoId]);
+	});
+
 	it("Should handle semicolon with fallback composable statements", async () => {
 		const api: OverpassApiObject = buildApi();
 
@@ -78,6 +95,21 @@ describe("Statement", () => {
 		const api: OverpassApiObject = buildApi();
 
 		const result = await api.execJson((s: OverpassState) => [s.statement(`node(${montevideoId});`)], onlyIds);
+
+		expect(result.elements.length).toBe(1);
+		const [element] = result.elements;
+
+		expect(element.id).toEqual(montevideoId);
+		expect(element.type).toBe("node");
+	});
+
+	it("Should handle semicolon with fallback statements with compile utils", async () => {
+		const api: OverpassApiObject = buildApi();
+
+		const result = await api.execJson(
+			(s: OverpassState) => [s.statement((u) => u.template`node(${u.number(montevideoId)});`)],
+			onlyIds,
+		);
 
 		expect(result.elements.length).toBe(1);
 		const [element] = result.elements;

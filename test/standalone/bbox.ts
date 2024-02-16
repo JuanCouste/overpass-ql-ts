@@ -1,6 +1,6 @@
 import { expect, it } from "@jest/globals";
 import { OverpassApiObject, OverpassBoundingBox, OverpassQueryTarget } from "../../src";
-import { buildApi } from "../setup/apiBuilder";
+import { buildApi } from "../utils";
 import { fetchFormsOfStatement } from "./target";
 
 export function standaloneBBoxTests() {

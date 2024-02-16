@@ -3,6 +3,9 @@ import { OverpassBoundingBox, OverpassGeoPos, OverpassQueryTarget } from "@/mode
 
 export interface BaseCompiledItem {
 	readonly isParam: boolean;
+
+	/** Change the resulting raw string */
+	withManipulation(manipulation: (raw: string) => string): CompiledItem;
 }
 
 export interface ParamCompiledItem<T> extends BaseCompiledItem {

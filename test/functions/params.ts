@@ -7,8 +7,15 @@ import {
 	ParamItem,
 	ParamType,
 } from "../../src";
-import { buildApi } from "../setup/apiBuilder";
-import { mdeoLabelId, montevideoBBox, montevideoId, onlyIds, palacLegId, plazaIndepId } from "../testContext";
+import {
+	palacLegId as PAL_LEG_ID,
+	buildApi,
+	mdeoLabelId,
+	montevideoBBox,
+	montevideoId,
+	onlyIds,
+	plazaIndepId,
+} from "../utils";
 
 export function functionsParamTests() {
 	it("Should allow number params", async () => {
@@ -59,7 +66,7 @@ export function functionsParamTests() {
 		expect(resPalLeg.elements.length).toBe(1);
 		const [palLeg] = resPalLeg.elements;
 
-		expect(palLeg.id).toEqual(palacLegId);
+		expect(palLeg.id).toEqual(PAL_LEG_ID);
 		expect(palLeg.type).toBe("way");
 	});
 
@@ -87,7 +94,7 @@ export function functionsParamTests() {
 		expect(resPalLeg.elements.length).toBe(1);
 		const [palLeg] = resPalLeg.elements;
 
-		expect(palLeg.id).toEqual(palacLegId);
+		expect(palLeg.id).toEqual(PAL_LEG_ID);
 		expect(palLeg.type).toBe("way");
 	});
 

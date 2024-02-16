@@ -1,7 +1,7 @@
 import { OverpassStatement } from "@/model";
 import { OverpassJsonOutput, OverpassState } from "@/query";
 import { expect } from "@jest/globals";
-import { uruguayId } from "../testContext";
+import { uruguayId } from "../utils";
 
 export function expectUruguay(output: OverpassJsonOutput | string) {
 	expect(typeof output).toBe("object");

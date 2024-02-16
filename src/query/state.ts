@@ -63,7 +63,7 @@ export interface OverpassStateMethods {
 	 * This statement is expected to be usable within unions and such.
 	 */
 	composableStatement(statement: string): ComposableOverpassStatement;
-	composableStatement(compile: (utils: CompileUtils) => CompiledItem): OverpassStatement;
+	composableStatement(compile: (utils: CompileUtils) => CompiledItem): ComposableOverpassStatement;
 
 	/** The contents of {@link set} */
 	set(

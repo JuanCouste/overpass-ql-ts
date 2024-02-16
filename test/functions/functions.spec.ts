@@ -2,8 +2,7 @@ import "../setup/checkConnection";
 //
 import { describe, expect, it } from "@jest/globals";
 import { OverpassApiObject, OverpassJsonOutput, OverpassQueryTarget, ParamItem, ParamType } from "../../src";
-import { buildApi } from "../setup/apiBuilder";
-import { montevideoId, onlyIds, uruguayId } from "../testContext";
+import { buildApi, montevideoId, onlyIds, uruguayId } from "../utils";
 import { functionsParamTests } from "./params";
 
 describe("Statement", () => {

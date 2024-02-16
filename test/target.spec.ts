@@ -4,8 +4,7 @@ import { OverpassQueryTarget } from "@/model";
 import { OverpassApiObject } from "@/query";
 import { describe, it } from "@jest/globals";
 import expect from "expect";
-import { buildApi } from "./setup/apiBuilder";
-import { mdeoLabelId, montevideoId, uruguayId } from "./testContext";
+import { buildApi, mdeoLabelId, montevideoId, uruguayId } from "./utils";
 
 describe("Target", () => {
 	it("Should handle intersections", async () => {

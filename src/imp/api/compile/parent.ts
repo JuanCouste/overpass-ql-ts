@@ -31,4 +31,12 @@ export class OverpassParentCompiledItem implements ParentCompiledItem {
 			}
 		}
 	}
+
+	withManipulation(manipulation: (raw: string) => string): CompiledItem {
+		const copy: (string | CompiledItem)[] = [...this.subParts];
+		const lastIndex = copy.length - 1;
+		const last = copy[lastIndex];
+		copy[lastIndex] = typeof last == "string" ? manipulation(last) : last.withManipulation(manipulation);
+		return new OverpassParentCompiledItem(copy);
+	}
 }

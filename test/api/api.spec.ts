@@ -2,7 +2,7 @@ import "../setup/checkConnection";
 //
 import { describe, expect, it } from "@jest/globals";
 import { OverpassApiObject, OverpassApiObjectImp } from "../../src";
-import { buildApi } from "../setup/apiBuilder";
+import { buildApi } from "../utils";
 import { apiFormatTests } from "./format";
 import { apiMethodsTests } from "./methods";
 import { apiOutOptionsTests } from "./options";

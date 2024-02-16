@@ -7,9 +7,7 @@ import {
 	ParamType,
 	RequestAdapter,
 } from "../../src";
-import { buildApi } from "../setup/apiBuilder";
-import { jsonFormat, onlyIds } from "../testContext";
-import { TEXT_CSV } from "../utils";
+import { TEXT_CSV, buildApi, jsonFormat, onlyIds } from "../utils";
 import { expectUruguay, uruguayStatementBuilder } from "./uruguay";
 
 function getUnknownFormat(contentType: string | undefined): Promise<OverpassFormat | undefined> {

@@ -10,8 +10,7 @@ import {
 	OverpassSettings,
 	OverpassState,
 } from "../src";
-import { buildApi } from "./setup/apiBuilder";
-import { mdeoCityId, mdeoDeparmentId, montevideoBBox, montevideoId, onlyIds, uruguayId } from "./testContext";
+import { buildApi, mdeoCityId, mdeoDeparmentId, montevideoBBox, montevideoId, onlyIds, uruguayId } from "./utils";
 
 async function queryAlternatives(
 	api: OverpassApiObject,

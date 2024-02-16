@@ -1,5 +1,3 @@
-import "./setup/checkConnection";
-//
 import { OverpassStatusValidatorImp } from "@/imp/api/status";
 import { describe, expect, it } from "@jest/globals";
 import { HttpResponse, OverpassApiError, OverpassErrorType, OverpassStatus } from "../src";
@@ -19,8 +17,8 @@ const noQueriesObj: OverpassStatus = {
 	aviableSlots: Infinity,
 };
 
-function validateResult(result: HttpResponse): OverpassStatus {
-	return new OverpassStatusValidatorImp(new URL(`http://localhost`)).validate(result);
+function validateResult(result: HttpResponse, rejectOnUnexpected: boolean = false): OverpassStatus {
+	return new OverpassStatusValidatorImp(new URL(`http://localhost`), rejectOnUnexpected).validate(result);
 }
 
 function validateStatusStr(statusStr: string): OverpassStatus {
@@ -31,8 +29,11 @@ function validateStatusStr(statusStr: string): OverpassStatus {
 	});
 }
 
-async function erroringValidateStatusStr(result: HttpResponse): Promise<OverpassStatus> {
-	return validateResult(result);
+async function erroringValidateStatusStr(
+	result: HttpResponse,
+	rejectOnUnexpected: boolean = false,
+): Promise<OverpassStatus> {
+	return validateResult(result, rejectOnUnexpected);
 }
 
 describe("Status", () => {
@@ -126,6 +127,19 @@ Currently running queries (pid, space limit, time limit, start time):`;
 		});
 
 		expect(status).toEqual(noQueriesObj);
+	});
+
+	it("Should handle unexpected lines", async () => {
+		const statusPromise = erroringValidateStatusStr(
+			{
+				status: 200,
+				contentType: TEXT_PLAIN,
+				response: `${noQueriesStr}\nunexpected`,
+			},
+			true,
+		);
+
+		await expect(statusPromise).rejects.toThrow(Error);
 	});
 
 	it("Should handle unexpected missing content type", async () => {

@@ -1,7 +1,7 @@
 import { afterAll, beforeAll, expect, it } from "@jest/globals";
 import { Browser } from "puppeteer-core";
 import { OverpassApiObject, OverpassJsonOutput, OverpassSettingsNoFormat, OverpassState } from "../../src";
-import { montevideoBBox, uruguayId } from "../testContext";
+import { montevideoBBox, uruguayId } from "../utils";
 import { cleanupBrowser, runTestInBrowser, setupBrowser } from "./setupBrowser";
 
 export function browserTests() {

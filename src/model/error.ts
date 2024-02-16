@@ -8,6 +8,7 @@ export enum OverpassErrorType {
 	UnknownError,
 	MemoryExhaustionError,
 	NoAtticData,
+	ParameterError,
 }
 
 interface ErrorOptions {
@@ -15,13 +16,15 @@ interface ErrorOptions {
 }
 
 export class OverpassError extends Error {
-	constructor(
-		public readonly type: OverpassErrorType,
-		message?: string,
-		options?: ErrorOptions,
-	) {
+	constructor(public readonly type: OverpassErrorType, message?: string, options?: ErrorOptions) {
 		const typeMessage = `OverpassError: ${OverpassErrorType[type]}`;
 		super(message != null ? `[${typeMessage}] ${message}` : typeMessage, options);
+	}
+}
+
+export class OverpassParameterError extends OverpassError {
+	constructor(message?: string, options?: ErrorOptions) {
+		super(OverpassErrorType.ParameterError, message, options);
 	}
 }
 

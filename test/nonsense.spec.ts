@@ -1,5 +1,3 @@
-import "./setup/checkConnection";
-//
 import { describe, it } from "@jest/globals";
 import { OverpassError } from "../src";
 

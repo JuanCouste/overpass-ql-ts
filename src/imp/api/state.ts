@@ -115,15 +115,13 @@ export class OverpassStateImp implements OverpassStateMethods {
 	statement(statement: string): OverpassStatement;
 	statement(compile: (utils: CompileUtils) => CompiledItem): OverpassStatement;
 	statement(input: string | ((utils: CompileUtils) => CompiledItem)): OverpassStatement {
-		return typeof input == "string" ? OverpassRawStatement.FromString(input) : new OverpassRawStatement(input);
+		return new OverpassRawStatement(typeof input == "string" ? (u) => u.raw(input) : input);
 	}
 
 	composableStatement(statement: string): ComposableOverpassStatement;
 	composableStatement(compile: (utils: CompileUtils) => CompiledItem): ComposableOverpassStatement;
 	composableStatement(input: string | ((utils: CompileUtils) => CompiledItem)): ComposableOverpassStatement {
-		return typeof input == "string"
-			? OverpassComposableRawStatement.FromString(input)
-			: new OverpassComposableRawStatement(input);
+		return new OverpassComposableRawStatement(typeof input == "string" ? (u) => u.raw(input) : input);
 	}
 
 	set(

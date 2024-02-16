@@ -6,6 +6,7 @@ export class OverpassParamCompiledItem<T> implements ParamCompiledItem<T> {
 	constructor(
 		private readonly param: ParamItem<T>,
 		private readonly callback: (item: T) => CompiledItem,
+		private readonly manipulation?: (raw: string) => string,
 	) {}
 
 	public get index() {
@@ -13,6 +14,17 @@ export class OverpassParamCompiledItem<T> implements ParamCompiledItem<T> {
 	}
 
 	compile(param: T): string {
-		return (this.callback(param) as ParentCompiledItem).subParts.join("");
+		const raw = (this.callback(param) as ParentCompiledItem).subParts.join("");
+		return this.manipulation != null ? this.manipulation(raw) : raw;
+	}
+
+	withManipulation(manipulation: (raw: string) => string): CompiledItem {
+		const current = this.manipulation;
+
+		return new OverpassParamCompiledItem<T>(
+			this.param,
+			this.callback,
+			current != null ? (raw: string) => manipulation(current(raw)) : manipulation,
+		);
 	}
 }

@@ -10,6 +10,7 @@ import {
 	OverpassBoundingBox,
 	OverpassExpression,
 	OverpassGeoPos,
+	OverpassParameterError,
 	OverpassQueryTarget,
 	ParamItem,
 	ParamType,
@@ -28,6 +29,10 @@ const OP_TARGETS_STRING: string[] = enumObjectToArray<OverpassQueryTarget, strin
 	[OverpassQueryTarget.Derived]: "derived",
 });
 
+const BBOX_SEED: OverpassBoundingBox = [0, 0, 0, 0];
+
+const DIRECTIONS = ["south", "west", "north", "east"];
+
 export class OverpassCompileUtils implements CompileUtils {
 	public readonly nl: CompiledItem;
 	public readonly empty: CompiledItem;
@@ -37,67 +42,104 @@ export class OverpassCompileUtils implements CompileUtils {
 		this.empty = this.raw("");
 	}
 
-	private paramItem<T>(param: ParamItem<T>, callback: (item: T) => CompiledItem): CompiledItem {
-		return new OverpassParamCompiledItem<T>(param, callback);
+	private paramItem<T>(value: OverpassExpression<T>, callback: (item: T) => CompiledItem) {
+		if (this.isParam(value)) {
+			return new OverpassParamCompiledItem<T>(value, callback);
+		} else {
+			return callback(value);
+		}
 	}
 
 	string(value: OverpassExpression<string>): CompiledItem {
-		if (this.isParam(value)) {
-			return this.paramItem(value, (string) => this.raw(string));
-		} else {
-			return this.raw(value);
-		}
+		return this.paramItem(value, (string) => {
+			if (typeof string != "string") {
+				throw new OverpassParameterError(`Unexpected string value (${string})`);
+			}
+
+			return this.raw(string);
+		});
+	}
+
+	private isNumber(number: number): boolean {
+		return typeof number == "number" && !isNaN(number) && isFinite(number);
 	}
 
 	number(value: OverpassExpression<number>): CompiledItem {
-		if (this.isParam(value)) {
-			return this.paramItem(value, (number) => this.rawNumber(number));
-		} else {
-			return this.rawNumber(value);
-		}
+		return this.paramItem(value, (number) => {
+			if (!this.isNumber(number)) {
+				throw new OverpassParameterError(`Unexpected number value (${number})`);
+			}
+
+			return this.raw(number.toString());
+		});
 	}
 
 	target(value: OverpassExpression<OverpassQueryTarget>): CompiledItem {
-		if (this.isParam(value)) {
-			return this.paramItem(value, (target) => this.raw(OP_TARGETS_STRING[target]));
-		} else {
-			return this.raw(OP_TARGETS_STRING[value]);
-		}
+		return this.paramItem(value, (target) => {
+			if (!this.isNumber(target)) {
+				throw new OverpassParameterError(`Unexpected target value (${target})`);
+			}
+
+			if (!(target in OverpassQueryTarget)) {
+				throw new OverpassParameterError(`Unexpected target value (${target})`);
+			}
+
+			return this.raw(OP_TARGETS_STRING[target]);
+		});
 	}
 
 	regExp(value: OverpassExpression<RegExp>): CompiledItem {
-		if (this.isParam(value)) {
-			return this.paramItem(value, (regExp) => this.raw(regExp.source));
-		} else {
-			return this.raw(value.source);
-		}
+		return this.paramItem(value, (regExp) => {
+			if (!(regExp instanceof RegExp)) {
+				throw new OverpassParameterError(`Unexpected RegExp value (${regExp})`);
+			}
+
+			return this.raw(regExp.source);
+		});
 	}
 
 	bbox(value: OverpassExpression<OverpassBoundingBox>): CompiledOverpassBoundingBox {
-		if (this.isParam(value)) {
-			const seed: OverpassBoundingBox = [0, 0, 0, 0];
-			const coords = seed.map((_, i) => this.paramItem(value, (bbox) => this.rawNumber(bbox[i])));
-			return coords as CompiledOverpassBoundingBox;
-		} else {
-			return value.map((coord) => this.rawNumber(coord)) as CompiledOverpassBoundingBox;
-		}
+		const bbox = BBOX_SEED.map((_, dirIndex) =>
+			this.paramItem(value, (bbox) => {
+				if (bbox == null) {
+					throw new OverpassParameterError(`Unexpected BoundingBox value (${bbox})`);
+				}
+
+				const range = dirIndex % 2 == 0 ? 90 : 180;
+
+				if (Math.abs(bbox[dirIndex]) > range) {
+					throw new OverpassParameterError(
+						`BoundingBox ${DIRECTIONS[dirIndex]} out of range (${bbox[dirIndex]})`,
+					);
+				}
+
+				return this.number(bbox[dirIndex]);
+			}),
+		);
+
+		return bbox as CompiledOverpassBoundingBox;
+	}
+
+	private geoPosCoord(value: OverpassExpression<OverpassGeoPos>, coord: keyof OverpassGeoPos): CompiledItem {
+		return this.paramItem(value, (geoPos) => {
+			if (geoPos == null) {
+				throw new OverpassParameterError(`Unexpected GeoPos value (${geoPos})`);
+			}
+
+			return this.number(geoPos[coord]);
+		});
 	}
 
 	geoPos(value: OverpassExpression<OverpassGeoPos>): CompiledOverpassGeoPos {
-		if (this.isParam(value)) {
-			return {
-				lat: this.paramItem(value, ({ lat }) => this.rawNumber(lat)),
-				lon: this.paramItem(value, ({ lon }) => this.rawNumber(lon)),
-			};
-		} else {
-			const { lat, lon } = value;
-			return { lat: this.rawNumber(lat), lon: this.rawNumber(lon) };
-		}
+		return {
+			lat: this.geoPosCoord(value, "lat"),
+			lon: this.geoPosCoord(value, "lon"),
+		};
 	}
 
 	isParam<T>(value: OverpassExpression<T>): value is ParamItem<T> {
 		if (typeof value == "object") {
-			return "type" in value! && value.type in ParamType;
+			return value != null && "type" in value && value.type in ParamType;
 		} else {
 			return false;
 		}
@@ -105,10 +147,6 @@ export class OverpassCompileUtils implements CompileUtils {
 
 	isSpecificParam<T>(value: any, type: ActualParamType<T>): value is ParamItem<T> {
 		return this.isParam(value) && value.type == type;
-	}
-
-	private rawNumber(number: number): CompiledItem {
-		return this.raw(number.toString());
 	}
 
 	raw(string: string): CompiledItem {
