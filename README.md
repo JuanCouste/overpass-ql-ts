@@ -12,14 +12,13 @@ import { DefaultOverpassApi, OverpassOutputVerbosity } from "overpass-ql-ts";
 
 const api = DefaultOverpassApi();
 
-const result = await api.execJson(
-	(s) => [ s.node.query({ name: /^Hospital/, amenity: "hospital" }) ],
-	{ verbosity: OverpassOutputVerbosity.Geometry }
-);
+const result = await api.execJson((s) => [s.node.query({ name: /^Hospital/, amenity: "hospital" })], {
+	verbosity: OverpassOutputVerbosity.Geometry,
+});
 
 const someHospital = result.elements[0];
 
-console.log(someHospital.lat, someHospital.lon)
+console.log(someHospital.lat, someHospital.lon);
 ```
 
 ## Instalation

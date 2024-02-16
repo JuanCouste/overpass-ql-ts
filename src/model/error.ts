@@ -16,7 +16,11 @@ interface ErrorOptions {
 }
 
 export class OverpassError extends Error {
-	constructor(public readonly type: OverpassErrorType, message?: string, options?: ErrorOptions) {
+	constructor(
+		public readonly type: OverpassErrorType,
+		message?: string,
+		options?: ErrorOptions,
+	) {
 		const typeMessage = `OverpassError: ${OverpassErrorType[type]}`;
 		super(message != null ? `[${typeMessage}] ${message}` : typeMessage, options);
 	}
