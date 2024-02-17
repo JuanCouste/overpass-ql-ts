@@ -59,13 +59,13 @@ export function sanitizationBoundingBoxTests() {
 
 		const outOfRange = ranges[direction] + 1;
 
-		[outOfRange, -outOfRange].forEach((outOfRange) => {
+		[+1, -1].forEach((sign) => {
 			const bbox: OverpassBoundingBox = [1, 1, 1, 1];
-			bbox[dirIndex] = outOfRange;
-			const sign = outOfRange >= 0 ? "+" : "-";
+			bbox[dirIndex] = sign * outOfRange;
+			const signStr = sign >= 0 ? "+" : "-";
 
 			ItSymetrically(
-				`Should error when bbox ${direction} out of range [${sign}]`,
+				`Should error when bbox ${direction} out of range [${signStr}]`,
 				SanitizationAdapter,
 				getInside,
 				[{ exp: bbox, type: ParamType.BoundingBox }],
