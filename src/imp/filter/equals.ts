@@ -9,8 +9,6 @@ export class OverpassEqualsFilter implements OverpassFilter {
 
 	compile(u: CompileUtils): CompiledItem {
 		const op = u.raw(this.negated ? "!=" : "=");
-		const prop = u.string(this.prop);
-		const value = u.string(this.value);
-		return u.template`[${prop}${op}"${value}"]`;
+		return u.template`[${u.qString(this.prop)}${op}${u.qString(this.value)}]`;
 	}
 }

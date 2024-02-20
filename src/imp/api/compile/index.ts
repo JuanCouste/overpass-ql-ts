@@ -67,6 +67,16 @@ export class OverpassCompileUtils implements CompileUtils {
 		});
 	}
 
+	qString(value: OverpassExpression<string>): CompiledItem {
+		return this.paramItem(value, (string) => {
+			if (typeof string != "string") {
+				throw new OverpassParameterError(`Unexpected string value (${string})`);
+			}
+
+			return this.template`"${this.raw(string)}"`;
+		});
+	}
+
 	private isNumber(number: number): boolean {
 		return typeof number == "number" && !isNaN(number) && isFinite(number);
 	}
@@ -101,7 +111,7 @@ export class OverpassCompileUtils implements CompileUtils {
 				throw new OverpassParameterError(`Unexpected RegExp value (${regExp})`);
 			}
 
-			return this.raw(regExp.source);
+			return this.template`"${this.raw(regExp.source)}"`;
 		});
 	}
 

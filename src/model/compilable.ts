@@ -45,6 +45,11 @@ export interface CompileUtils {
 	 * @returns the prepared string without quotes
 	 */
 	string(value: OverpassExpression<string>): CompiledItem;
+	/**
+	 * @param value A string that should be sanitized
+	 * @returns the prepared string with quotes included
+	 */
+	qString(value: OverpassExpression<string>): CompiledItem;
 	/** @param value A number that should be sanitized */
 	number(value: OverpassExpression<number>): CompiledItem;
 	/** @param value A regexp that should be prepared */
