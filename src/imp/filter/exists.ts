@@ -7,7 +7,7 @@ export class OverpassExistsFilter implements OverpassFilter {
 	) {}
 
 	compile(u: CompileUtils): CompiledItem {
-		const prop = u.string(this.prop);
+		const prop = u.qString(this.prop);
 		return this.negated ? u.template`[!${prop}]` : u.template`[${prop}]`;
 	}
 }

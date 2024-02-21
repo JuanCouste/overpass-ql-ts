@@ -11,7 +11,7 @@ export function browserTests() {
 
 	it("Should fetch status in browser script", async () => {
 		const status = await runTestInBrowser(browser, async (module, url) => {
-			const api: OverpassApiObject = module.DefaultOverpassApi(url);
+			const api: OverpassApiObject = module.FetchOverpassApi(url);
 			return await api.status();
 		});
 
@@ -26,7 +26,7 @@ export function browserTests() {
 		const { elements } = await runTestInBrowser(
 			browser,
 			async (module, url, montevideoBBox) => {
-				const api: OverpassApiObject = module.DefaultOverpassApi(url);
+				const api: OverpassApiObject = module.FetchOverpassApi(url);
 				const settings: OverpassSettingsNoFormat = { globalBoundingBox: montevideoBBox };
 				const result = await api.execJson(
 					(s: OverpassState) => [s.relation.query({ name: "Uruguay" })],

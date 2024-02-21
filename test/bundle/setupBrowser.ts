@@ -55,7 +55,7 @@ export async function setupBrowser(): Promise<Browser> {
 export async function cleanupBrowser(browser: Browser) {
 	await browser.close();
 	server.close();
-	await fs.rmdir(PUPPETEER_FOLDER, { recursive: true });
+	await fs.rm(PUPPETEER_FOLDER, { recursive: true });
 }
 
 export async function setupPage(browser: Browser) {

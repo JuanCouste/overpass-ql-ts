@@ -20,6 +20,9 @@ export function creationTests() {
 	const fetchFn = (() => {}) as unknown as typeof fetch;
 	const XmlClass = class {} as typeof XMLHttpRequest;
 
+	delete partialGlobal.fetch;
+	delete partialGlobal.XMLHttpRequest;
+
 	it(`Should create an api with ${FetchRequestAdapter.name}`, () => {
 		globalThis.fetch = fetchFn;
 

@@ -49,4 +49,27 @@ export function sanitizationGeoPosTests() {
 			ExpectParamteterError,
 		);
 	});
+
+	const ranges: { [K in keyof OverpassGeoPos]: number } = {
+		lat: 90,
+		lon: 180,
+	};
+
+	const coords: (keyof OverpassGeoPos)[] = ["lat", "lon"];
+
+	[+1, -1].forEach((sign) => {
+		coords.forEach((coord) => {
+			const outOfRange = sign * (ranges[coord] + 1);
+			const geoPos: OverpassGeoPos = { lat: 1, lon: 1, ...{ [coord]: outOfRange } };
+			const signStr = outOfRange >= 0 ? "+" : "-";
+
+			ItSymetrically(
+				`Should error when geopos ${coord} is out of range [${signStr}]`,
+				SanitizationAdapter,
+				getInside,
+				[{ exp: geoPos, type: ParamType.GeoPos }],
+				ExpectParamteterError,
+			);
+		});
+	});
 }

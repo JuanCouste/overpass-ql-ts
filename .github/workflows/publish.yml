@@ -1,0 +1,96 @@
+name: Publish
+run-name: ${{ github.actor }} is publishing a new version
+
+on:
+  workflow_dispatch:
+    inputs:
+      version-type:
+        type: choice
+        options:
+          - "major"
+          - "minor"
+          - "patch"
+        description: The type of version to be released
+        required: true
+
+env:
+  OVERPASS_QL_TS_URL: "http://localhost/api/interpreter"
+  OVERPASS_QL_BUNDLING: "Yes"
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    services:
+      overpasstestapi:
+        image: juancouste/overpass-test-api:1.0
+        ports:
+          - 80:80
+
+    steps:
+      - name: Ensure master
+        if: github.ref != 'refs/heads/master'
+        run: |
+          echo "This workflow should only be executed on master"
+          exit 1
+
+      # eventually replace with git clone
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Ensure tests passing
+        run: npx jest --coverage
+
+      - name: Update version
+        run: |
+          npm --no-git-tag-version version ${{ github.event.inputs.version-type }}
+          newversion=$(npm pkg get version | tr -d \")
+          echo "PACKAGE-VERSION=${newversion}" >> $GITHUB_ENV
+
+      - name: Build bundles & Update README.md
+        run: |
+          npm run build
+          node --loader ts-node/esm ./test/setup/updateReadme.mts ${{ env.PACKAGE-VERSION }}
+          zip lib/overpass-ql-ts.zip package.json README.md LICENSE lib/types-bundle.d.ts lib/esm-bundle.mjs lib/cjs-bundle.mjs
+
+      - name: Commit version change
+        run: |
+          git stage package.json package-lock.json README.md
+          git config user.name "Release script"
+          git config user.email ""
+          git commit -m "v${{ env.PACKAGE-VERSION }}"
+        
+      # eventually replace with git push
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: master
+
+      - name: Create Github Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v${{ env.PACKAGE-VERSION }}
+          generate_release_notes: true
+          files: lib/overpass-ql-ts.zip
+
+      - run: npm publish --provenance
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Update Coveralls
+        uses: coverallsapp/github-action@v2.2.3
+        with:
+          file: ./coverage/lcov.info
+          flag-name: v${{ env.PACKAGE-VERSION }}

@@ -33,6 +33,13 @@ const BBOX_SEED: OverpassBoundingBox = [0, 0, 0, 0];
 
 const DIRECTIONS = ["south", "west", "north", "east"];
 
+enum Axis {
+	Lat,
+	Lon,
+}
+
+const AXIS_RANGE: { [K in Axis]: number } = { [Axis.Lat]: 90, [Axis.Lon]: 180 };
+
 export class OverpassCompileUtils implements CompileUtils {
 	public readonly nl: CompiledItem;
 	public readonly empty: CompiledItem;
@@ -57,6 +64,16 @@ export class OverpassCompileUtils implements CompileUtils {
 			}
 
 			return this.raw(string);
+		});
+	}
+
+	qString(value: OverpassExpression<string>): CompiledItem {
+		return this.paramItem(value, (string) => {
+			if (typeof string != "string") {
+				throw new OverpassParameterError(`Unexpected string value (${string})`);
+			}
+
+			return this.template`"${this.raw(string)}"`;
 		});
 	}
 
@@ -94,39 +111,47 @@ export class OverpassCompileUtils implements CompileUtils {
 				throw new OverpassParameterError(`Unexpected RegExp value (${regExp})`);
 			}
 
-			return this.raw(regExp.source);
+			return this.template`"${this.raw(regExp.source)}"`;
 		});
 	}
 
-	bbox(value: OverpassExpression<OverpassBoundingBox>): CompiledOverpassBoundingBox {
+	private isOutOfRange(number: number, axis: Axis): boolean {
+		return Math.abs(number) > AXIS_RANGE[axis];
+	}
+
+	bbox(bboxExp: OverpassExpression<OverpassBoundingBox>): CompiledOverpassBoundingBox {
 		const bbox = BBOX_SEED.map((_, dirIndex) =>
-			this.paramItem(value, (bbox) => {
+			this.paramItem(bboxExp, (bbox) => {
 				if (bbox == null) {
 					throw new OverpassParameterError(`Unexpected BoundingBox value (${bbox})`);
 				}
 
-				const range = dirIndex % 2 == 0 ? 90 : 180;
+				const value = bbox[dirIndex];
 
-				if (Math.abs(bbox[dirIndex]) > range) {
-					throw new OverpassParameterError(
-						`BoundingBox ${DIRECTIONS[dirIndex]} out of range (${bbox[dirIndex]})`,
-					);
+				if (this.isOutOfRange(value, dirIndex % 2 == 0 ? Axis.Lat : Axis.Lon)) {
+					throw new OverpassParameterError(`BoundingBox ${DIRECTIONS[dirIndex]} out of range (${value})`);
 				}
 
-				return this.number(bbox[dirIndex]);
+				return this.number(value);
 			}),
 		);
 
 		return bbox as CompiledOverpassBoundingBox;
 	}
 
-	private geoPosCoord(value: OverpassExpression<OverpassGeoPos>, coord: keyof OverpassGeoPos): CompiledItem {
-		return this.paramItem(value, (geoPos) => {
+	private geoPosCoord(geoPosExp: OverpassExpression<OverpassGeoPos>, coord: keyof OverpassGeoPos): CompiledItem {
+		return this.paramItem(geoPosExp, (geoPos) => {
 			if (geoPos == null) {
 				throw new OverpassParameterError(`Unexpected GeoPos value (${geoPos})`);
 			}
 
-			return this.number(geoPos[coord]);
+			const value = geoPos[coord];
+
+			if (this.isOutOfRange(value, coord == "lat" ? Axis.Lat : Axis.Lon)) {
+				throw new OverpassParameterError(`GeoPos ${coord} out of range (${value})`);
+			}
+
+			return this.number(value);
 		});
 	}
 

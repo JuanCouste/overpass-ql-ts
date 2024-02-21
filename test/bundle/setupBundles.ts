@@ -45,5 +45,5 @@ export async function setupBundles() {
 }
 
 export async function cleanupBundles() {
-	await fs.rmdir(BUNDLE_FOLDER, { recursive: true });
+	await fs.rm(BUNDLE_FOLDER, { recursive: true });
 }
