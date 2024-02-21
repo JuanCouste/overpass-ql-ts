@@ -30,7 +30,7 @@ npm install overpass-ql-ts
 
 ## Features & "Roadmap"
 
-The package is usable and has ~100% test coverage, though many features we intend to implement are WIP.
+The package is usable though many features we intend to implement are WIP.
 
 ### This package can:
 
