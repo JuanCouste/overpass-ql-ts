@@ -31,8 +31,8 @@
 		"build": "ts-patch install && rollup --config rollup.config.ts --configPlugin @rollup/plugin-typescript",
 		"check": "ts-patch install && tsc --watch --noEmit",
 		"test": "jest",
-		"overpass-container": "ts-node --esm ./test/setup/overpass.ts",
-		"test-in-container": "ts-node --esm ./test/setup/test.ts"
+		"overpass-container": "ts-node --esm ./test/setup/overpass.mts",
+		"test-in-container": "ts-node --esm ./test/setup/test.mts"
 	},
 	"dependencies": {},
 	"devDependencies": {
