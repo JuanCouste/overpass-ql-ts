@@ -4,7 +4,7 @@ This package aims to make creating dynamic overpassql queries easier by providin
 You wont need to worry about making small mistakes with syntax, and neither about changing existing queries.
 
 [![npm version](https://badgen.net/npm/v/overpass-ql-ts)](https://npmjs.org/package/overpass-ql-ts)
-[![install size](https://packagephobia.com/badge?p=overpass-ql-ts@1.4.0)](https://packagephobia.com/result?p=overpass-ql-ts@1.4.0)
+[![install size](https://packagephobia.com/badge?p=overpass-ql-ts@1.4.1)](https://packagephobia.com/result?p=overpass-ql-ts@1.4.1)
 [![tests](https://github.com/JuanCouste/overpass-ql-ts/actions/workflows/testing.yml/badge.svg)](https://github.com/JuanCouste/overpass-ql-ts/actions/workflows/testing.yml)
 [![Coverage Status](https://coveralls.io/repos/github/JuanCouste/overpass-ql-ts/badge.svg?branch=master)](https://coveralls.io/github/JuanCouste/overpass-ql-ts?branch=master)
 
