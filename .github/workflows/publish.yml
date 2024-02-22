@@ -55,7 +55,7 @@ jobs:
         run: npm ci
 
       - name: Ensure tests passing
-        run: npx jest --coverage
+        run: npm run test
 
       - name: Update version
         run: |
@@ -66,8 +66,8 @@ jobs:
       - name: Build bundles & Update README.md
         run: |
           npm run build
-          node --loader ts-node/esm ./test/setup/updateReadme.mts ${{ env.PACKAGE-VERSION }}
-          zip lib/overpass-ql-ts.zip package.json README.md LICENSE lib/types-bundle.d.ts lib/esm-bundle.mjs lib/cjs-bundle.mjs
+          node ./scripts/run updateReadme.mts ${{ env.PACKAGE-VERSION }}
+          zip lib/overpass-ql-ts.zip package.json README.md LICENSE lib/types-bundle.d.ts lib/esm-bundle.mjs lib/cjs-bundle.cjs
 
       - name: Commit version change
         run: |

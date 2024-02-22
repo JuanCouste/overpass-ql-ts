@@ -30,21 +30,22 @@
 	"scripts": {
 		"build": "ts-patch install && rollup --config rollup.config.ts --configPlugin @rollup/plugin-typescript",
 		"check": "ts-patch install && tsc --watch --noEmit",
-		"test": "jest",
-		"overpass-container": "ts-node --esm ./test/setup/overpass.mts",
-		"test-in-container": "ts-node --esm ./test/setup/test.mts"
+		"test": "jest --coverage && node ./scripts/run coverage.mts",
+		"overpass-container": "node ./scripts/run overpass.mts",
+		"test-in-container": "node ./scripts/run test.mts"
 	},
-	"dependencies": {},
 	"devDependencies": {
 		"@jest/globals": "^29.7.0",
 		"@rollup/plugin-commonjs": "^25.0.7",
 		"@rollup/plugin-node-resolve": "^15.2.3",
 		"@rollup/plugin-typescript": "^11.1.5",
 		"@types/jest": "^29.5.8",
+		"@types/lcov-parse": "^1.0.2",
 		"@types/node": "^18.11.9",
 		"@types/node-fetch": "^2.6.9",
 		"dotenv": "^16.3.1",
 		"jest": "^29.7.0",
+		"lcov-parse": "^1.0.0",
 		"node-fetch": "^2.6.9",
 		"puppeteer-core": "^18.2.1",
 		"rollup": "^2.79.1",

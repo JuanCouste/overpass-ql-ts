@@ -11,7 +11,7 @@ export const baseConfig: JestConfigWithTsJest = {
 	// Shorter may not complete for main overpass api
 	testTimeout: 2000,
 	coverageDirectory: "coverage",
-	coveragePathIgnorePatterns: ["test/", ".*\\.config\\.ts"],
+	coveragePathIgnorePatterns: ["test/", "scripts/", ".*\\.config\\.ts"],
 	openHandlesTimeout: 0,
 	transform: {
 		// Warns about moduleInterop
@@ -30,9 +30,9 @@ export default bunchTestsInOneFile
 			...baseConfig,
 			testMatch: ["**/test.spec.ts"],
 			testPathIgnorePatterns: [],
-		}
+	  }
 	: {
 			...baseConfig,
 			testMatch: ["**/*.spec.ts"],
 			testPathIgnorePatterns: ["test/test.spec.ts"],
-		};
+	  };

@@ -1,4 +1,4 @@
-import { ChildProcess, exec as childExec } from "child_process";
+import { exec as childExec } from "child_process";
 import { networkName, overpassContainerName, pipeChildStdio, run, waitFor } from "./containers.mjs";
 
 const imageName = "juancouste/overpass-test-api:1.0";
@@ -35,39 +35,9 @@ async function main() {
 
 	pipeChildStdio(container);
 
-	setupTermination(container);
-
 	await waitFor(container);
 
 	console.log("Container was terminated");
-}
-
-function setupTermination(container: ChildProcess) {
-	async function interrupt(signal: NodeJS.Signals) {
-		console.log(`Process was interrupted ${signal}`);
-		container.kill(signal);
-		await cleanup();
-		console.log("Exiting");
-		process.exit(0);
-	}
-
-	async function cleanup() {
-		console.log("Terminatning container ...");
-		try {
-			await run(`docker stop ${overpassContainerName}`);
-			console.log("Container was terminated, removing ...");
-			await run(`docker rm ${overpassContainerName}`);
-			console.log("Done");
-		} catch (error) {
-			console.error(error);
-		}
-	}
-
-	process.on("SIGINT", interrupt);
-	process.on("SIGTERM", interrupt);
-	process.on("SIGKILL", interrupt);
-	process.on("uncaughtException", cleanup);
-	process.on("exit", cleanup);
 }
 
 main().then(console.log, console.error);
