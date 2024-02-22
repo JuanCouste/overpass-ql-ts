@@ -7,7 +7,7 @@ export const baseConfig: JestConfigWithTsJest = {
 	preset: "ts-jest",
 	testEnvironment: "node",
 	moduleNameMapper: { "^@/(.*)$": "<rootDir>/src/$1" },
-	setupFiles: ["./test/setup/setup.ts"],
+	setupFiles: ["./test/setup.ts"],
 	// Shorter may not complete for main overpass api
 	testTimeout: 2000,
 	coverageDirectory: "coverage",
