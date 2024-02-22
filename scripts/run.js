@@ -34,6 +34,6 @@ const argArray = process.argv
 
 try {
 	execSync(`node ./scripts/lib/${name}.mjs ${argArray}`, { stdio: "inherit" });
-} catch(error) {
-	process.exit(1)
+} catch (error) {
+	process.exit(1);
 }
