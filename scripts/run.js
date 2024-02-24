@@ -25,14 +25,14 @@ if (emitResult.diagnostics.length > 0) {
 		);
 	});
 
-	process.exit(1)
+	process.exit(1);
 }
 
 try {
 	const { main } = await import(`./lib/${name}.mjs`);
 
-	await main(process.argv.slice(3))
-} catch(error) {
+	await main(process.argv.slice(3));
+} catch (error) {
 	console.error(error);
-	process.exit(1)
+	process.exit(1);
 }
