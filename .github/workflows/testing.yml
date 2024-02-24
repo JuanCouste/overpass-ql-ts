@@ -23,7 +23,7 @@ jobs:
 
     services:
       overpasstestapi:
-        image: juancouste/overpass-test-api:1.0
+        image: juancouste/overpass-test-api:1.3
         ports:
           - 80:80
 
@@ -35,8 +35,8 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install Dependencies
+      - name: Install dependencies
         run: npm ci
 
-      - name: Run Jest Tests
+      - name: Run jest tests
         run: npm run test

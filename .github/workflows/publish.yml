@@ -16,6 +16,7 @@ on:
 env:
   OVERPASS_QL_TS_URL: "http://localhost/api/interpreter"
   OVERPASS_QL_BUNDLING: "Yes"
+  PACKAGE-VERSION: null
 
 jobs:
   publish:
@@ -27,16 +28,20 @@ jobs:
 
     services:
       overpasstestapi:
-        image: juancouste/overpass-test-api:1.0
+        image: juancouste/overpass-test-api:1.3
         ports:
           - 80:80
 
     steps:
-      - name: Ensure master
+      - name: npm token preconditon
+        env: 
+          npm_auth_token_env: ${{ secrets.NPM_AUTH_TOKEN }}
+        if: ${{ env.npm_auth_token_env == '' }}
+        run: echo "Secret NPM_AUTH_TOKEN is not defined" && exit 1
+
+      - name: Master branch precondition
         if: github.ref != 'refs/heads/master'
-        run: |
-          echo "This workflow should only be executed on master"
-          exit 1
+        run: echo "This workflow should only be executed on master" && exit 1
 
       # eventually replace with git clone
       - name: Checkout
@@ -51,7 +56,7 @@ jobs:
           node-version: 20
           registry-url: 'https://registry.npmjs.org'
 
-      - name: Install Dependencies
+      - name: Install dependencies
         run: npm ci
 
       - name: Ensure tests passing
@@ -94,7 +99,7 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
 
-      - name: Update Coveralls
+      - name: Update coveralls
         uses: coverallsapp/github-action@v2.2.3
         with:
           file: ./coverage/lcov.info
