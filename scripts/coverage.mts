@@ -18,7 +18,7 @@ function uncovered(item: LcovItem): boolean {
 	return item.hit < item.found;
 }
 
-async function main() {
+export async function main(args: string[]) {
 	const files = await parseLcov("./coverage/lcov.info");
 
 	const uncoveredFiles = files.filter(
@@ -54,5 +54,3 @@ async function main() {
 		process.exit(1);
 	}
 }
-
-main();

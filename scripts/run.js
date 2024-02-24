@@ -1,4 +1,3 @@
-import { execSync } from "child_process";
 import { parse } from "path";
 import ts from "typescript";
 
@@ -25,15 +24,15 @@ if (emitResult.diagnostics.length > 0) {
 			`${diagnostic.fileName}(${diagnostic.line + 1},${diagnostic.character + 1}): ${diagnostic.messageText}`,
 		);
 	});
+
+	process.exit(1)
 }
 
-const argArray = process.argv
-	.slice(3)
-	.map((arg) => `"${arg}"`)
-	.join(" ");
-
 try {
-	execSync(`node ./scripts/lib/${name}.mjs ${argArray}`, { stdio: "inherit" });
-} catch (error) {
-	process.exit(1);
+	const { main } = await import(`./lib/${name}.mjs`);
+
+	await main(process.argv.slice(3))
+} catch(error) {
+	console.error(error);
+	process.exit(1)
 }

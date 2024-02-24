@@ -7,7 +7,7 @@ const envVariables = {
 	OVERPASS_ALLOW_DUPLICATE_QUERIES: "yes",
 };
 
-async function main() {
+export async function main(args: string[]) {
 	console.log("[1] Pulling image");
 	await run(`docker pull ${imageName}`, { pipeStdio: true });
 
@@ -39,5 +39,3 @@ async function main() {
 
 	console.log("Container was terminated");
 }
-
-main().then(console.log, console.error);
