@@ -1,4 +1,4 @@
-import { OverpassBoundingBox } from "@/model";
+import { OverpassBoundingBox, OverpassExpression } from "@/model";
 
 export enum OverpassFormat {
 	XML,
@@ -22,7 +22,7 @@ export interface OverpassSettingsBase<F extends OverpassFormat> {
 	 * So, if you send a really complex big query, prefix it with a higher value; e.g., "3600" for an hour.
 	 * And ensure that your client is patient enough to not abort due to a timeout in itself.
 	 */
-	readonly timeout?: number;
+	readonly timeout?: OverpassExpression<number>;
 	/**
 	 * Non-negative integer. Default value is 536870912 (512 MB).
 	 * This parameter indicates the maximum allowed memory for the query in bytes RAM on the server, as expected by the user.
@@ -33,7 +33,7 @@ export interface OverpassSettingsBase<F extends OverpassFormat> {
 	 * e.g. requests for 2GB will likely be rejected during peak hours, as they don't fit into the overall resource management.
 	 * Technically speaking, maxsize is treated as a 64bit signed number.
 	 */
-	readonly maxSize?: number;
+	readonly maxSize?: OverpassExpression<number>;
 	/** The output format used to return OSM data. Default is {@link OverpassFormat.XML}. */
 	readonly format?: F;
 	/**
@@ -45,7 +45,7 @@ export interface OverpassSettingsBase<F extends OverpassFormat> {
 	 * and each value is separated with a comma.
 	 * The values are, in order: southern-most latitude, western-most longitude, northern-most latitude, eastern-most longitude.
 	 */
-	readonly globalBoundingBox?: OverpassBoundingBox;
+	readonly globalBoundingBox?: OverpassExpression<OverpassBoundingBox>;
 	/**
 	 * Attic: OSM data that is no longer valid in an up-to-date dataset
 	 * Modifies an Overpass QL query to examine attic data,
@@ -53,7 +53,7 @@ export interface OverpassSettingsBase<F extends OverpassFormat> {
 	 * This setting can be useful, for example, to reconstruct data that has been vandalized,
 	 * or simply to view an object as it existed in the database at some point in the past.
 	 */
-	readonly date?: Date;
+	readonly date?: OverpassExpression<Date>;
 	/**
 	 * The diff setting lets the database determine the difference of two queries at different points in time.
 	 * This is useful for example to deltas for database extracts.

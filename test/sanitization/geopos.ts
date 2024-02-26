@@ -1,7 +1,6 @@
-import { expect } from "@jest/globals";
 import { OverpassExpression, OverpassGeoPos, OverpassState, OverpassStatement, ParamType } from "../../src";
-import { ItSymetrically } from "../utils";
-import { ExpectParamteterError, SanitizationAdapter } from "./adapter";
+import { ItSymetrically, StaticAdapter } from "../utils";
+import { ExpectParamteterError, ExpectResolves } from "./adapter";
 
 function getInside(state: OverpassState, geoPos: OverpassExpression<OverpassGeoPos>): OverpassStatement {
 	return state.node.inside([geoPos]);
@@ -10,15 +9,15 @@ function getInside(state: OverpassState, geoPos: OverpassExpression<OverpassGeoP
 export function sanitizationGeoPosTests() {
 	ItSymetrically(
 		"Should be fine when geopos is fine",
-		SanitizationAdapter,
+		StaticAdapter,
 		getInside,
 		[{ exp: { lat: 1, lon: 1 }, type: ParamType.GeoPos }],
-		async (result) => await expect(result).resolves.toHaveProperty("elements"),
+		ExpectResolves,
 	);
 
 	ItSymetrically(
 		"Should error when geopos is undefined",
-		SanitizationAdapter,
+		StaticAdapter,
 		getInside,
 		[{ exp: undefined! as OverpassGeoPos, type: ParamType.GeoPos }],
 		ExpectParamteterError,
@@ -26,7 +25,7 @@ export function sanitizationGeoPosTests() {
 
 	ItSymetrically(
 		"Should error when geopos is null",
-		SanitizationAdapter,
+		StaticAdapter,
 		getInside,
 		[{ exp: null! as OverpassGeoPos, type: ParamType.GeoPos }],
 		ExpectParamteterError,
@@ -35,7 +34,7 @@ export function sanitizationGeoPosTests() {
 	Array<number>(NaN, Infinity, null!, undefined!).forEach((number) => {
 		ItSymetrically(
 			`Should error when geopos lat is ${number}`,
-			SanitizationAdapter,
+			StaticAdapter,
 			getInside,
 			[{ exp: { lat: number, lon: 1 }, type: ParamType.GeoPos }],
 			ExpectParamteterError,
@@ -43,7 +42,7 @@ export function sanitizationGeoPosTests() {
 
 		ItSymetrically(
 			`Should error when geopos lon is ${number}`,
-			SanitizationAdapter,
+			StaticAdapter,
 			getInside,
 			[{ exp: { lat: 1, lon: number }, type: ParamType.GeoPos }],
 			ExpectParamteterError,
@@ -65,7 +64,7 @@ export function sanitizationGeoPosTests() {
 
 			ItSymetrically(
 				`Should error when geopos ${coord} is out of range [${signStr}]`,
-				SanitizationAdapter,
+				StaticAdapter,
 				getInside,
 				[{ exp: geoPos, type: ParamType.GeoPos }],
 				ExpectParamteterError,

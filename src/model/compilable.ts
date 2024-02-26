@@ -54,6 +54,7 @@ export interface CompileUtils {
 	number(value: OverpassExpression<number>): CompiledItem;
 	/** @param value A regexp that should be prepared */
 	regExp(value: OverpassExpression<RegExp>): CompiledItem;
+	date(value: OverpassExpression<Date>): CompiledItem;
 	/**
 	 * @param value A bbox that should be prepared
 	 * @returns the respective prepared parts [s, w, n, e]

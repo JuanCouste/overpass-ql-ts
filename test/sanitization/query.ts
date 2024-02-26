@@ -1,7 +1,6 @@
-import { expect } from "@jest/globals";
 import { OverpassExpression, OverpassState, OverpassStatement, ParamType } from "../../src";
-import { ItSymetrically } from "../utils";
-import { ExpectParamteterError, SanitizationAdapter } from "./adapter";
+import { ItSymetrically, StaticAdapter } from "../utils";
+import { ExpectParamteterError, ExpectResolves } from "./adapter";
 
 function FilterObjectEquals(state: OverpassState, name: OverpassExpression<string>): OverpassStatement {
 	return state.node.query({ name: name });
@@ -14,15 +13,15 @@ function FilterArrayEquals(state: OverpassState, name: OverpassExpression<string
 export function sanitizationQueryTests() {
 	ItSymetrically(
 		"Should be fine when equals filter is fine",
-		SanitizationAdapter,
+		StaticAdapter,
 		FilterObjectEquals,
 		[{ exp: "aName", type: ParamType.String }],
-		async (result) => await expect(result).resolves.toHaveProperty("elements"),
+		ExpectResolves,
 	);
 
 	ItSymetrically(
 		"Should error when equals filter is null",
-		SanitizationAdapter,
+		StaticAdapter,
 		FilterObjectEquals,
 		[{ exp: null! as string, type: ParamType.String }],
 		ExpectParamteterError,
@@ -30,7 +29,7 @@ export function sanitizationQueryTests() {
 
 	ItSymetrically(
 		"Should error when equals filter is undefined",
-		SanitizationAdapter,
+		StaticAdapter,
 		FilterObjectEquals,
 		[{ exp: undefined! as string, type: ParamType.String }],
 		ExpectParamteterError,
@@ -38,7 +37,7 @@ export function sanitizationQueryTests() {
 
 	ItSymetrically(
 		"Should error when equals filter is null in tuple array",
-		SanitizationAdapter,
+		StaticAdapter,
 		FilterArrayEquals,
 		[{ exp: null! as string, type: ParamType.String }],
 		ExpectParamteterError,

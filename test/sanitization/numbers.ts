@@ -1,7 +1,6 @@
-import { expect } from "@jest/globals";
 import { OverpassExpression, OverpassState, OverpassStatement, ParamType } from "../../src";
-import { ItSymetrically } from "../utils";
-import { ExpectParamteterError, SanitizationAdapter } from "./adapter";
+import { ItSymetrically, StaticAdapter } from "../utils";
+import { ExpectParamteterError, ExpectResolves } from "./adapter";
 
 function getNodeById(state: OverpassState, id: OverpassExpression<number>): OverpassStatement {
 	return state.node.byId(id);
@@ -10,16 +9,16 @@ function getNodeById(state: OverpassState, id: OverpassExpression<number>): Over
 export function sanitizationNumberTests() {
 	ItSymetrically(
 		"Should be fine when number is fine",
-		SanitizationAdapter,
+		StaticAdapter,
 		getNodeById,
 		[{ exp: 1, type: ParamType.Number }],
-		async (result) => await expect(result).resolves.toHaveProperty("elements"),
+		ExpectResolves,
 	);
 
 	Array<number>(NaN, Infinity, null!, undefined!).forEach((number) => {
 		ItSymetrically(
 			`Should error when number is ${number}`,
-			SanitizationAdapter,
+			StaticAdapter,
 			getNodeById,
 			[{ exp: number, type: ParamType.Number }],
 			ExpectParamteterError,
@@ -28,7 +27,7 @@ export function sanitizationNumberTests() {
 
 	ItSymetrically(
 		"Should error when parameter is not of number type",
-		SanitizationAdapter,
+		StaticAdapter,
 		getNodeById,
 		[{ exp: "1" as unknown as number, type: ParamType.Number }],
 		ExpectParamteterError,

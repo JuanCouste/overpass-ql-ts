@@ -44,7 +44,7 @@ export type SymetricCheck<S extends OverpassSettingsNoFormat, O extends Overpass
 	promise: Promise<OverpassApiOutput<OverpassJsonSettings<S>, O>>,
 ) => Promise<void>;
 
-export async function DoSymetricTest<
+async function DoSymetricTest<
 	Args extends AnyParamValue[],
 	S extends OverpassSettingsNoFormat,
 	O extends OverpassOutputOptions,
@@ -55,8 +55,8 @@ export async function DoSymetricTest<
 		...args: SymetricArgsExpression<Args>
 	) => OverpassStatement[] | OverpassStatement,
 	symetricArgs: AnySymetricArguments<Args>,
-	options: O | undefined,
-	settings: S | undefined,
+	optionsBuilder: ((...args: SymetricArgsExpression<Args>) => O) | undefined,
+	settingsBuilder: ((...args: SymetricArgsExpression<Args>) => S) | undefined,
 	check: SymetricCheck<S, O>,
 ) {
 	const objectArgs = symetricArgs.map(anySymetricArgToObject) as SymetricArgumentsObject<Args>;
@@ -67,29 +67,63 @@ export async function DoSymetricTest<
 
 	await Promise.all<void>(
 		[
-			async () => api.execJson((s) => statementBuilder(s, ...args), options, settings),
-			async () => api.createFunction(types, statementBuilder, options, settings)(...args),
+			async () =>
+				api.execJson(
+					(s) => statementBuilder(s, ...args),
+					optionsBuilder?.(...args),
+					settingsBuilder?.(...args),
+				),
+			async () =>
+				api.createFunction(types, (state, ...args) => {
+					const stm = statementBuilder(state, ...args);
+					return {
+						statements: stm instanceof Array ? stm : [stm],
+						outpOptions: optionsBuilder?.(...args),
+						settings: settingsBuilder?.(...args),
+					};
+				})(...args),
 		].map((funct) => check(funct())),
 	);
 }
 
-export function DoSymetricPlainTest<
-	Args extends AnyParamValue[],
-	S extends OverpassSettingsNoFormat,
-	O extends OverpassOutputOptions,
->(
+export type ItSymetricallyFunction = <Args extends AnyParamValue[]>(
+	testName: string,
 	apiBuilder: () => OverpassApiObject,
 	statementBuilder: (
 		state: OverpassState,
 		...args: SymetricArgsExpression<Args>
 	) => OverpassStatement[] | OverpassStatement,
 	symetricArgs: AnySymetricArguments<Args>,
-	check: SymetricCheck<S, O>,
-) {
-	return DoSymetricTest(apiBuilder, statementBuilder, symetricArgs, undefined, undefined, check);
+	check: SymetricCheck<OverpassSettingsNoFormat, OverpassOutputOptions>,
+) => void;
+
+function makeItSymetrically(itFunction: (testName: string, test: () => Promise<void>) => void): ItSymetricallyFunction {
+	return <Args extends AnyParamValue[]>(
+		testName: string,
+		apiBuilder: () => OverpassApiObject,
+		statementBuilder: (
+			state: OverpassState,
+			...args: SymetricArgsExpression<Args>
+		) => OverpassStatement[] | OverpassStatement,
+		symetricArgs: AnySymetricArguments<Args>,
+		check: SymetricCheck<OverpassSettingsNoFormat, OverpassOutputOptions>,
+	) => {
+		itFunction(
+			testName,
+			async () => await DoSymetricTest(apiBuilder, statementBuilder, symetricArgs, undefined, undefined, check),
+		);
+	};
 }
 
-export function ItSymetrically<
+export const ItSymetrically = makeItSymetrically(it) as {
+	only: ItSymetricallyFunction;
+	skip: ItSymetricallyFunction;
+} & ItSymetricallyFunction;
+
+ItSymetrically.only = makeItSymetrically(it.only);
+ItSymetrically.skip = makeItSymetrically(it.skip);
+
+export type ItSymetricallyWOptsFunction = <
 	Args extends AnyParamValue[],
 	S extends OverpassSettingsNoFormat,
 	O extends OverpassOutputOptions,
@@ -100,31 +134,38 @@ export function ItSymetrically<
 		state: OverpassState,
 		...args: SymetricArgsExpression<Args>
 	) => OverpassStatement[] | OverpassStatement,
+	optionsBuilder: ((...args: SymetricArgsExpression<Args>) => O) | undefined,
+	settingsBuilder: ((...args: SymetricArgsExpression<Args>) => S) | undefined,
 	symetricArgs: AnySymetricArguments<Args>,
 	check: SymetricCheck<S, O>,
-) {
-	it(
-		testName,
-		async () => await DoSymetricTest(apiBuilder, statementBuilder, symetricArgs, undefined, undefined, check),
-	);
+) => void;
+
+function makeItSymetricallyWOpts(
+	itFunction: (testName: string, test: () => Promise<void>) => void,
+): ItSymetricallyWOptsFunction {
+	return <Args extends AnyParamValue[], S extends OverpassSettingsNoFormat, O extends OverpassOutputOptions>(
+		testName: string,
+		apiBuilder: () => OverpassApiObject,
+		statementBld: (
+			state: OverpassState,
+			...args: SymetricArgsExpression<Args>
+		) => OverpassStatement[] | OverpassStatement,
+		optionsBld: ((...args: SymetricArgsExpression<Args>) => O) | undefined,
+		settingsBld: ((...args: SymetricArgsExpression<Args>) => S) | undefined,
+		symetricArgs: AnySymetricArguments<Args>,
+		check: SymetricCheck<S, O>,
+	) => {
+		itFunction(
+			testName,
+			async () => await DoSymetricTest(apiBuilder, statementBld, symetricArgs, optionsBld, settingsBld, check),
+		);
+	};
 }
 
-ItSymetrically.only = function ItSymetrically<
-	Args extends AnyParamValue[],
-	S extends OverpassSettingsNoFormat,
-	O extends OverpassOutputOptions,
->(
-	testName: string,
-	apiBuilder: () => OverpassApiObject,
-	statementBuilder: (
-		state: OverpassState,
-		...args: SymetricArgsExpression<Args>
-	) => OverpassStatement[] | OverpassStatement,
-	symetricArgs: AnySymetricArguments<Args>,
-	check: SymetricCheck<S, O>,
-) {
-	it.only(
-		testName,
-		async () => await DoSymetricTest(apiBuilder, statementBuilder, symetricArgs, undefined, undefined, check),
-	);
-};
+export const ItSymetricallyWOpts = makeItSymetricallyWOpts(it) as {
+	only: ItSymetricallyWOptsFunction;
+	skip: ItSymetricallyWOptsFunction;
+} & ItSymetricallyWOptsFunction;
+
+ItSymetricallyWOpts.only = makeItSymetricallyWOpts(it.only);
+ItSymetricallyWOpts.skip = makeItSymetricallyWOpts(it.skip);

@@ -15,6 +15,14 @@ export function expectUruguay(output: OverpassJsonOutput | string) {
 	expect(element.type).toBe("relation");
 }
 
+export async function asyncExpectUruguay(promise: Promise<OverpassJsonOutput | string>): Promise<void> {
+	await expect(promise).resolves.toBeInstanceOf(Object);
+
+	const output = await promise;
+
+	expectUruguay(output);
+}
+
 export function uruguayStatementBuilder(s: OverpassState): OverpassStatement[] {
 	return [s.relation.byId(URUGUAY_ID)];
 }

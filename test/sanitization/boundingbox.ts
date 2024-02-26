@@ -1,7 +1,6 @@
-import { expect } from "@jest/globals";
 import { OverpassBoundingBox, OverpassExpression, OverpassState, OverpassStatement, ParamType } from "../../src";
-import { ItSymetrically } from "../utils";
-import { ExpectParamteterError, SanitizationAdapter } from "./adapter";
+import { ItSymetrically, StaticAdapter } from "../utils";
+import { ExpectParamteterError, ExpectResolves } from "./adapter";
 
 function getInside(state: OverpassState, bbox: OverpassExpression<OverpassBoundingBox>): OverpassStatement {
 	return state.node.bbox(bbox);
@@ -12,15 +11,15 @@ type CardinalDirection = "south" | "west" | "north" | "east";
 export function sanitizationBoundingBoxTests() {
 	ItSymetrically(
 		"Should be fine when bbox is fine",
-		SanitizationAdapter,
+		StaticAdapter,
 		getInside,
 		[{ exp: [1, 1, 1, 1], type: ParamType.BoundingBox }],
-		async (result) => await expect(result).resolves.toHaveProperty("elements"),
+		ExpectResolves,
 	);
 
 	ItSymetrically(
 		"Should error when bbox is undefined",
-		SanitizationAdapter,
+		StaticAdapter,
 		getInside,
 		[{ exp: undefined! as OverpassBoundingBox, type: ParamType.BoundingBox }],
 		ExpectParamteterError,
@@ -28,7 +27,7 @@ export function sanitizationBoundingBoxTests() {
 
 	ItSymetrically(
 		"Should error when bbox is null",
-		SanitizationAdapter,
+		StaticAdapter,
 		getInside,
 		[{ exp: null! as OverpassBoundingBox, type: ParamType.BoundingBox }],
 		ExpectParamteterError,
@@ -50,7 +49,7 @@ export function sanitizationBoundingBoxTests() {
 
 			ItSymetrically(
 				`Should error when bbox ${direction} is ${number}`,
-				SanitizationAdapter,
+				StaticAdapter,
 				getInside,
 				[{ exp: bbox, type: ParamType.BoundingBox }],
 				ExpectParamteterError,
@@ -66,7 +65,7 @@ export function sanitizationBoundingBoxTests() {
 
 			ItSymetrically(
 				`Should error when bbox ${direction} out of range [${signStr}]`,
-				SanitizationAdapter,
+				StaticAdapter,
 				getInside,
 				[{ exp: bbox, type: ParamType.BoundingBox }],
 				ExpectParamteterError,

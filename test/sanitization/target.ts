@@ -1,7 +1,6 @@
-import { expect } from "@jest/globals";
 import { OverpassExpression, OverpassQueryTarget, OverpassState, OverpassStatement, ParamType } from "../../src";
-import { ItSymetrically } from "../utils";
-import { ExpectParamteterError, SanitizationAdapter } from "./adapter";
+import { ItSymetrically, StaticAdapter } from "../utils";
+import { ExpectParamteterError, ExpectResolves } from "./adapter";
 
 function getNodeByTarget(state: OverpassState, target: OverpassExpression<OverpassQueryTarget>): OverpassStatement {
 	return state.byId(target, 1);
@@ -10,15 +9,15 @@ function getNodeByTarget(state: OverpassState, target: OverpassExpression<Overpa
 export function sanitizationTargetTests() {
 	ItSymetrically(
 		"Should be fine when target is fine",
-		SanitizationAdapter,
+		StaticAdapter,
 		getNodeByTarget,
 		[{ exp: OverpassQueryTarget.Node, type: ParamType.Target }],
-		async (result) => await expect(result).resolves.toHaveProperty("elements"),
+		ExpectResolves,
 	);
 
 	ItSymetrically(
 		"Should error when parameter is not a target",
-		SanitizationAdapter,
+		StaticAdapter,
 		getNodeByTarget,
 		[{ exp: "1" as unknown as OverpassQueryTarget, type: ParamType.Target }],
 		ExpectParamteterError,
@@ -31,7 +30,7 @@ export function sanitizationTargetTests() {
 	Array<number>(NaN, Infinity, null!, undefined!, -1, max + 1).forEach((number) => {
 		ItSymetrically(
 			`Should error when target is ${number}`,
-			SanitizationAdapter,
+			StaticAdapter,
 			getNodeByTarget,
 			[{ exp: number, type: ParamType.Target }],
 			ExpectParamteterError,

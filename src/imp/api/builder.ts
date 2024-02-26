@@ -3,6 +3,7 @@ import { OverpassQueryBuilder } from "@/imp/types";
 import { CompileUtils, CompiledItem, CompiledSubPart, OverpassStatement } from "@/model";
 import {
 	CSVField,
+	OverpassCSVFormatSettings,
 	OverpassFormat,
 	OverpassOutputGeoInfo,
 	OverpassOutputOptions,
@@ -60,61 +61,76 @@ const CSV_FIELDS: { [K in CSVField]: string } = {
 export class OverpassQueryBuilderImp implements OverpassQueryBuilder {
 	constructor(private readonly utils: CompileUtils) {}
 
-	private compileSettings(settings: OverpassSettings): CompiledItem {
-		if (Object.keys(settings).length == 0) {
-			return this.utils.empty;
+	private compileCSVFormat({ fields, delimiterCharacter, headerLine }: OverpassCSVFormatSettings): CompiledItem {
+		const u = this.utils;
+
+		const fieldStr = fields
+			.map((field) => (typeof field == "string" ? field : `::${CSV_FIELDS[field]}`))
+			.join(", ");
+
+		if (headerLine != null || delimiterCharacter != null) {
+			if (delimiterCharacter != null) {
+				return u.raw(`[out:csv(${fieldStr}; ${headerLine ?? true}; "${delimiterCharacter}")]`);
+			} else {
+				return u.raw(`[out:csv(${fieldStr}; ${headerLine})]`);
+			}
 		} else {
-			const options: CompiledItem[] = [];
-			const { timeout, maxSize, format, globalBoundingBox, date, diff } = settings;
-			if (timeout != null) {
-				options.push(this.utils.raw(`[timeout:${timeout}]`));
-			}
-			if (maxSize != null) {
-				options.push(this.utils.raw(`[maxsize:${maxSize}]`));
-			}
-			if (format != null) {
-				if (format != OverpassFormat.CSV) {
-					options.push(this.utils.raw(`[out:${OP_FORMAT[format]}]`));
-				} else {
-					if (settings.csvSettings == null) {
-						throw new Error("csvSettings for format: csv must be supplied");
-					}
-					const { fields, headerLine, delimiterCharacter } = settings.csvSettings;
-					const fieldStr = fields
-						.map((field) => (typeof field == "string" ? field : `::${CSV_FIELDS[field]}`))
-						.join(", ");
-					if (headerLine != null || delimiterCharacter != null) {
-						if (delimiterCharacter != null) {
-							options.push(
-								this.utils.raw(
-									`[out:csv(${fieldStr}; ${headerLine ?? true}; "${delimiterCharacter}")]`,
-								),
-							);
-						} else {
-							options.push(this.utils.raw(`[out:csv(${fieldStr}; ${headerLine})]`));
-						}
-					} else {
-						options.push(this.utils.raw(`[out:csv(${fieldStr})]`));
-					}
-				}
-			}
-			if (globalBoundingBox != null) {
-				const [s, w, n, e] = globalBoundingBox;
-				options.push(this.utils.raw(`[bbox:${s},${w},${n},${e}]`));
-			}
-			if (date != null) {
-				options.push(this.utils.raw(`[date:"${date.toISOString()}"]`));
-			}
-			if (diff != null) {
-				if (Array.isArray(diff)) {
-					const [start, end] = diff;
-					options.push(this.utils.raw(`[diff:"${start.toISOString()}","${end.toISOString()}"]`));
-				}
-			}
-			const { nl } = this.utils;
-			const compiledOptions = this.utils.join(options, "\n");
-			return this.utils.template`/* Settings */${nl}${compiledOptions};${nl}`;
+			return u.raw(`[out:csv(${fieldStr})]`);
 		}
+	}
+
+	private compileFormat(settings: OverpassSettings): CompiledItem {
+		if (settings.format != OverpassFormat.CSV) {
+			return this.utils.raw(`[out:${OP_FORMAT[settings.format!]}]`);
+		} else {
+			if (settings.csvSettings == null) {
+				throw new Error("csvSettings for format: csv must be supplied");
+			}
+
+			return this.compileCSVFormat(settings.csvSettings);
+		}
+	}
+
+	private compileSettings(settings: OverpassSettings): CompiledItem {
+		const u = this.utils;
+		const { nl, empty } = u;
+
+		if (Object.keys(settings).length == 0) {
+			return empty;
+		}
+
+		const { timeout, maxSize, globalBoundingBox, date, diff } = settings;
+		const options: CompiledItem[] = [];
+
+		if (timeout != null) {
+			options.push(u.template`[timeout:${u.number(timeout)}]`);
+		}
+
+		if (maxSize != null) {
+			options.push(u.template`[maxsize:${u.number(maxSize)}]`);
+		}
+
+		if (settings.format != null) {
+			options.push(this.compileFormat(settings));
+		}
+
+		if (globalBoundingBox != null) {
+			const [s, w, n, e] = u.bbox(globalBoundingBox);
+			options.push(u.template`[bbox:${s},${w},${n},${e}]`);
+		}
+
+		if (date != null) {
+			options.push(u.template`[date:"${u.date(date)}"]`);
+		}
+
+		if (diff != null) {
+			if (Array.isArray(diff)) {
+				const [start, end] = diff;
+				options.push(u.raw(`[diff:"${start.toISOString()}","${end.toISOString()}"]`));
+			}
+		}
+
+		return u.template`/* Settings */${nl}${u.join(options, "\n")};${nl}`;
 	}
 
 	private compileOutputOptions({

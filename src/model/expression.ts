@@ -7,23 +7,33 @@ export enum ParamType {
 	BoundingBox,
 	GeoPos,
 	Target,
+	Date,
 }
 
-export type AnyParamValue = number | OverpassQueryTarget | string | RegExp | OverpassBoundingBox | OverpassGeoPos;
+export type AnyParamValue =
+	| number
+	| OverpassQueryTarget
+	| string
+	| RegExp
+	| Date
+	| OverpassBoundingBox
+	| OverpassGeoPos;
 
 export type ActualParamType<T> = T extends OverpassQueryTarget
 	? ParamType.Target | ParamType.Number
 	: T extends number
-		? ParamType.Number
-		: T extends string
-			? ParamType.String
-			: T extends RegExp
-				? ParamType.RegExp
-				: T extends OverpassBoundingBox
-					? ParamType.BoundingBox
-					: T extends OverpassGeoPos
-						? ParamType.GeoPos
-						: never;
+	? ParamType.Number
+	: T extends string
+	? ParamType.String
+	: T extends RegExp
+	? ParamType.RegExp
+	: T extends Date
+	? ParamType.Date
+	: T extends OverpassBoundingBox
+	? ParamType.BoundingBox
+	: T extends OverpassGeoPos
+	? ParamType.GeoPos
+	: never;
 
 export interface ParamItem<T> {
 	readonly index: number;

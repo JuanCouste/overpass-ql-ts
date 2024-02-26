@@ -1,3 +1,4 @@
+export * from "./adapter";
 export * from "./api";
 export * from "./contentType";
 export * from "./errors";

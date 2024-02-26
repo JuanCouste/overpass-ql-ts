@@ -1,7 +1,6 @@
-import { expect } from "@jest/globals";
 import { OverpassExpression, OverpassState, OverpassStatement, ParamType } from "../../src";
-import { ItSymetrically } from "../utils";
-import { ExpectParamteterError, SanitizationAdapter } from "./adapter";
+import { ItSymetrically, StaticAdapter } from "../utils";
+import { ExpectParamteterError, ExpectResolves } from "./adapter";
 
 function getNodeByName(state: OverpassState, name: OverpassExpression<RegExp>): OverpassStatement {
 	return state.node.query((b) => ({ name: b.regExp(name) }));
@@ -10,15 +9,15 @@ function getNodeByName(state: OverpassState, name: OverpassExpression<RegExp>): 
 export function sanitizationRegExpTests() {
 	ItSymetrically(
 		"Should be fine when regexps are fine",
-		SanitizationAdapter,
+		StaticAdapter,
 		getNodeByName,
 		[{ exp: /aName/, type: ParamType.RegExp }],
-		async (result) => await expect(result).resolves.toHaveProperty("elements"),
+		ExpectResolves,
 	);
 
 	ItSymetrically(
 		"Should error when regexps are undefined",
-		SanitizationAdapter,
+		StaticAdapter,
 		getNodeByName,
 		[{ exp: undefined! as RegExp, type: ParamType.RegExp }],
 		ExpectParamteterError,
@@ -26,7 +25,7 @@ export function sanitizationRegExpTests() {
 
 	ItSymetrically(
 		"Should error when regexps are null",
-		SanitizationAdapter,
+		StaticAdapter,
 		getNodeByName,
 		[{ exp: null! as RegExp, type: ParamType.RegExp }],
 		ExpectParamteterError,
@@ -34,7 +33,7 @@ export function sanitizationRegExpTests() {
 
 	ItSymetrically(
 		"Should error when parameter is not a regexp",
-		SanitizationAdapter,
+		StaticAdapter,
 		getNodeByName,
 		[{ exp: "name" as unknown as RegExp, type: ParamType.RegExp }],
 		ExpectParamteterError,

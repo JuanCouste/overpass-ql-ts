@@ -115,6 +115,20 @@ export class OverpassCompileUtils implements CompileUtils {
 		});
 	}
 
+	date(value: OverpassExpression<Date>): CompiledItem {
+		return this.paramItem(value, (date) => {
+			if (!(date instanceof Date)) {
+				throw new OverpassParameterError(`Unexpected Date value (${date})`);
+			}
+
+			if (isNaN(date.getTime())) {
+				throw new OverpassParameterError(`Invalid date (${date.getTime()})`);
+			}
+
+			return this.raw(date.toISOString());
+		});
+	}
+
 	private isOutOfRange(number: number, axis: Axis): boolean {
 		return Math.abs(number) > AXIS_RANGE[axis];
 	}
