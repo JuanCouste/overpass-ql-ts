@@ -14,7 +14,6 @@ import {
 	OverpassQueryTarget,
 	ParamItem,
 	ParamType,
-	ParentCompiledItem,
 } from "@/model";
 
 const OP_TARGETS_STRING: string[] = enumObjectToArray<OverpassQueryTarget, string>({
@@ -201,7 +200,7 @@ export class OverpassCompileUtils implements CompileUtils {
 		);
 	}
 
-	template(strings: TemplateStringsArray, ...expr: CompiledItem[]): ParentCompiledItem {
+	template(strings: TemplateStringsArray, ...expr: CompiledItem[]): CompiledItem {
 		return new OverpassParentCompiledItem(
 			strings.raw
 				.map((part, i) => [part, expr[i]])

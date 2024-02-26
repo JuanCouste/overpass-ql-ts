@@ -1,6 +1,6 @@
 import { enumObjectToArray } from "@/imp/api/enum";
 import { OverpassQueryBuilder } from "@/imp/types";
-import { CompileUtils, CompiledItem, CompiledSubPart, OverpassStatement } from "@/model";
+import { CompileUtils, CompiledItem, OverpassStatement } from "@/model";
 import {
 	CSVField,
 	OverpassCSVFormatSettings,
@@ -141,27 +141,30 @@ export class OverpassQueryBuilderImp implements OverpassQueryBuilder {
 		limit,
 		targetSet,
 	}: OverpassOutputOptions): CompiledItem {
+		const u = this.utils;
+		const { nl } = u;
+
 		const params: CompiledItem[] = [];
 		if (verbosity != null) {
-			params.push(this.utils.raw(OP_VERBOSITY[verbosity]));
+			params.push(u.raw(OP_VERBOSITY[verbosity]));
 		}
 		if (geoInfo != null) {
-			params.push(this.utils.raw(OP_GEOINFO[geoInfo]));
+			params.push(u.raw(OP_GEOINFO[geoInfo]));
 		}
 		if (boundingBox != null) {
 			const [s, w, n, e] = boundingBox;
-			params.push(this.utils.raw(`(${s},${w},${n},${e})`));
+			params.push(u.raw(`(${s},${w},${n},${e})`));
 		}
 		if (sortOrder != null) {
-			params.push(this.utils.raw(OP_SORTORDER[sortOrder]));
+			params.push(u.raw(OP_SORTORDER[sortOrder]));
 		}
 		if (limit != null) {
-			params.push(this.utils.raw(limit.toString()));
+			params.push(u.raw(limit.toString()));
 		}
-		const { nl } = this.utils;
-		const target = this.utils.raw(targetSet ?? "_");
-		const compiledParams = this.utils.join(params, " ");
-		return this.utils.template`/* Output */${nl}.${target} out ${compiledParams};`;
+
+		const target = u.raw(targetSet ?? "_");
+
+		return u.template`/* Output */${nl}.${target} out ${u.join(params, " ")};`;
 	}
 
 	private prepareStatements(statements: OverpassStatement[]): CompiledItem {
@@ -177,9 +180,9 @@ export class OverpassQueryBuilderImp implements OverpassQueryBuilder {
 		settings: OverpassSettings,
 		options: OverpassOutputOptions,
 		statements: OverpassStatement[],
-	): CompiledSubPart[] {
+	): CompiledItem {
 		const settingsStr = this.compileSettings(settings);
 		const optionsStr = this.compileOutputOptions(options);
-		return this.utils.template`${settingsStr}${this.prepareStatements(statements)}${optionsStr}`.subParts;
+		return this.utils.template`${settingsStr}${this.prepareStatements(statements)}${optionsStr}`;
 	}
 }

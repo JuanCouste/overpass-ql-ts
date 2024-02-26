@@ -12,7 +12,7 @@ import {
 	OverpassStatusValidator,
 	RequestAdapter,
 } from "@/imp/types";
-import { AnyParamValue, CompileUtils, CompiledSubPart, OverpassStatement } from "@/model";
+import { AnyParamValue, CompileUtils, CompiledItem, OverpassStatement } from "@/model";
 import {
 	ArgTypes,
 	CreateFunctionArgs,
@@ -101,7 +101,7 @@ export class OverpassApiObjectImp implements OverpassApiObject {
 		statements: OverpassStatement[],
 		options?: OverpassOutputOptions,
 		settings?: OverpassSettings,
-	): CompiledSubPart[] {
+	): CompiledItem {
 		if (statements.length == 0) {
 			throw new Error(`You should provide at least 1 statement ... try node.byId(5431618355)`);
 		}
@@ -118,17 +118,13 @@ export class OverpassApiObjectImp implements OverpassApiObject {
 
 		const statements = statementBuilder(state);
 
-		const queryParts = this.compileParts(
+		const compiledQuery = this.compileParts(
 			statements instanceof Array ? statements : [statements],
 			options,
 			settings,
 		);
 
-		if (queryParts.some((part) => typeof part != "string")) {
-			throw new Error(`Unexpected parameter in static query, how did this happen ??`);
-		}
-
-		return (queryParts as string[]).join("");
+		return compiledQuery.compile([]);
 	}
 
 	private async doRequest(query: string): Promise<HttpResponse> {
@@ -239,16 +235,14 @@ export class OverpassApiObjectImp implements OverpassApiObject {
 			settingsInput,
 		);
 
-		const queryParts = this.compileParts(
+		const compiledQuery = this.compileParts(
 			statements,
 			{ ...outpOptions },
 			{ ...settings, format: OverpassFormat.JSON },
 		);
 
 		return async (...args) => {
-			const query = queryParts
-				.map<string>((part) => (typeof part == "string" ? part : part.compile(args[part.index])))
-				.join("");
+			const query = compiledQuery.compile(args);
 
 			const httpResponse = await this.doRequest(query);
 

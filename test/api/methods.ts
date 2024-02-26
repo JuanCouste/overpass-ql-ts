@@ -4,6 +4,7 @@ import {
 	OverpassApiObjectImp,
 	OverpassFormat,
 	OverpassQueryValidator,
+	ParamItem,
 	ParamType,
 	RequestAdapter,
 } from "../../src";
@@ -64,7 +65,9 @@ export function apiMethodsTests() {
 	it("Should not allow params in buildQuery", () => {
 		const api: OverpassApiObject = BuildApi();
 
-		const fn = () => api.buildQuery((s) => ({ compile: (u) => u.number({ index: 0, type: ParamType.Number }) }));
+		const param: ParamItem<number> = { index: 0, type: ParamType.Number };
+
+		const fn = () => api.buildQuery((s) => s.statement((u) => u.number(param)));
 
 		expect(fn).toThrow(Error);
 	});

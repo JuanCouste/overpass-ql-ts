@@ -1,21 +1,21 @@
+import { it } from "@jest/globals";
 import {
 	ActualParamType,
 	AnyParamValue,
-	OverpassBoundingBox,
-	OverpassExpression,
-	OverpassGeoPos,
-	OverpassStatement,
-} from "@/model";
-import {
 	ArgTypes,
 	OverpassApiObject,
 	OverpassApiOutput,
+	OverpassBoundingBox,
+	OverpassExpression,
+	OverpassGeoPos,
 	OverpassJsonSettings,
 	OverpassOutputOptions,
+	OverpassQueryTarget,
 	OverpassSettingsNoFormat,
 	OverpassState,
-} from "@/query";
-import { it } from "@jest/globals";
+	OverpassStatement,
+	ParamType,
+} from "../../src";
 
 export type SymetricArgumentArray<T> = [OverpassExpression<T>, ActualParamType<T>];
 
@@ -169,3 +169,33 @@ export const ItSymetricallyWOpts = makeItSymetricallyWOpts(it) as {
 
 ItSymetricallyWOpts.only = makeItSymetricallyWOpts(it.only);
 ItSymetricallyWOpts.skip = makeItSymetricallyWOpts(it.skip);
+
+export const Args = {
+	Number(exp: number): SymetricArgumentObject<number> {
+		return { exp, type: ParamType.Number };
+	},
+
+	String(exp: string): SymetricArgumentObject<string> {
+		return { exp, type: ParamType.String };
+	},
+
+	RegExp(exp: RegExp): SymetricArgumentObject<RegExp> {
+		return { exp, type: ParamType.RegExp };
+	},
+
+	Date(exp: Date): SymetricArgumentObject<Date> {
+		return { exp, type: ParamType.Date };
+	},
+
+	BBox(exp: OverpassBoundingBox): SymetricArgumentObject<OverpassBoundingBox> {
+		return { exp, type: ParamType.BoundingBox };
+	},
+
+	GeoPos(exp: OverpassGeoPos): SymetricArgumentObject<OverpassGeoPos> {
+		return { exp, type: ParamType.GeoPos };
+	},
+
+	Target(exp: OverpassQueryTarget): SymetricArgumentObject<OverpassQueryTarget> {
+		return { exp, type: ParamType.Target };
+	},
+};

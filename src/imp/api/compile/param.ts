@@ -1,20 +1,14 @@
-import { CompiledItem, ParamCompiledItem, ParamItem, ParentCompiledItem } from "@/model";
+import { CompiledItem, ParamItem, ParamType } from "@/model";
 
-export class OverpassParamCompiledItem<T> implements ParamCompiledItem<T> {
-	public readonly isParam = true;
-
+export class OverpassParamCompiledItem<T> implements CompiledItem {
 	constructor(
 		private readonly param: ParamItem<T>,
 		private readonly callback: (item: T) => CompiledItem,
 		private readonly manipulation?: (raw: string) => string,
 	) {}
 
-	public get index() {
-		return this.param.index;
-	}
-
-	compile(param: T): string {
-		const raw = (this.callback(param) as ParentCompiledItem).subParts.join("");
+	private compileParam(param: T): string {
+		const raw = this.callback(param).compile([]);
 		return this.manipulation != null ? this.manipulation(raw) : raw;
 	}
 
@@ -26,5 +20,15 @@ export class OverpassParamCompiledItem<T> implements ParamCompiledItem<T> {
 			this.callback,
 			current != null ? (raw: string) => manipulation(current(raw)) : manipulation,
 		);
+	}
+
+	compile(params: any[]): string {
+		const { index, type } = this.param;
+
+		if (params.length <= index) {
+			throw new Error(`Missing parameter for [${index}](${ParamType[type]}), got ${params.length} in total`);
+		}
+
+		return this.compileParam(params[index]);
 	}
 }

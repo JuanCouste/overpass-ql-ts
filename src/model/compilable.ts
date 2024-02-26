@@ -1,28 +1,11 @@
 import { ActualParamType, OverpassExpression, ParamItem } from "@/model/expression";
 import { OverpassBoundingBox, OverpassGeoPos, OverpassQueryTarget } from "@/model/types";
 
-export interface BaseCompiledItem {
-	readonly isParam: boolean;
-
+export interface CompiledItem {
 	/** Change the resulting raw string */
 	withManipulation(manipulation: (raw: string) => string): CompiledItem;
+	compile(params: any[]): string;
 }
-
-export interface ParamCompiledItem<T> extends BaseCompiledItem {
-	readonly isParam: true;
-	readonly index: number;
-
-	compile(param: T): string;
-}
-
-export type CompiledSubPart = string | ParamCompiledItem<any>;
-
-export interface ParentCompiledItem extends BaseCompiledItem {
-	readonly isParam: false;
-	readonly subParts: CompiledSubPart[];
-}
-
-export type CompiledItem = ParamCompiledItem<any> | ParentCompiledItem;
 
 export type CompiledOverpassBoundingBox = [
 	south: CompiledItem,
@@ -81,7 +64,7 @@ export interface CompileUtils {
 	 * @example
 	 * 	u.template`node(${u.number(id)})`
 	 */
-	template(strings: TemplateStringsArray, ...expr: CompiledItem[]): ParentCompiledItem;
+	template(strings: TemplateStringsArray, ...expr: CompiledItem[]): CompiledItem;
 }
 
 export interface CompilableItem {
