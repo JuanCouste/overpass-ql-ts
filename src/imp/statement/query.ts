@@ -2,7 +2,10 @@ import { CompileUtils, CompiledItem, OverpassFilter, OverpassStatementTarget } f
 import { ComposableOverpassStatementBase } from "./base";
 
 export class OverpassQueryStatement extends ComposableOverpassStatementBase {
-	constructor(private readonly target: OverpassStatementTarget, private readonly filters: OverpassFilter[]) {
+	constructor(
+		private readonly target: OverpassStatementTarget,
+		private readonly filters: OverpassFilter[],
+	) {
 		super();
 	}
 

@@ -2,7 +2,10 @@ import { CompileUtils, CompiledItem, OverpassExpression, OverpassStatementTarget
 import { ComposableOverpassStatementBase } from "./base";
 
 export class OverpassByIdStatement extends ComposableOverpassStatementBase {
-	constructor(private readonly target: OverpassStatementTarget, private readonly id: OverpassExpression<number>) {
+	constructor(
+		private readonly target: OverpassStatementTarget,
+		private readonly id: OverpassExpression<number>,
+	) {
 		super();
 	}
 

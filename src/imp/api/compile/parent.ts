@@ -5,7 +5,10 @@ type SubParts = string | CompiledItem;
 export class OverpassParentCompiledItem implements CompiledItem {
 	private readonly subParts: SubParts[];
 
-	constructor(parts: SubParts[], private readonly manipulation?: (raw: string) => string) {
+	constructor(
+		parts: SubParts[],
+		private readonly manipulation?: (raw: string) => string,
+	) {
 		this.subParts = parts
 			.map((part) => (part instanceof OverpassParentCompiledItem ? part.flatten() : [part]))
 			.flat();

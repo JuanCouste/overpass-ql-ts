@@ -70,10 +70,9 @@ export async function fetchFormsOfStatementWithBBox<Method extends keyof Overpas
 	}
 	return await Promise.all<OverpassJsonOutput>(
 		targets
-			.map<Promise<OverpassJsonOutput>[]>((target) => [
-				fetchTargetMap(api, method, target, params, globalBBox),
-				fetchTargetState(api, method, target, params, globalBBox),
-			])
+			.map<
+				Promise<OverpassJsonOutput>[]
+			>((target) => [fetchTargetMap(api, method, target, params, globalBBox), fetchTargetState(api, method, target, params, globalBBox)])
 			.flat(),
 	);
 }
