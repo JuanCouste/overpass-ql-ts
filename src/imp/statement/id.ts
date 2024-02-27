@@ -1,11 +1,8 @@
-import { ComposableOverpassStatementBase } from "@/imp/statement/base";
 import { CompileUtils, CompiledItem, OverpassExpression, OverpassStatementTarget } from "@/model";
+import { ComposableOverpassStatementBase } from "./base";
 
 export class OverpassByIdStatement extends ComposableOverpassStatementBase {
-	constructor(
-		private readonly target: OverpassStatementTarget,
-		private readonly id: OverpassExpression<number>,
-	) {
+	constructor(private readonly target: OverpassStatementTarget, private readonly id: OverpassExpression<number>) {
 		super();
 	}
 

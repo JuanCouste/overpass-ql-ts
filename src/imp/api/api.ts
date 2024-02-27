@@ -1,9 +1,3 @@
-import { OverpassQueryBuilderImp } from "@/imp/api/builder";
-import { OverpassCompileUtils } from "@/imp/api/compile";
-import { OverpassFilterBuilderImp } from "@/imp/api/filter";
-import { OverpassStateImp } from "@/imp/api/state";
-import { OverpassStatusValidatorImp } from "@/imp/api/status";
-import { OverpassQueryValidatorImp } from "@/imp/api/validator";
 import {
 	HttpMethod,
 	HttpResponse,
@@ -30,6 +24,12 @@ import {
 	OverpassState,
 	OverpassStatus,
 } from "@/query";
+import { OverpassQueryBuilderImp } from "./builder";
+import { OverpassCompileUtils } from "./compile";
+import { OverpassFilterBuilderImp } from "./filter";
+import { OverpassStateImp } from "./state";
+import { OverpassStatusValidatorImp } from "./status";
+import { OverpassQueryValidatorImp } from "./validator";
 
 export class OverpassApiObjectImp implements OverpassApiObject {
 	public static readonly MAIN_INSTANCE = new URL("https://overpass-api.de/api/interpreter");
@@ -106,7 +106,7 @@ export class OverpassApiObjectImp implements OverpassApiObject {
 			throw new Error(`You should provide at least 1 statement ... try node.byId(5431618355)`);
 		}
 
-		return this.queryBuilder.build({ ...settings }, { ...options }, statements);
+		return this.queryBuilder.buildQuery({ ...settings }, { ...options }, statements);
 	}
 
 	public buildQuery(
@@ -172,7 +172,7 @@ export class OverpassApiObjectImp implements OverpassApiObject {
 
 		const format = this.getUnknownFormat(httpResponse);
 
-		return await this.queryValidator.validate<OverpassSettings, OverpassOutputOptions>(query, httpResponse, format);
+		return this.queryValidator.validate<OverpassSettings, OverpassOutputOptions>(query, httpResponse, format);
 	}
 
 	private static NormalizeOutput<S extends OverpassSettingsNoFormat, O extends OverpassOutputOptions>(

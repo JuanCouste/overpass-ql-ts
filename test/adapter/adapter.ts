@@ -1,7 +1,7 @@
+import { APP_JSON, GetErrorFile, TEXT_HTML_CH, TEXT_PLAIN } from "?/utils";
 import { HttpMethod, OverpassError, OverpassErrorType, OverpassJsonOutput, RequestAdapter } from "@/index";
 import { expect, it } from "@jest/globals";
 import { createServer } from "http";
-import { APP_JSON, GetErrorFile, TEXT_HTML_CH, TEXT_PLAIN } from "../utils";
 import { setupServerForJson, setupServerResponse, waitForServer } from "./mockServer";
 
 export function adapterSpecificTests(adapterBuilder: () => RequestAdapter) {

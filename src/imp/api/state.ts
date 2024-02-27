@@ -1,7 +1,5 @@
-import { OverpassChainableIntersectStatement } from "@/imp/api/target/intersect";
-import { OverpassTargetMapStateImp } from "@/imp/api/target/target";
-import { OverpassComposableRawStatement, OverpassRawStatement } from "@/imp/statement";
-import { OverpassStatementTargetImp } from "@/imp/statement/target";
+import { OverpassChainableIntersectStatement, OverpassTargetMapStateImp } from "@/imp/api/target";
+import { OverpassComposableRawStatement, OverpassRawStatement, OverpassStatementTargetImp } from "@/imp/statement";
 import {
 	CompileUtils,
 	CompiledItem,
@@ -63,10 +61,7 @@ export class OverpassStateImp implements OverpassStateMethods {
 	private readonly targets: Map<OverpassQueryTarget, OverpassTargetMapState> = new Map();
 	private readonly functions: Functions = {};
 
-	constructor(
-		private readonly utils: CompileUtils,
-		private readonly filterBuilder: OverpassFilterBuilder,
-	) {
+	constructor(private readonly utils: CompileUtils, private readonly filterBuilder: OverpassFilterBuilder) {
 		const stateProxy = new Proxy<OverpassStateImp>(this, { get: this.proxyGet });
 		this.proxy = stateProxy as unknown as OverpassState;
 	}

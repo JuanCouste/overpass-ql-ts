@@ -1,6 +1,6 @@
+import { BuildApi, MDEO_LABEL_ID, ONLY_IDS } from "?/utils";
+import { OverpassApiObject, OverpassState } from "@/index";
 import { expect, it } from "@jest/globals";
-import { OverpassApiObject, OverpassState } from "../../src";
-import { BuildApi, MDEO_LABEL_ID, ONLY_IDS } from "../utils";
 
 export function standaloneIntersectTests() {
 	it("Should intersect elements", async () => {

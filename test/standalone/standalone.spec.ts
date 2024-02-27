@@ -1,4 +1,4 @@
-import "../setup/checkConnection";
+import "?/setup/checkConnection";
 //
 import { describe } from "@jest/globals";
 import { standaloneAnyTests } from "./any";

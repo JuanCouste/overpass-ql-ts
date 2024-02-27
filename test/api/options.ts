@@ -1,3 +1,4 @@
+import { BuildApi, MDEO_DEP_ID } from "?/utils";
 import { OverpassBoundingBox } from "@/model";
 import {
 	OverpassApiObject,
@@ -9,7 +10,6 @@ import {
 	OverpassState,
 } from "@/query";
 import { expect, it } from "@jest/globals";
-import { BuildApi, MDEO_DEP_ID } from "../utils";
 
 export function apiOutOptionsTests() {
 	it("Should run queries with limit", async () => {
@@ -29,7 +29,7 @@ export function apiOutOptionsTests() {
 
 		const query = api.buildQuery((s: OverpassState) => [s.node.query({ name: "Zabala" })], { boundingBox });
 
-		expect(query).toMatch(/\([\s\n]*-34.9[\s\n]*,[\s\n]*-56.2[\s\n]*,[\s\n]*-34.9[\s\n]*,[\s\n]*-56.2[\s\n]*\)/);
+		expect(query).toMatch(/\(\s*-34.9\s*,\s*-56.2\s*,\s*-34.9\s*,\s*-56.2\s*\)/);
 	});
 
 	it("Should run queries with geometry", async () => {
@@ -60,6 +60,6 @@ export function apiOutOptionsTests() {
 
 		const query = api.buildQuery((s: OverpassState) => [s.node.byId(0)], { targetSet: "someset" });
 
-		expect(query).toMatch(/\.[\s\n]*\bsomeset\b[\s\n]*out/);
+		expect(query).toMatch(/\.\s*\bsomeset\b\s*out/);
 	});
 }

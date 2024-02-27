@@ -59,7 +59,7 @@ export interface OverpassSettingsBase<F extends OverpassFormat> {
 	 * This is useful for example to deltas for database extracts.
 	 * If only one date is supplied, the second date defaults to "now".
 	 */
-	readonly diff?: Date | [Date, Date];
+	readonly diff?: OverpassExpression<Date> | [OverpassExpression<Date>, OverpassExpression<Date>];
 }
 
 export enum CSVField {

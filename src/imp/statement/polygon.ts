@@ -1,5 +1,5 @@
-import { ComposableOverpassStatementBase } from "@/imp/statement/base";
 import { CompileUtils, CompiledItem, OverpassExpression, OverpassGeoPos, OverpassStatementTarget } from "@/model";
+import { ComposableOverpassStatementBase } from "./base";
 
 export class OverpassInsidePolygonStatement extends ComposableOverpassStatementBase {
 	constructor(

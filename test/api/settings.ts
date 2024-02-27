@@ -1,80 +1,37 @@
+import { BuildApi, MDEO_BBOX, MDEO_ID, ONLY_IDS } from "?/utils";
+import { OverpassApiObject, OverpassErrorType, OverpassFormat, OverpassRemarkError } from "@/index";
 import { expect, it } from "@jest/globals";
-import {
-	AnyParamValue,
-	OverpassApiObject,
-	OverpassBoundingBox,
-	OverpassErrorType,
-	OverpassFormat,
-	OverpassOutputOptions,
-	OverpassRemarkError,
-	OverpassSettingsNoFormat,
-	ParamType,
-	RequestAdapter,
-} from "../../src";
-import {
-	AnySymetricArguments,
-	BuildApi,
-	ItSymetricallyWOpts,
-	MDEO_BBOX,
-	MDEO_ID,
-	ONLY_IDS,
-	SymetricArgsExpression,
-} from "../utils";
 import { asyncExpectUruguay, uruguayStatementBuilder } from "./uruguay";
 
 export function apiSettingsTests() {
-	ItSymetricallyCheckQuery(
-		"Should build timeout queries",
-		(_) => ONLY_IDS,
-		(timeout) => ({ timeout }),
-		[{ exp: 12345, type: ParamType.Number }],
-		(query) => expect(query).toMatch(/\[[\s\n]*timeout[\s\n]*:[\s\n]*12345[\s\n]*\]/),
-	);
+	it("Should run timeout queries", async () => {
+		const api = BuildApi();
 
-	ItSymetricallyWOpts<[number], OverpassSettingsNoFormat, OverpassOutputOptions>(
-		"Should run timeout queries",
-		BuildApi,
-		(s) => uruguayStatementBuilder(s),
-		(_) => ONLY_IDS,
-		(timeout) => ({ timeout }),
-		[{ exp: 12345, type: ParamType.Number }],
-		async (result) => await asyncExpectUruguay(result),
-	);
+		const result = api.execJson(uruguayStatementBuilder, ONLY_IDS, { timeout: 12345 });
 
-	ItSymetricallyCheckQuery(
-		"Should build date queries",
-		(_) => ONLY_IDS,
-		(date) => ({ date }),
-		[{ exp: new Date(Date.UTC(2000, 1, 2)), type: ParamType.Date }],
-		(query) => expect(query).toMatch(/\[[\s\n]*date[\s\n]*:[\s\n]*"2000-02-02T00:00:00\.000Z"[\s\n]*\]/),
-	);
+		await asyncExpectUruguay(result);
+	});
 
-	ItSymetricallyWOpts<[Date], OverpassSettingsNoFormat, OverpassOutputOptions>(
-		"Should run date queries",
-		BuildApi,
-		(s) => uruguayStatementBuilder(s),
-		(_) => ONLY_IDS,
-		(date) => ({ date }),
-		[{ exp: new Date(Date.UTC(2000, 1, 2)), type: ParamType.Date }],
-		async (promise) => {
-			await expect(promise).rejects.toThrow(OverpassRemarkError);
-			await expect(promise).rejects.toHaveProperty("type", OverpassErrorType.NoAtticData);
-		},
-	);
+	it("Should run date queries", async () => {
+		const api = BuildApi();
+
+		const promise = api.execJson(uruguayStatementBuilder, ONLY_IDS, { date: new Date(Date.UTC(2000, 1, 2)) });
+
+		await expect(promise).rejects.toThrow(OverpassRemarkError);
+		await expect(promise).rejects.toHaveProperty("type", OverpassErrorType.NoAtticData);
+	});
 
 	it("Should run diff queries", async () => {
 		const api: OverpassApiObject = BuildApi();
 
-		const query = api.buildQuery(uruguayStatementBuilder, ONLY_IDS, {
-			format: OverpassFormat.XML,
-			diff: [new Date(Date.UTC(2000, 1, 2)), new Date(Date.UTC(2003, 4, 5))],
-		});
-
-		expect(query).toMatch(
-			/\[[\s\n]*diff[\s\n]*:[\s\n]*"2000-02-02T00:00:00\.000Z"[\s\n]*,[\s\n]*"2003-05-05T00:00:00\.000Z"[\s\n]*\]/,
+		const promise = api.exec(
+			{
+				format: OverpassFormat.XML,
+				diff: [new Date(Date.UTC(2000, 1, 2)), new Date(Date.UTC(2003, 4, 5))],
+			},
+			uruguayStatementBuilder,
+			ONLY_IDS,
 		);
-
-		const promise = api.execQuery(query);
 
 		await expect(promise).rejects.toThrow(OverpassRemarkError);
 		await expect(promise).rejects.toHaveProperty("type", OverpassErrorType.NoAtticData);
@@ -90,75 +47,35 @@ export function apiSettingsTests() {
 		expect(result).toMatch("<?xml");
 	});
 
-	ItSymetricallyCheckQuery(
-		"Should build queries with maxSize",
-		(_) => ONLY_IDS,
-		(maxSize) => ({ maxSize }),
-		[{ exp: 500, type: ParamType.Number }],
-		(query) => expect(query).toMatch(/\[[\s\n]*maxsize[\s\n]*:[\s\n]*500[\s\n]*\]/),
-	);
+	it("Should run queries with maxSize", async () => {
+		const api: OverpassApiObject = BuildApi();
 
-	ItSymetricallyWOpts<[number], OverpassSettingsNoFormat, OverpassOutputOptions>(
-		"Should run queries with maxSize",
-		BuildApi,
-		(s) => uruguayStatementBuilder(s),
-		(_) => ONLY_IDS,
-		(maxSize) => ({ maxSize }),
-		[{ exp: 500, type: ParamType.Number }],
-		async (promise) => await asyncExpectUruguay(promise),
-	);
+		const result = api.execJson(uruguayStatementBuilder, ONLY_IDS, { maxSize: 500 });
 
-	ItSymetricallyWOpts<[OverpassBoundingBox], OverpassSettingsNoFormat, OverpassOutputOptions>(
-		"Should run queries with globalBoundingBox",
-		BuildApi,
-		(s) =>
-			s.node.query((b) => [
-				["name", b.equals("Montevideo")],
-				["capital", b.equals("yes")],
-			]),
-		(_) => ONLY_IDS,
-		(bbox) => ({ globalBoundingBox: bbox }),
-		[{ exp: MDEO_BBOX, type: ParamType.BoundingBox }],
-		async (result) => {
-			expect(result).resolves.toBeInstanceOf(Object);
+		await asyncExpectUruguay(result);
+	});
 
-			const { elements } = await result;
+	it("Should run queries with globalBoundingBox", async () => {
+		const api: OverpassApiObject = BuildApi();
 
-			expect(elements.length).toBe(1);
-			const [element] = elements;
+		const result = api.execJson(
+			(s) =>
+				s.node.query((b) => [
+					["name", b.equals("Montevideo")],
+					["capital", b.equals("yes")],
+				]),
+			ONLY_IDS,
+			{ globalBoundingBox: MDEO_BBOX },
+		);
 
-			expect(element.id).toEqual(MDEO_ID);
-			expect(element.type).toBe("node");
-		},
-	);
-}
+		expect(result).resolves.toBeInstanceOf(Object);
 
-const staticQueryAdapter: RequestAdapter = {
-	request(_, { body } = {}) {
-		throw decodeURIComponent(body!.substring("data=".length));
-	},
-};
+		const { elements } = await result;
 
-function ItSymetricallyCheckQuery<Args extends AnyParamValue[]>(
-	testName: string,
-	optionsBld: ((...args: SymetricArgsExpression<Args>) => OverpassOutputOptions) | undefined,
-	settingsBld: ((...args: SymetricArgsExpression<Args>) => OverpassSettingsNoFormat) | undefined,
-	symetricArgs: AnySymetricArguments<Args>,
-	check: (query: string) => void,
-) {
-	ItSymetricallyWOpts(
-		testName,
-		() => BuildApi(() => staticQueryAdapter),
-		(s, ..._) => s.node.byId(1),
-		optionsBld,
-		settingsBld,
-		symetricArgs,
-		async (result) => {
-			try {
-				await result;
-			} catch (query) {
-				check(query as string);
-			}
-		},
-	);
+		expect(elements.length).toBe(1);
+		const [element] = elements;
+
+		expect(element.id).toEqual(MDEO_ID);
+		expect(element.type).toBe("node");
+	});
 }

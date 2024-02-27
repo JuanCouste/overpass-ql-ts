@@ -1,5 +1,5 @@
-import { HttpResponse } from "@/imp/types/http";
 import { OverpassStatus } from "@/query";
+import { HttpResponse } from "./http";
 
 export interface OverpassStatusValidator {
 	validate(response: HttpResponse): OverpassStatus;

@@ -1,7 +1,7 @@
-import { OverpassTargetStateBase } from "@/imp/api/target/base";
-import { OverpassChainableIntersectStatement } from "@/imp/api/target/intersect";
 import { ComposableOverpassStatement, OverpassExpression } from "@/model";
 import { OverpassTargetState } from "@/query";
+import { OverpassTargetStateBase } from "./base";
+import { OverpassChainableIntersectStatement } from "./intersect";
 
 export class OverpassTargetMapStateImp extends OverpassTargetStateBase {
 	intersect(

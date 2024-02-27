@@ -1,6 +1,5 @@
 import "./setup/checkConnection";
 //
-import { describe, expect, it } from "@jest/globals";
 import {
 	OverpassApiObject,
 	OverpassJsonOutput,
@@ -9,7 +8,8 @@ import {
 	OverpassQueryTarget,
 	OverpassSettings,
 	OverpassState,
-} from "../src";
+} from "@/index";
+import { describe, expect, it } from "@jest/globals";
 import { BuildApi, MDEO_BBOX, MDEO_CITY_ID, MDEO_DEP_ID, MDEO_ID, ONLY_IDS, URUGUAY_ID } from "./utils";
 
 async function queryAlternatives(

@@ -1,4 +1,4 @@
-import { HttpResponse, OverpassJsonOutput, RequestAdapter } from "../../src";
+import { HttpResponse, OverpassJsonOutput, RequestAdapter } from "@/index";
 import { BuildApi } from "./api";
 import { APP_JSON } from "./contentType";
 import { JSON_OUTPUT } from "./ids";

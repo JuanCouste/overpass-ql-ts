@@ -1,5 +1,6 @@
 import { ActualParamType, OverpassExpression, ParamItem } from "@/model/expression";
 import { OverpassBoundingBox, OverpassGeoPos, OverpassQueryTarget } from "@/model/types";
+import { OverpassOutputGeoInfo, OverpassOutputVerbosity, OverpassSortOrder } from "@/query/enum";
 
 export interface CompiledItem {
 	/** Change the resulting raw string */
@@ -48,8 +49,15 @@ export interface CompileUtils {
 	 * @returns the respective prepared parts { lat, lon }
 	 */
 	geoPos(value: OverpassExpression<OverpassGeoPos>): CompiledOverpassGeoPos;
+
 	/** @param value A target that should be prepared */
 	target(value: OverpassExpression<OverpassQueryTarget>): CompiledItem;
+	/** @param value A verbosity that should be prepared */
+	verbosity(value: OverpassExpression<OverpassOutputVerbosity>): CompiledItem;
+	/** @param value A geoInfo that should be prepared */
+	geoInfo(value: OverpassExpression<OverpassOutputGeoInfo>): CompiledItem;
+	/** @param value A sortOrder that should be prepared */
+	sortOrder(value: OverpassExpression<OverpassSortOrder>): CompiledItem;
 
 	isParam<T>(value: OverpassExpression<T>): value is ParamItem<T>;
 	/** @returns wheter {@link value} is a {@link ParamItem<T>} and it's type is {@link type} */

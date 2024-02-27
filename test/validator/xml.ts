@@ -1,14 +1,14 @@
-import { expect, it } from "@jest/globals";
-import { Element as XMLElement, xml2js } from "xml-js";
+import { APP_OSM_XML, MEMORY_EXHAUSTION_REMARK, NO_ATTIC_REMARK, TIMEOUT_REMARK, UNKNOWN_REMARK } from "?/utils";
+import { OverpassQueryValidatorImp } from "@/imp";
 import {
 	OverpassErrorType,
 	OverpassFormat,
 	OverpassOutputOptions,
 	OverpassRemarkError,
 	OverpassSettingsBase,
-} from "../../src";
-import { OverpassQueryValidatorImp } from "../../src/imp/api/validator";
-import { APP_OSM_XML, MEMORY_EXHAUSTION_REMARK, NO_ATTIC_REMARK, TIMEOUT_REMARK, UNKNOWN_REMARK } from "../utils";
+} from "@/index";
+import { expect, it } from "@jest/globals";
+import { Element as XMLElement, xml2js } from "xml-js";
 
 function validateXml(xmlNodes: string[]): string {
 	const validator = new OverpassQueryValidatorImp(null!);

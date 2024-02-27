@@ -1,6 +1,6 @@
+import { MDEO_BBOX, URUGUAY_ID } from "?/utils";
+import { OverpassApiObject, OverpassJsonOutput, OverpassSettingsNoFormat, OverpassState } from "@/index";
 import { beforeAll, expect, it } from "@jest/globals";
-import { OverpassApiObject, OverpassJsonOutput, OverpassSettingsNoFormat, OverpassState } from "../../src";
-import { MDEO_BBOX, URUGUAY_ID } from "../utils";
 import { CJS_BUNDLE, OverpassQlTsModule } from "./setupBundles";
 
 export function nodeTests() {

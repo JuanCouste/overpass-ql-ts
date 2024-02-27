@@ -1,13 +1,10 @@
-import { OverpassFilterHelperBase } from "@/imp/api/filter/base";
 import { OverpassEqualsFilter } from "@/imp/filter";
 import { OverpassExpression, OverpassFilter } from "@/model";
 import { OverpassFilterHelper } from "@/query";
+import { OverpassFilterHelperBase } from "./base";
 
 export class OverpassEqualsFilterHelper extends OverpassFilterHelperBase {
-	constructor(
-		private readonly value: OverpassExpression<string>,
-		negated: boolean,
-	) {
+	constructor(private readonly value: OverpassExpression<string>, negated: boolean) {
 		super(negated);
 	}
 

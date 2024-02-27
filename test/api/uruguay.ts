@@ -1,7 +1,7 @@
+import { URUGUAY_ID } from "?/utils";
 import { OverpassStatement } from "@/model";
 import { OverpassJsonOutput, OverpassState } from "@/query";
 import { expect } from "@jest/globals";
-import { URUGUAY_ID } from "../utils";
 
 export function expectUruguay(output: OverpassJsonOutput | string) {
 	expect(typeof output).toBe("object");

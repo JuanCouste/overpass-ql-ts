@@ -1,8 +1,8 @@
-import "../setup/checkConnection";
+import "?/setup/checkConnection";
 //
+import { BuildApi, MDEO_ID, ONLY_IDS, URUGUAY_ID } from "?/utils";
+import { OverpassApiObject, OverpassJsonOutput, OverpassQueryTarget, ParamItem, ParamType } from "@/index";
 import { describe, expect, it } from "@jest/globals";
-import { OverpassApiObject, OverpassJsonOutput, OverpassQueryTarget, ParamItem, ParamType } from "../../src";
-import { BuildApi, MDEO_ID, ONLY_IDS, URUGUAY_ID } from "../utils";
 import { functionsParamTests } from "./params";
 
 describe("Statement", () => {

@@ -3,7 +3,7 @@ import "./setup/checkConnection";
 import "./adapter/adapter.spec";
 import "./api/api.spec";
 import "./bundle/bundle.spec";
-import "./compile/compile.spec";
+import "./compilation/compilation.spec";
 import "./functions/functions.spec";
 import "./nonsense.spec";
 import "./query.spec";

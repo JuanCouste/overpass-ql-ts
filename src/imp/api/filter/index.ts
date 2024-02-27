@@ -1,8 +1,8 @@
-import { OverpassEqualsFilterHelper } from "@/imp/api/filter/equals";
-import { OverpassExistsFilterHelper } from "@/imp/api/filter/exists";
-import { OverpassRegExpFilterHelper } from "@/imp/api/filter/regexp";
 import { OverpassExpression } from "@/model";
 import { OverpassFilterBuilder, OverpassFilterHelper } from "@/query";
+import { OverpassEqualsFilterHelper } from "./equals";
+import { OverpassExistsFilterHelper } from "./exists";
+import { OverpassRegExpFilterHelper } from "./regexp";
 
 export class OverpassFilterBuilderImp implements OverpassFilterBuilder {
 	private readonly negated: boolean;

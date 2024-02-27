@@ -1,4 +1,5 @@
 import { OverpassBoundingBox, OverpassGeoPos, OverpassQueryTarget } from "@/model/types";
+import { OverpassOutputGeoInfo, OverpassOutputVerbosity, OverpassSortOrder } from "@/query/enum";
 
 export enum ParamType {
 	Number,
@@ -6,21 +7,31 @@ export enum ParamType {
 	RegExp,
 	BoundingBox,
 	GeoPos,
-	Target,
 	Date,
+	Target,
+	Verbosity,
+	GeoInfo,
+	SortOrder,
 }
 
-export type AnyParamValue =
-	| number
-	| OverpassQueryTarget
-	| string
-	| RegExp
-	| Date
-	| OverpassBoundingBox
-	| OverpassGeoPos;
+export type EnumParamType = ParamType.Target | ParamType.Verbosity | ParamType.GeoInfo | ParamType.SortOrder;
 
-export type ActualParamType<T> = T extends OverpassQueryTarget
-	? ParamType.Target | ParamType.Number
+export type OverpassEnum = OverpassQueryTarget | OverpassOutputVerbosity | OverpassOutputGeoInfo | OverpassSortOrder;
+
+export type AnyParamValue = number | OverpassEnum | string | RegExp | Date | OverpassBoundingBox | OverpassGeoPos;
+
+export type ActualEnumParamType<T extends OverpassEnum> = T extends OverpassQueryTarget
+	? ParamType.Target
+	: T extends OverpassOutputVerbosity
+	? ParamType.Verbosity
+	: T extends OverpassOutputGeoInfo
+	? ParamType.GeoInfo
+	: T extends OverpassSortOrder
+	? ParamType.SortOrder
+	: never;
+
+export type ActualParamType<T> = T extends OverpassEnum
+	? ActualEnumParamType<T> | ParamType.Number
 	: T extends number
 	? ParamType.Number
 	: T extends string

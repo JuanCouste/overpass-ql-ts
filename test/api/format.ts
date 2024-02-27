@@ -1,6 +1,6 @@
+import { BuildApi, ONLY_IDS, URUGUAY_ID } from "?/utils";
+import { CSVField, OverpassApiObject, OverpassCSVSettings, OverpassFormat } from "@/index";
 import { describe, expect, it } from "@jest/globals";
-import { CSVField, OverpassApiObject, OverpassCSVSettings, OverpassFormat } from "../../src";
-import { BuildApi, ONLY_IDS, URUGUAY_ID } from "../utils";
 import { uruguayStatementBuilder } from "./uruguay";
 
 export function apiFormatTests() {

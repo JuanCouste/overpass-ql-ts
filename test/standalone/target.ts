@@ -1,3 +1,4 @@
+import { ONLY_IDS } from "?/utils";
 import {
 	AnyOverpassQueryTarget,
 	OverpassApiObject,
@@ -7,8 +8,7 @@ import {
 	OverpassState,
 	OverpassStatement,
 	OverpassTargetState,
-} from "../../src";
-import { ONLY_IDS } from "../utils";
+} from "@/index";
 
 type TargetMapStatementFunction<Method extends keyof OverpassTargetState> = (
 	...args: Parameters<OverpassTargetState[Method]>
@@ -70,9 +70,10 @@ export async function fetchFormsOfStatementWithBBox<Method extends keyof Overpas
 	}
 	return await Promise.all<OverpassJsonOutput>(
 		targets
-			.map<
-				Promise<OverpassJsonOutput>[]
-			>((target) => [fetchTargetMap(api, method, target, params, globalBBox), fetchTargetState(api, method, target, params, globalBBox)])
+			.map<Promise<OverpassJsonOutput>[]>((target) => [
+				fetchTargetMap(api, method, target, params, globalBBox),
+				fetchTargetState(api, method, target, params, globalBBox),
+			])
 			.flat(),
 	);
 }

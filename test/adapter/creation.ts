@@ -1,4 +1,4 @@
-import { expect, it } from "@jest/globals";
+import { FetchRequestAdapter, NodeHttpRequestAdapter, XMLHttpRequestAdapter } from "@/imp";
 import {
 	DefaultOverpassApi,
 	FetchOverpassApi,
@@ -7,8 +7,8 @@ import {
 	OverpassApiObjectImp,
 	RequestAdapter,
 	XMLOverpassApi,
-} from "../../src";
-import { FetchRequestAdapter, NodeHttpRequestAdapter, XMLHttpRequestAdapter } from "../../src/imp/api/request";
+} from "@/index";
+import { expect, it } from "@jest/globals";
 
 function expectAdapterToBe(api: OverpassApiObject, adapterClass: new () => RequestAdapter) {
 	expect((api as OverpassApiObjectImp).__adapter__).toBeInstanceOf(adapterClass);

@@ -1,16 +1,7 @@
 import { enumObjectToArray } from "@/imp/api/enum";
 import { OverpassQueryBuilder } from "@/imp/types";
 import { CompileUtils, CompiledItem, OverpassStatement } from "@/model";
-import {
-	CSVField,
-	OverpassCSVFormatSettings,
-	OverpassFormat,
-	OverpassOutputGeoInfo,
-	OverpassOutputOptions,
-	OverpassOutputVerbosity,
-	OverpassSettings,
-	OverpassSortOrder,
-} from "@/query";
+import { CSVField, OverpassCSVFormatSettings, OverpassFormat, OverpassOutputOptions, OverpassSettings } from "@/query";
 
 const OP_FORMAT: string[] = enumObjectToArray<OverpassFormat, string>({
 	[OverpassFormat.XML]: "xml",
@@ -19,25 +10,6 @@ const OP_FORMAT: string[] = enumObjectToArray<OverpassFormat, string>({
 	[OverpassFormat.CSV]: "csv",
 	[OverpassFormat.Custom]: "custom",
 	[OverpassFormat.Popup]: "popup",
-});
-
-const OP_VERBOSITY: string[] = enumObjectToArray<OverpassOutputVerbosity, string>({
-	[OverpassOutputVerbosity.Ids]: "ids",
-	[OverpassOutputVerbosity.Geometry]: "skel",
-	[OverpassOutputVerbosity.Body]: "body",
-	[OverpassOutputVerbosity.Tags]: "tags",
-	[OverpassOutputVerbosity.Metadata]: "meta",
-});
-
-const OP_GEOINFO: string[] = enumObjectToArray<OverpassOutputGeoInfo, string>({
-	[OverpassOutputGeoInfo.Geometry]: "geom",
-	[OverpassOutputGeoInfo.BoundingBox]: "bb",
-	[OverpassOutputGeoInfo.Center]: "center",
-});
-
-const OP_SORTORDER: string[] = enumObjectToArray<OverpassSortOrder, string>({
-	[OverpassSortOrder.Ascending]: "asc",
-	[OverpassSortOrder.QuadtileIndex]: "qt",
 });
 
 const CSV_FIELDS: { [K in CSVField]: string } = {
@@ -91,7 +63,7 @@ export class OverpassQueryBuilderImp implements OverpassQueryBuilder {
 		}
 	}
 
-	private compileSettings(settings: OverpassSettings): CompiledItem {
+	public buildSettings(settings: OverpassSettings): CompiledItem {
 		const u = this.utils;
 		const { nl, empty } = u;
 
@@ -124,16 +96,18 @@ export class OverpassQueryBuilderImp implements OverpassQueryBuilder {
 		}
 
 		if (diff != null) {
-			if (Array.isArray(diff)) {
+			if (diff instanceof Array) {
 				const [start, end] = diff;
-				options.push(u.raw(`[diff:"${start.toISOString()}","${end.toISOString()}"]`));
+				options.push(u.template`[diff:"${u.date(start)}","${u.date(end)}"]`);
+			} else {
+				options.push(u.template`[diff:"${u.date(diff)}"]`);
 			}
 		}
 
 		return u.template`/* Settings */${nl}${u.join(options, "\n")};${nl}`;
 	}
 
-	private compileOutputOptions({
+	public buildOptions({
 		verbosity,
 		geoInfo,
 		boundingBox,
@@ -145,29 +119,30 @@ export class OverpassQueryBuilderImp implements OverpassQueryBuilder {
 		const { nl } = u;
 
 		const params: CompiledItem[] = [];
+
 		if (verbosity != null) {
-			params.push(u.raw(OP_VERBOSITY[verbosity]));
+			params.push(u.verbosity(verbosity));
 		}
 		if (geoInfo != null) {
-			params.push(u.raw(OP_GEOINFO[geoInfo]));
+			params.push(u.geoInfo(geoInfo));
 		}
 		if (boundingBox != null) {
-			const [s, w, n, e] = boundingBox;
-			params.push(u.raw(`(${s},${w},${n},${e})`));
+			const [s, w, n, e] = u.bbox(boundingBox);
+			params.push(u.template`(${s},${w},${n},${e})`);
 		}
 		if (sortOrder != null) {
-			params.push(u.raw(OP_SORTORDER[sortOrder]));
+			params.push(u.sortOrder(sortOrder));
 		}
 		if (limit != null) {
-			params.push(u.raw(limit.toString()));
+			params.push(u.number(limit));
 		}
 
-		const target = u.raw(targetSet ?? "_");
+		const target = targetSet == null ? u.raw("_") : u.string(targetSet);
 
 		return u.template`/* Output */${nl}.${target} out ${u.join(params, " ")};`;
 	}
 
-	private prepareStatements(statements: OverpassStatement[]): CompiledItem {
+	public buildStatements(statements: OverpassStatement[]): CompiledItem {
 		const compiledStatements = this.utils.join(
 			statements.map((stm) => this.utils.template`${stm.compile(this.utils)};`),
 			"\n",
@@ -176,13 +151,13 @@ export class OverpassQueryBuilderImp implements OverpassQueryBuilder {
 		return this.utils.template`/* Statements */${nl}${compiledStatements}${nl}`;
 	}
 
-	public build(
+	public buildQuery(
 		settings: OverpassSettings,
 		options: OverpassOutputOptions,
 		statements: OverpassStatement[],
 	): CompiledItem {
-		const settingsStr = this.compileSettings(settings);
-		const optionsStr = this.compileOutputOptions(options);
-		return this.utils.template`${settingsStr}${this.prepareStatements(statements)}${optionsStr}`;
+		const settingsStr = this.buildSettings(settings);
+		const optionsStr = this.buildOptions(options);
+		return this.utils.template`${settingsStr}${this.buildStatements(statements)}${optionsStr}`;
 	}
 }

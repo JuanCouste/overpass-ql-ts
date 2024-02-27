@@ -1,5 +1,5 @@
-import { ComposableOverpassStatementBase, OverpassStatementBase } from "@/imp/statement/base";
 import { CompileUtils, CompiledItem } from "@/model";
+import { ComposableOverpassStatementBase, OverpassStatementBase } from "./base";
 
 function removeLastSemicolon(statement: string) {
 	statement = statement.trim();

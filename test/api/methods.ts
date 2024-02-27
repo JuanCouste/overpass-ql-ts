@@ -1,4 +1,4 @@
-import { expect, it } from "@jest/globals";
+import { APP_OSM_XML, BuildApi, JSON_FORMAT, ONLY_IDS, TEXT_CSV } from "?/utils";
 import {
 	OverpassApiObject,
 	OverpassApiObjectImp,
@@ -7,8 +7,8 @@ import {
 	ParamItem,
 	ParamType,
 	RequestAdapter,
-} from "../../src";
-import { BuildApi, JSON_FORMAT, ONLY_IDS, TEXT_CSV } from "../utils";
+} from "@/index";
+import { expect, it } from "@jest/globals";
 import { expectUruguay, uruguayStatementBuilder } from "./uruguay";
 
 function getUnknownFormat(contentType: string | undefined): Promise<OverpassFormat | undefined> {
@@ -80,5 +80,9 @@ export function apiMethodsTests() {
 		const csv = await getUnknownFormat(TEXT_CSV);
 
 		expect(csv).toBe(OverpassFormat.CSV);
+
+		const xml = await getUnknownFormat(APP_OSM_XML);
+
+		expect(xml).toBe(OverpassFormat.XML);
 	});
 }

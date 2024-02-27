@@ -42,6 +42,7 @@ export const bundleList: RollupOptions[] = [
 			format: "es",
 		},
 		plugins: [dts({ tsconfig: "./tsconfig.build.json" })],
+		external: /^https?$/,
 	},
 ];
 

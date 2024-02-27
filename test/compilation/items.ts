@@ -1,7 +1,6 @@
+import { OverpassParamCompiledItem, OverpassParentCompiledItem } from "@/imp";
+import { ParamType } from "@/index";
 import { expect, it } from "@jest/globals";
-import { ParamType } from "../../src";
-import { OverpassParamCompiledItem } from "../../src/imp/api/compile/param";
-import { OverpassParentCompiledItem } from "../../src/imp/api/compile/parent";
 
 export function compileItemTests() {
 	it("Should chain param manipulations", () => {

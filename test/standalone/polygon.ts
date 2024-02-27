@@ -1,6 +1,6 @@
+import { BuildApi } from "?/utils";
+import { OverpassApiObject, OverpassBoundingBox, OverpassPolygonCoordExpression, OverpassQueryTarget } from "@/index";
 import { expect, it } from "@jest/globals";
-import { OverpassApiObject, OverpassBoundingBox, OverpassPolygonCoordExpression, OverpassQueryTarget } from "../../src";
-import { BuildApi } from "../utils";
 import { fetchFormsOfStatement } from "./target";
 
 function polygonFromBoundingBox([s, w, n, e]: OverpassBoundingBox): OverpassPolygonCoordExpression[] {

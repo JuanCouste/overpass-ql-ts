@@ -1,7 +1,7 @@
 import "./setup/checkConnection";
 //
+import { ComposableOverpassStatement, OverpassApiObject, OverpassState } from "@/index";
 import { describe, expect, it } from "@jest/globals";
-import { ComposableOverpassStatement, OverpassApiObject, OverpassState } from "../src";
 import { BuildApi, MDEO_ID, ONLY_IDS, URUGUAY_ID } from "./utils";
 
 describe("Statement", () => {
