@@ -1,6 +1,6 @@
 import { afterAll, beforeAll } from "@jest/globals";
-import { baseConfig } from "../../jest.config";
-import { BuildApi } from "../utils";
+import { baseConfig } from "../jest.config";
+import { BuildApi } from "./utils";
 
 let promises: Promise<void>[];
 

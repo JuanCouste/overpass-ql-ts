@@ -1,4 +1,4 @@
-import "../setup/checkConnection";
+import "../checkConnection";
 //
 import { OverpassError, OverpassErrorType } from "@/model";
 import { describe, expect, it } from "@jest/globals";

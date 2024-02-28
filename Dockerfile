@@ -6,6 +6,7 @@ WORKDIR /app/
 
 RUN npm install
 
+COPY ./scripts /app/scripts/
 COPY ./src /app/src/
 COPY ./test /app/test/
 
