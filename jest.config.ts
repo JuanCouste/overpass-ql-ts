@@ -33,9 +33,9 @@ export default bunchTestsInOneFile
 			...baseConfig,
 			testMatch: ["**/test.spec.ts"],
 			testPathIgnorePatterns: [],
-	  }
+		}
 	: {
 			...baseConfig,
 			testMatch: ["**/*.spec.ts"],
 			testPathIgnorePatterns: ["test/test.spec.ts"],
-	  };
+		};
