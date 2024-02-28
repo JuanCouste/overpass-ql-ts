@@ -30,7 +30,7 @@
 	"scripts": {
 		"build": "ts-patch install && rollup --config rollup.config.ts --configPlugin @rollup/plugin-typescript",
 		"check": "ts-patch install && tsc --watch --noEmit",
-		"test": "jest --coverage && node ./scripts/run coverage.mts",
+		"test": "ts-patch install && jest --coverage && node ./scripts/run coverage.mts",
 		"overpass-container": "node ./scripts/run overpass.mts",
 		"test-in-container": "node ./scripts/run test.mts"
 	},

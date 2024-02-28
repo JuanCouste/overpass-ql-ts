@@ -1,6 +1,14 @@
 export { DefaultOverpassApi, FetchOverpassApi, HttpOverpassApi, OverpassApiObjectImp, XMLOverpassApi } from "@/imp";
 
-export * from "@/imp/types";
+export {
+	HttpMethod,
+	HttpRequest,
+	HttpResponse,
+	OverpassQueryBuilder,
+	OverpassQueryValidator,
+	OverpassStatusValidator,
+	RequestAdapter,
+} from "@/imp/types";
 
 export * from "@/model";
 export * from "@/query";
