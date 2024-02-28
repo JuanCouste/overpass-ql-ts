@@ -1,4 +1,4 @@
-import "?/setup/checkConnection";
+import "?/checkConnection";
 //
 import { BuildApi } from "?/utils";
 import { OverpassApiObject, OverpassApiObjectImp } from "@/index";

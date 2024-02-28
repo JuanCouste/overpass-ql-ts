@@ -1,4 +1,4 @@
-import "./setup/checkConnection";
+import "./checkConnection";
 //
 import { OverpassQueryTarget } from "@/model";
 import { OverpassApiObject } from "@/query";

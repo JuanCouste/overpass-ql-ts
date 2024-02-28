@@ -1,4 +1,4 @@
-import "./setup/checkConnection";
+import "./checkConnection";
 //
 import { ComposableOverpassStatement, OverpassApiObject, OverpassState } from "@/index";
 import { describe, expect, it } from "@jest/globals";

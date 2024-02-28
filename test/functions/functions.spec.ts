@@ -1,4 +1,4 @@
-import "?/setup/checkConnection";
+import "?/checkConnection";
 //
 import { BuildApi, MDEO_ID, ONLY_IDS, URUGUAY_ID } from "?/utils";
 import { OverpassApiObject, OverpassJsonOutput, OverpassQueryTarget, ParamItem, ParamType } from "@/index";

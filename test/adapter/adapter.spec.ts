@@ -1,4 +1,4 @@
-import "?/setup/checkConnection";
+import "?/checkConnection";
 //
 import {
 	FetchFunction,
@@ -35,7 +35,7 @@ describe("Adapter", () => {
 								},
 							} as IncomingMessage);
 					},
-				}) as ClientRequest;
+				} as ClientRequest);
 
 			const adapter = new NodeHttpRequestAdapter([method, method]);
 			const promise = adapter.request(new URL("https://localhost"));

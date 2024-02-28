@@ -11,16 +11,12 @@ function updatePackagephobiaBadge(lines: string[], version: string) {
 	lines[sizeIndex] = `[![install size](${packagephobiaBadge})](${packagephobiaResult})`;
 }
 
-async function main() {
+export async function main([version]: string[]) {
 	const readme = await readFile(README_FILE, "utf-8");
 	const lines = readme.split("\n");
-
-	const version = process.argv[2];
 
 	updatePackagephobiaBadge(lines, version);
 
 	const updatedReadme = lines.join("\n");
 	await writeFile(README_FILE, updatedReadme);
 }
-
-main();

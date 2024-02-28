@@ -1,4 +1,4 @@
-import "./setup/checkConnection";
+import "./checkConnection";
 //
 import "./adapter/adapter.spec";
 import "./api/api.spec";

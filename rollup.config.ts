@@ -4,6 +4,8 @@ import typescript from "@rollup/plugin-typescript";
 import { RollupOptions } from "rollup";
 import { dts } from "rollup-plugin-dts";
 
+const external = /^https?$/;
+
 export const bundleList: RollupOptions[] = [
 	{
 		/* CommonJS Bundle */
@@ -19,7 +21,7 @@ export const bundleList: RollupOptions[] = [
 			commonjs(),
 			nodeResolve({ preferBuiltins: true }),
 		],
-		external: /^https?$/,
+		external: external,
 	},
 	{
 		/* ESM Bundle */
@@ -32,7 +34,7 @@ export const bundleList: RollupOptions[] = [
 			typescript({ sourceMap: false, tsconfig: "./tsconfig.build.json" }),
 			nodeResolve({ preferBuiltins: true }),
 		],
-		external: /^https?$/,
+		external: external,
 	},
 	{
 		/* Types Bundle */
@@ -42,7 +44,7 @@ export const bundleList: RollupOptions[] = [
 			format: "es",
 		},
 		plugins: [dts({ tsconfig: "./tsconfig.build.json" })],
-		external: /^https?$/,
+		external: external,
 	},
 ];
 

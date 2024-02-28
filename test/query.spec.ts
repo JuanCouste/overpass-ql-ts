@@ -1,4 +1,4 @@
-import "./setup/checkConnection";
+import "./checkConnection";
 //
 import {
 	OverpassApiObject,

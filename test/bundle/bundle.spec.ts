@@ -1,4 +1,4 @@
-import "?/setup/checkConnection";
+import "?/checkConnection";
 //
 import { afterAll, beforeAll, describe } from "@jest/globals";
 import { browserTests } from "./browser";
