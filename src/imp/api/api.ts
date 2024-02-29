@@ -6,9 +6,11 @@ import {
 	OverpassStatusValidator,
 	RequestAdapter,
 } from "@/imp/types";
-import { AnyParamValue, CompileUtils, CompiledItem, OverpassStatement } from "@/model";
 import {
+	AnyParamValue,
 	ArgTypes,
+	CompileUtils,
+	CompiledItem,
 	CreateFunctionArgs,
 	CreateFunctionContext,
 	OverpassApiFunction,
@@ -22,8 +24,9 @@ import {
 	OverpassSettings,
 	OverpassSettingsNoFormat,
 	OverpassState,
+	OverpassStatement,
 	OverpassStatus,
-} from "@/query";
+} from "@/model";
 import { OverpassQueryBuilderImp } from "./builder";
 import { OverpassCompileUtils } from "./compile";
 import { OverpassFilterBuilderImp } from "./filter";

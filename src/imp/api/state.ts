@@ -6,24 +6,22 @@ import {
 	OverpassStatementTargetImp,
 } from "@/imp/statement";
 import {
+	AnyOverpassQueryTarget,
 	CompileUtils,
 	CompiledItem,
 	ComposableOverpassStatement,
 	OverpassExpression,
-	OverpassQueryTarget,
-	OverpassRecurseStmType,
-	OverpassStatement,
-} from "@/model";
-import {
-	AnyOverpassQueryTarget,
 	OverpassFilterBuilder,
+	OverpassQueryTarget,
 	OverpassQueryTargetExpression,
 	OverpassQueryTargetString,
+	OverpassRecurseStmType,
 	OverpassState,
 	OverpassStateMethods,
+	OverpassStatement,
 	OverpassTargetMapState,
 	OverpassTargetState,
-} from "@/query";
+} from "@/model";
 
 const STATEMENT_METHOD = (function () {
 	const enumObj: { [K in keyof OverpassTargetState]: true } = {
@@ -67,10 +65,7 @@ export class OverpassStateImp implements OverpassStateMethods {
 	private readonly targets: Map<OverpassQueryTarget, OverpassTargetMapState> = new Map();
 	private readonly functions: Functions = {};
 
-	constructor(
-		private readonly utils: CompileUtils,
-		private readonly filterBuilder: OverpassFilterBuilder,
-	) {
+	constructor(private readonly utils: CompileUtils, private readonly filterBuilder: OverpassFilterBuilder) {
 		const stateProxy = new Proxy<OverpassStateImp>(this, { get: this.proxyGet });
 		this.proxy = stateProxy as unknown as OverpassState;
 	}

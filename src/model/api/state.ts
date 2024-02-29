@@ -1,15 +1,9 @@
-import {
-	CompileUtils,
-	CompiledItem,
-	ComposableOverpassStatement,
-	OverpassBoundingBox,
-	OverpassExpression,
-	OverpassGeoPos,
-	OverpassQueryTarget,
-	OverpassRecurseStmType,
-	OverpassStatement,
-} from "@/model";
-import { OverpassQueryFilter, OverpassQueryFilterFunction } from "@/query/query";
+import { CompiledItem } from "@/model/compilable";
+import { OverpassQueryTarget, OverpassRecurseStmType } from "@/model/enum";
+import { OverpassExpression } from "@/model/expression";
+import { CompileUtils, ComposableOverpassStatement, OverpassStatement } from "@/model/parts";
+import { OverpassBoundingBox, OverpassGeoPos } from "@/model/types";
+import { OverpassQueryFilter, OverpassQueryFilterFunction } from "./query";
 
 export type OverpassQueryTargetString = "any" | "node" | "way" | "relation";
 

@@ -1,6 +1,5 @@
 import { HttpResponse, OverpassStatusValidator } from "@/imp/types";
-import { OverpassApiError, OverpassErrorType } from "@/model";
-import { OverpassRunningQuery, OverpassStatus } from "@/query";
+import { OverpassApiError, OverpassErrorType, OverpassRunningQuery, OverpassStatus } from "@/model";
 
 type TempOverpassStatus = { -readonly [K in keyof OverpassStatus]?: OverpassStatus[K] };
 
@@ -18,10 +17,7 @@ interface RegExpHandler {
 }
 
 export class OverpassStatusValidatorImp implements OverpassStatusValidator {
-	constructor(
-		private readonly statusUrl: URL,
-		private readonly rejectOnUnexpected: boolean = false,
-	) {}
+	constructor(private readonly statusUrl: URL, private readonly rejectOnUnexpected: boolean = false) {}
 
 	private static ConnectedAs(status: TempOverpassStatus, value: string) {
 		status.connectedAs = +value;

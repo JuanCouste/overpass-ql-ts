@@ -1,6 +1,5 @@
-import { OverpassGeoPos } from "@/model";
-import { OverpassOutputOptions } from "@/query/output";
-import { OverpassFormat, OverpassSettings } from "@/query/settings";
+import { OverpassFormat, OverpassOutputOptions, OverpassSettings } from "@/model/query";
+import { OverpassGeoPos } from "@/model/types";
 
 export interface OverpassElementBounds {
 	readonly minlat: number;

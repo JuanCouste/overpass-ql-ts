@@ -10,13 +10,15 @@ import {
 	OverpassEnum,
 	OverpassExpression,
 	OverpassGeoPos,
+	OverpassOutputGeoInfo,
+	OverpassOutputVerbosity,
 	OverpassParameterError,
 	OverpassQueryTarget,
 	OverpassRecurseStmType,
+	OverpassSortOrder,
 	ParamItem,
 	ParamType,
 } from "@/model";
-import { OverpassOutputGeoInfo, OverpassOutputVerbosity, OverpassSortOrder } from "@/query";
 import { OverpassParamCompiledItem } from "./param";
 import { OverpassParentCompiledItem } from "./parent";
 

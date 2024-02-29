@@ -11,4 +11,3 @@ export {
 } from "@/imp/types";
 
 export * from "@/model";
-export * from "@/query";

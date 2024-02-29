@@ -1,13 +1,9 @@
 import { OverpassRegExpFilter } from "@/imp/filter";
-import { OverpassExpression, OverpassFilter } from "@/model";
-import { OverpassFilterHelper } from "@/query";
+import { OverpassExpression, OverpassFilter, OverpassFilterHelper } from "@/model";
 import { OverpassFilterHelperBase } from "./base";
 
 export class OverpassRegExpFilterHelper extends OverpassFilterHelperBase {
-	constructor(
-		private readonly regExp: OverpassExpression<RegExp>,
-		negated: boolean,
-	) {
+	constructor(private readonly regExp: OverpassExpression<RegExp>, negated: boolean) {
 		super(negated);
 	}
 

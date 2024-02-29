@@ -1,5 +1,4 @@
-import { CompiledItem, OverpassStatement } from "@/model";
-import { OverpassOutputOptions, OverpassSettings } from "@/query";
+import { CompiledItem, OverpassOutputOptions, OverpassSettings, OverpassStatement } from "@/model";
 
 export interface OverpassQueryBuilder {
 	buildSettings(settings: OverpassSettings): CompiledItem;

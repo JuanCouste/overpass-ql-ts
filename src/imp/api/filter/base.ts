@@ -1,5 +1,4 @@
-import { OverpassExpression, OverpassFilter } from "@/model";
-import { OverpassFilterHelper } from "@/query";
+import { OverpassExpression, OverpassFilter, OverpassFilterHelper } from "@/model";
 
 export abstract class OverpassFilterHelperBase implements OverpassFilterHelper {
 	constructor(protected readonly negated: boolean) {}

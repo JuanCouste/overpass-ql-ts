@@ -1,5 +1,4 @@
-import { ComposableOverpassStatement, OverpassExpression } from "@/model";
-import { OverpassTargetState } from "@/query";
+import { ComposableOverpassStatement, OverpassExpression, OverpassTargetState } from "@/model";
 import { OverpassTargetStateBase } from "./base";
 import { OverpassChainableIntersectStatement } from "./intersect";
 

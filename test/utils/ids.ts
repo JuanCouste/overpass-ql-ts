@@ -1,11 +1,11 @@
-import { OverpassBoundingBox } from "@/model";
 import {
+	OverpassBoundingBox,
 	OverpassFormat,
 	OverpassJsonOutput,
 	OverpassOutputOptions,
 	OverpassOutputVerbosity,
 	OverpassSettings,
-} from "@/query";
+} from "@/model";
 
 export const MDEO_ID = 296140043;
 export const MDEO_DEP_ID = 1634207;

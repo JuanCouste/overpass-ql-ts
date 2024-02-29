@@ -1,7 +1,6 @@
 import "./checkConnection";
 //
-import { OverpassQueryTarget } from "@/model";
-import { OverpassApiObject } from "@/query";
+import { OverpassApiObject, OverpassQueryTarget } from "@/model";
 import { describe, it } from "@jest/globals";
 import expect from "expect";
 import { BuildApi, MDEO_ID, MDEO_LABEL_ID, URUGUAY_ID } from "./utils";

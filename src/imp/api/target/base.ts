@@ -5,27 +5,25 @@ import {
 	OverpassQueryStatement,
 } from "@/imp/statement";
 import {
+	AnyOverpassFilter,
 	CompileUtils,
 	ComposableOverpassStatement,
 	OverpassBoundingBox,
 	OverpassExpression,
 	OverpassFilter,
-	OverpassGeoPos,
-	OverpassParameterError,
-	OverpassStatementTarget,
-	ParamType,
-} from "@/model";
-import {
-	AnyOverpassFilter,
 	OverpassFilterBuilder,
 	OverpassFilterHelper,
+	OverpassGeoPos,
+	OverpassParameterError,
 	OverpassPolygonCoordExpression,
 	OverpassQueryFilter,
 	OverpassQueryFilterFunction,
 	OverpassQueryFilterTuple,
 	OverpassQueryRegExpFilterTuple,
+	OverpassStatementTarget,
 	OverpassTargetState,
-} from "@/query";
+	ParamType,
+} from "@/model";
 
 export abstract class OverpassTargetStateBase implements OverpassTargetState {
 	constructor(

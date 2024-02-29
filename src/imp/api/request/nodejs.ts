@@ -1,6 +1,6 @@
 import { OverpassApiObjectImp } from "@/imp/api/api";
 import { HttpMethod, HttpRequest, HttpResponse, RequestAdapter } from "@/imp/types";
-import { OverpassApiObject } from "@/query";
+import { OverpassApiObject } from "@/model";
 import { METHOD, NetworkError } from "./adapter";
 
 export type HttpRequestMethod = typeof import("http").request;

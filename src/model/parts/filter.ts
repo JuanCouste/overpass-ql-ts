@@ -1,3 +1,3 @@
-import { CompilableItem } from "@/model/compilable";
+import { CompilableItem } from "./compilable";
 
 export interface OverpassFilter extends CompilableItem {}

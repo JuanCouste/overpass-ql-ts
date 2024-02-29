@@ -1,5 +1,6 @@
-import { OverpassBoundingBox, OverpassExpression } from "@/model";
-import { OverpassOutputGeoInfo, OverpassOutputVerbosity, OverpassSortOrder } from "@/query/enum";
+import { OverpassOutputGeoInfo, OverpassOutputVerbosity, OverpassSortOrder } from "@/model/enum";
+import { OverpassExpression } from "@/model/expression";
+import { OverpassBoundingBox } from "@/model/types";
 
 export interface OverpassOutputOptions {
 	/** Target set to output.
