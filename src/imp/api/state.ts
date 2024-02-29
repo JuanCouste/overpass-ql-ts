@@ -67,7 +67,10 @@ export class OverpassStateImp implements OverpassStateMethods {
 	private readonly targets: Map<OverpassQueryTarget, OverpassTargetMapState> = new Map();
 	private readonly functions: Functions = {};
 
-	constructor(private readonly utils: CompileUtils, private readonly filterBuilder: OverpassFilterBuilder) {
+	constructor(
+		private readonly utils: CompileUtils,
+		private readonly filterBuilder: OverpassFilterBuilder,
+	) {
 		const stateProxy = new Proxy<OverpassStateImp>(this, { get: this.proxyGet });
 		this.proxy = stateProxy as unknown as OverpassState;
 	}
