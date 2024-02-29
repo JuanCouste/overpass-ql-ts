@@ -48,11 +48,10 @@ The package is usable though many features we intend to implement are WIP.
 
 1.  String sanitization
 2.  Recurse filter, way_cnt, way_link
-3.  Chaining of bbox, id, filter, etc in the same statement
-4.  Evaluator support
-5.  Flow control statements
-6.  Around
-7.  etc
+3.  More evaluator support
+4.  Flow control statements
+5.  Around
+6.  etc
 
 ## Examples
 

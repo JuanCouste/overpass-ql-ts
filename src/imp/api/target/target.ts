@@ -9,6 +9,7 @@ export class OverpassTargetMapStateImp extends OverpassTargetStateBase {
 	): ComposableOverpassStatement & OverpassTargetState {
 		return new OverpassChainableIntersectStatement(
 			this.target.withIntersection(set1, ...sets),
+			this.chain,
 			this.utils,
 			this.filterBuilder,
 			this.evaluatorItemBuilder,

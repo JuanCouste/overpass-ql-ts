@@ -1,9 +1,14 @@
 import {
+	AndChainableOverpassStatement,
+	ChainableOverpassStatement,
 	CompileUtils,
 	CompiledItem,
 	ComposableOverpassStatement,
+	OverpassChainableTargetableState,
 	OverpassExpression,
 	OverpassStatement,
+	OverpassStatementTarget,
+	OverpassTargetStateStatement,
 } from "@/model";
 
 export abstract class OverpassStatementBase implements OverpassStatement {
@@ -24,6 +29,57 @@ export abstract class ComposableOverpassStatementBase
 
 	toSet(set: OverpassExpression<string>): ComposableOverpassStatement {
 		return new OverpassSetStatement(this, set);
+	}
+}
+
+export abstract class ChainableOverpassStatementBase
+	extends ComposableOverpassStatementBase
+	implements ChainableOverpassStatement, AndChainableOverpassStatement
+{
+	constructor(
+		private readonly target: OverpassStatementTarget,
+		private readonly chain: OverpassChainableTargetableState,
+	) {
+		super();
+	}
+
+	and(
+		statement:
+			| ChainableOverpassStatement
+			| ((chain: OverpassChainableTargetableState) => ChainableOverpassStatement),
+	): OverpassTargetStateStatement {
+		const actualStatement = typeof statement == "function" ? statement(this.chain) : statement;
+		return new AndChainableOverpassStatementImp(this.target, this.chain, [this, actualStatement]);
+	}
+
+	abstract compileChainable(utils: CompileUtils): CompiledItem[];
+
+	compile(u: CompileUtils): CompiledItem {
+		const target = this.target.compile(u);
+		const parts = this.compileChainable(u);
+		return u.template`${target} ${u.join(parts, "\n\t")}`;
+	}
+}
+
+export class AndChainableOverpassStatementImp extends ChainableOverpassStatementBase {
+	private readonly chained: ChainableOverpassStatement[];
+
+	constructor(
+		target: OverpassStatementTarget,
+		chain: OverpassChainableTargetableState,
+		chained: ChainableOverpassStatement[],
+	) {
+		super(target, chain);
+
+		this.chained = chained
+			.map((statement) =>
+				statement instanceof AndChainableOverpassStatementImp ? statement.chained : [statement],
+			)
+			.flat();
+	}
+
+	compileChainable(u: CompileUtils): CompiledItem[] {
+		return this.chained.map((statement) => statement.compileChainable(u)).flat();
 	}
 }
 

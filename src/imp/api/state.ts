@@ -10,6 +10,7 @@ import {
 	CompileFunction,
 	CompileUtils,
 	ComposableOverpassStatement,
+	OverpassChainableTargetableState,
 	OverpassExpression,
 	OverpassFilterBuilder,
 	OverpassItemEvaluatorBuilder,
@@ -63,6 +64,7 @@ type Functions = {
 
 export class OverpassStateImp implements OverpassStateMethods {
 	public readonly proxy: OverpassState;
+	public readonly chain: OverpassChainableTargetableState;
 
 	private readonly targets: Map<OverpassQueryTarget, OverpassTargetMapState> = new Map();
 	private readonly functions: Functions = {};
@@ -74,6 +76,13 @@ export class OverpassStateImp implements OverpassStateMethods {
 	) {
 		const stateProxy = new Proxy<OverpassStateImp>(this, { get: this.proxyGet });
 		this.proxy = stateProxy as unknown as OverpassState;
+		this.chain = new OverpassTargetMapStateImp(
+			null!,
+			null!,
+			this.utils,
+			this.filterBuilder,
+			this.evaluatorItemBuilder,
+		);
 	}
 
 	static Build(
@@ -92,6 +101,7 @@ export class OverpassStateImp implements OverpassStateMethods {
 			const statementTarget = new OverpassStatementTargetImp(target, []);
 			targetState = new OverpassTargetMapStateImp(
 				statementTarget,
+				this.chain,
 				this.utils,
 				this.filterBuilder,
 				this.evaluatorItemBuilder,
@@ -157,6 +167,7 @@ export class OverpassStateImp implements OverpassStateMethods {
 		const statementTarget = new OverpassStatementTargetImp(target, [set1, ...sets]);
 		return new OverpassChainableIntersectStatement(
 			statementTarget,
+			this.chain,
 			this.utils,
 			this.filterBuilder,
 			this.evaluatorItemBuilder,

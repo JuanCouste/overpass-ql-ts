@@ -1,5 +1,6 @@
 import { OverpassExpression } from "@/model/expression";
-import { CompilableItem } from "./compilable";
+import { CompiledItem } from "../compilable";
+import { CompilableItem, CompileUtils } from "./compilable";
 
 export interface OverpassStatement extends CompilableItem {}
 
@@ -11,6 +12,10 @@ export interface ComposableOverpassStatement extends OverpassStatement {
 
 	/** Saves the current statement to {@link set} */
 	toSet(set: OverpassExpression<string>): ComposableOverpassStatement;
+}
+
+export interface ChainableOverpassStatement extends ComposableOverpassStatement {
+	compileChainable(utils: CompileUtils): CompiledItem[];
 }
 
 export interface OverpassStatementTarget extends CompilableItem {
