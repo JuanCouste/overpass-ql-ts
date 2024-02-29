@@ -47,7 +47,7 @@ The package is usable though many features we intend to implement are WIP.
 ### Roadmap
 
 1.  String sanitization
-2.  Recurse
+2.  Recurse filter, way_cnt, way_link
 3.  Chaining of bbox, id, filter, etc in the same statement
 4.  Evaluator support
 5.  Conditional query filter
