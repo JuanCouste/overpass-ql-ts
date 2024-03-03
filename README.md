@@ -52,7 +52,8 @@ The package is usable though many features we intend to implement are WIP.
 4.  Evaluator support
 5.  Conditional query filter
 6.  Flow control statements
-7.  etc
+7.  Around
+8.  etc
 
 ## Development
 
