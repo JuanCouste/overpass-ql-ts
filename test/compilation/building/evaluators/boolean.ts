@@ -1,29 +1,12 @@
-import { CompileSymetric } from "?/compilation/symetry";
-import { Symetric, SymetricArgsExpression, SymetricArgumentsObject } from "?/utils";
-import { OverpassBooleanEvaluatorImp, OverpassCompileUtils, OverpassStringEvaluatorImp } from "@/imp";
-import { AnyParamValue, OverpassEvaluator } from "@/index";
+import { Symetric } from "?/utils";
+import { OverpassBooleanEvaluatorImp, OverpassStringEvaluatorImp } from "@/imp";
 import { expect, it } from "@jest/globals";
+import { CompileEvaluatorSymetric } from "./utils";
 
-export function compileEvaluatorsTests() {
+export function compileBooleanEvaluatorsTests() {
 	it("Should compile boolean evaluator", async () => {
 		const [raw, withParams] = CompileEvaluatorSymetric(
 			(boolean) => OverpassBooleanEvaluatorImp.From(boolean),
-			[Symetric.Bool(true)],
-		);
-		await expect(withParams).resolves.toEqual(await raw);
-	});
-
-	it("Should compile equals evaluator", async () => {
-		const [raw, withParams] = CompileEvaluatorSymetric(
-			(boolean) => OverpassBooleanEvaluatorImp.From(true).eq(boolean),
-			[Symetric.Bool(true)],
-		);
-		await expect(withParams).resolves.toEqual(await raw);
-	});
-
-	it("Should compile not equals evaluator", async () => {
-		const [raw, withParams] = CompileEvaluatorSymetric(
-			(boolean) => OverpassBooleanEvaluatorImp.From(true).neq(boolean),
 			[Symetric.Bool(true)],
 		);
 		await expect(withParams).resolves.toEqual(await raw);
@@ -75,13 +58,4 @@ export function compileEvaluatorsTests() {
 		);
 		await expect(withParams).resolves.toEqual(await raw);
 	});
-}
-
-function CompileEvaluatorSymetric<Args extends AnyParamValue[]>(
-	buildEvaluator: (...args: SymetricArgsExpression<Args>) => OverpassEvaluator<any>,
-	args: SymetricArgumentsObject<Args>,
-) {
-	const utils = new OverpassCompileUtils();
-
-	return CompileSymetric<Args>((...args) => buildEvaluator(...args).compile(utils), args);
 }

@@ -3,12 +3,15 @@ import { OverpassMagnitudeEvaluatorImp } from "@/imp/evaluator/mangnitude";
 import {
 	CompileUtils,
 	CompiledItem,
+	OverpassArithmeticOperator,
 	OverpassEvaluator,
 	OverpassEvaluatorExpression,
 	OverpassEvaluatorNode,
 	OverpassExpression,
 	OverpassNumberEvaluator,
 } from "@/model";
+import { OverpassAbsEvaluatorNode } from "./abs";
+import { OverpassArithmeticEvaluatorNode } from "./arithmetic";
 
 export class OverpassNumberEvaluatorNode extends OverpassEvaluatorNodeImp<number> {
 	constructor(private readonly expression: OverpassExpression<number>) {
@@ -37,18 +40,27 @@ export class OverpassNumberEvaluatorImp
 	}
 
 	abs(): OverpassNumberEvaluator {
-		throw new Error("Method not implemented.");
+		return new OverpassNumberEvaluatorImp(new OverpassAbsEvaluatorNode(this));
 	}
+
+	op(op: OverpassArithmeticOperator, rightExp: OverpassEvaluatorExpression<number>): OverpassNumberEvaluator {
+		const right = this.evaluatorFromExp(rightExp);
+		return new OverpassNumberEvaluatorImp(new OverpassArithmeticEvaluatorNode(this, op, right));
+	}
+
 	plus(number: OverpassEvaluatorExpression<number>): OverpassNumberEvaluator {
-		throw new Error("Method not implemented.");
+		return this.op(OverpassArithmeticOperator.Add, number);
 	}
+
 	minus(number: OverpassEvaluatorExpression<number>): OverpassNumberEvaluator {
-		throw new Error("Method not implemented.");
+		return this.op(OverpassArithmeticOperator.Sub, number);
 	}
+
 	times(number: OverpassEvaluatorExpression<number>): OverpassNumberEvaluator {
-		throw new Error("Method not implemented.");
+		return this.op(OverpassArithmeticOperator.Mult, number);
 	}
+
 	dividedBy(number: OverpassEvaluatorExpression<number>): OverpassNumberEvaluator {
-		throw new Error("Method not implemented.");
+		return this.op(OverpassArithmeticOperator.Divide, number);
 	}
 }
