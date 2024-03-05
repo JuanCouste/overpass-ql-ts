@@ -1,7 +1,22 @@
+import { config } from "dotenv";
 import { JestConfigWithTsJest } from "ts-jest";
 
-// This is a sad way to indicate to bunch all tests in one file
-const bunchTestsInOneFile = process.argv.slice(2).includes("--coverage=false");
+config();
+
+function parseYesNo(env: string | undefined, defaultValue: boolean): boolean {
+	switch (env?.toLocaleLowerCase()) {
+		case "yes":
+		case "y":
+		case "true":
+			return true;
+		case "no":
+		case "n":
+		case "false":
+			return false;
+		default:
+			return defaultValue;
+	}
+}
 
 export const baseConfig: JestConfigWithTsJest = {
 	preset: "ts-jest",
@@ -12,7 +27,7 @@ export const baseConfig: JestConfigWithTsJest = {
 	},
 	setupFiles: ["./test/setup.ts"],
 	// Shorter may not complete for main overpass api
-	testTimeout: 2000,
+	testTimeout: +(process.env.OVERPASS_QL_TIMEOUT ?? 2000),
 	coverageDirectory: "coverage",
 	coveragePathIgnorePatterns: ["test/", "scripts/", ".*\\.config\\.ts"],
 	openHandlesTimeout: 0,
@@ -23,19 +38,20 @@ export const baseConfig: JestConfigWithTsJest = {
 			{
 				useESM: true,
 				diagnostics: { ignoreCodes: ["TS151001"] },
+				isolatedModules: parseYesNo(process.env.OVERPASS_QL_TS_NODE_I, false),
 			},
 		],
 	},
 };
 
-export default bunchTestsInOneFile
+export default parseYesNo(process.env.OVERPASS_QL_TEST_BUNCH, false)
 	? {
 			...baseConfig,
 			testMatch: ["**/test.spec.ts"],
 			testPathIgnorePatterns: [],
-		}
+	  }
 	: {
 			...baseConfig,
 			testMatch: ["**/*.spec.ts"],
 			testPathIgnorePatterns: ["test/test.spec.ts"],
-		};
+	  };

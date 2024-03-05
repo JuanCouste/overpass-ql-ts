@@ -25,6 +25,10 @@ export const Symetric = {
 		return { exp, type: ParamType.Number };
 	},
 
+	Bool(exp: boolean): SymetricArgumentObject<boolean> {
+		return { exp, type: ParamType.Boolean };
+	},
+
 	String(exp: string): SymetricArgumentObject<string> {
 		return { exp, type: ParamType.String };
 	},

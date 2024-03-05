@@ -11,6 +11,7 @@ export class OverpassTargetMapStateImp extends OverpassTargetStateBase {
 			this.target.withIntersection(set1, ...sets),
 			this.utils,
 			this.filterBuilder,
+			this.evaluatorItemBuilder,
 		);
 	}
 }

@@ -14,6 +14,7 @@ export enum ParamType {
 	BoundingBox,
 	GeoPos,
 	Date,
+	Boolean,
 	Target,
 	Verbosity,
 	GeoInfo,
@@ -35,7 +36,15 @@ export type OverpassEnum =
 	| OverpassSortOrder
 	| OverpassRecurseStmType;
 
-export type AnyParamValue = number | OverpassEnum | string | RegExp | Date | OverpassBoundingBox | OverpassGeoPos;
+export type AnyParamValue =
+	| number
+	| boolean
+	| OverpassEnum
+	| string
+	| RegExp
+	| Date
+	| OverpassBoundingBox
+	| OverpassGeoPos;
 
 export type ActualEnumParamType<T extends OverpassEnum> = T extends OverpassQueryTarget
 	? ParamType.Target
@@ -53,6 +62,8 @@ export type ActualParamType<T> = T extends OverpassEnum
 	? ActualEnumParamType<T> | ParamType.Number
 	: T extends number
 	? ParamType.Number
+	: T extends boolean
+	? ParamType.Boolean
 	: T extends string
 	? ParamType.String
 	: T extends RegExp

@@ -5,6 +5,7 @@ import {
 	OverpassOutputOptions,
 	OverpassOutputVerbosity,
 	OverpassSettings,
+	OverpassSettingsNoFormat,
 } from "@/model";
 
 export const MDEO_ID = 296140043;
@@ -14,6 +15,7 @@ export const MDEO_LABEL_ID = 313943109;
 export const URUGUAY_ID = 287072;
 export const PLAZA_INDEP_ID = 1219079;
 export const PAL_LEG_ID = 81683741;
+export const JBO_STATUE_ID = 4422097133;
 
 export const ONLY_IDS: OverpassOutputOptions = { verbosity: OverpassOutputVerbosity.Ids };
 
@@ -26,6 +28,10 @@ export const MDEO_BBOX: OverpassBoundingBox = [
 export const PAL_LEG_BBOX: OverpassBoundingBox = [
 	-34.89313931916607, -56.1902053626241, -34.88892000597966, -56.183711085621454,
 ];
+
+export const JBO_BBOX: OverpassBoundingBox = [-34.8899369, -56.1865393, -34.8899369, -56.1865393];
+
+export const JBO_G_BBOX: OverpassSettingsNoFormat = { globalBoundingBox: JBO_BBOX };
 
 export const JSON_OUTPUT: Pick<OverpassJsonOutput, "version" | "generator" | "osm3s"> = {
 	version: 0.6,

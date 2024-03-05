@@ -7,11 +7,12 @@ import {
 } from "@/imp/statement";
 import {
 	AnyOverpassQueryTarget,
+	CompileFunction,
 	CompileUtils,
-	CompiledItem,
 	ComposableOverpassStatement,
 	OverpassExpression,
 	OverpassFilterBuilder,
+	OverpassItemEvaluatorBuilder,
 	OverpassQueryTarget,
 	OverpassQueryTargetExpression,
 	OverpassQueryTargetString,
@@ -29,6 +30,7 @@ const STATEMENT_METHOD = (function () {
 		byId: true,
 		inside: true,
 		query: true,
+		filter: true,
 	};
 	return Object.keys(enumObj);
 })();
@@ -65,13 +67,21 @@ export class OverpassStateImp implements OverpassStateMethods {
 	private readonly targets: Map<OverpassQueryTarget, OverpassTargetMapState> = new Map();
 	private readonly functions: Functions = {};
 
-	constructor(private readonly utils: CompileUtils, private readonly filterBuilder: OverpassFilterBuilder) {
+	constructor(
+		private readonly utils: CompileUtils,
+		private readonly filterBuilder: OverpassFilterBuilder,
+		private readonly evaluatorItemBuilder: OverpassItemEvaluatorBuilder,
+	) {
 		const stateProxy = new Proxy<OverpassStateImp>(this, { get: this.proxyGet });
 		this.proxy = stateProxy as unknown as OverpassState;
 	}
 
-	static Build(utils: CompileUtils, filterBuilder: OverpassFilterBuilder): OverpassState {
-		const state = new OverpassStateImp(utils, filterBuilder);
+	static Build(
+		utils: CompileUtils,
+		filterBuilder: OverpassFilterBuilder,
+		evaluatorItemBuilder: OverpassItemEvaluatorBuilder,
+	): OverpassState {
+		const state = new OverpassStateImp(utils, filterBuilder, evaluatorItemBuilder);
 		return state.proxy;
 	}
 
@@ -80,7 +90,12 @@ export class OverpassStateImp implements OverpassStateMethods {
 		let targetState = this.targets.get(target);
 		if (targetState == null) {
 			const statementTarget = new OverpassStatementTargetImp(target, []);
-			targetState = new OverpassTargetMapStateImp(statementTarget, this.utils, this.filterBuilder);
+			targetState = new OverpassTargetMapStateImp(
+				statementTarget,
+				this.utils,
+				this.filterBuilder,
+				this.evaluatorItemBuilder,
+			);
 			this.targets.set(target, targetState);
 		}
 		return targetState;
@@ -115,14 +130,14 @@ export class OverpassStateImp implements OverpassStateMethods {
 	}
 
 	statement(statement: string): OverpassStatement;
-	statement(compile: (utils: CompileUtils) => CompiledItem): OverpassStatement;
-	statement(input: string | ((utils: CompileUtils) => CompiledItem)): OverpassStatement {
+	statement(compile: CompileFunction): OverpassStatement;
+	statement(input: string | CompileFunction): OverpassStatement {
 		return new OverpassRawStatement(typeof input == "string" ? (u) => u.raw(input) : input);
 	}
 
 	composableStatement(statement: string): ComposableOverpassStatement;
-	composableStatement(compile: (utils: CompileUtils) => CompiledItem): ComposableOverpassStatement;
-	composableStatement(input: string | ((utils: CompileUtils) => CompiledItem)): ComposableOverpassStatement {
+	composableStatement(compile: CompileFunction): ComposableOverpassStatement;
+	composableStatement(input: string | CompileFunction): ComposableOverpassStatement {
 		return new OverpassComposableRawStatement(typeof input == "string" ? (u) => u.raw(input) : input);
 	}
 
@@ -140,7 +155,12 @@ export class OverpassStateImp implements OverpassStateMethods {
 	): ComposableOverpassStatement & OverpassTargetState {
 		const target = AnyTargetToQueryTarget(anyTargetExp);
 		const statementTarget = new OverpassStatementTargetImp(target, [set1, ...sets]);
-		return new OverpassChainableIntersectStatement(statementTarget, this.utils, this.filterBuilder);
+		return new OverpassChainableIntersectStatement(
+			statementTarget,
+			this.utils,
+			this.filterBuilder,
+			this.evaluatorItemBuilder,
+		);
 	}
 
 	recurse(

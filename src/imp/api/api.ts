@@ -18,6 +18,7 @@ import {
 	OverpassApiOutput,
 	OverpassFilterBuilder,
 	OverpassFormat,
+	OverpassItemEvaluatorBuilder,
 	OverpassJsonOutput,
 	OverpassJsonSettings,
 	OverpassOutputOptions,
@@ -29,6 +30,7 @@ import {
 } from "@/model";
 import { OverpassQueryBuilderImp } from "./builder";
 import { OverpassCompileUtils } from "./compile";
+import { OverpassItemEvaluatorBuilderImp } from "./evaluator";
 import { OverpassFilterBuilderImp } from "./filter";
 import { OverpassStateImp } from "./state";
 import { OverpassStatusValidatorImp } from "./status";
@@ -46,6 +48,7 @@ export class OverpassApiObjectImp implements OverpassApiObject {
 		private readonly compileUtils: CompileUtils,
 		private readonly filterBuilder: OverpassFilterBuilder,
 		private readonly queryBuilder: OverpassQueryBuilder,
+		private readonly evaluatorItemBuilder: OverpassItemEvaluatorBuilder,
 	) {}
 
 	public static Build(
@@ -61,6 +64,7 @@ export class OverpassApiObjectImp implements OverpassApiObject {
 		const compileUtils = new OverpassCompileUtils();
 		const builder = new OverpassQueryBuilderImp(compileUtils);
 		const filterBuilder = OverpassFilterBuilderImp.Build();
+		const evaluatorItemBuilder = new OverpassItemEvaluatorBuilderImp();
 
 		return new OverpassApiObjectImp(
 			adapter,
@@ -71,6 +75,7 @@ export class OverpassApiObjectImp implements OverpassApiObject {
 			compileUtils,
 			filterBuilder,
 			builder,
+			evaluatorItemBuilder,
 		);
 	}
 
@@ -117,7 +122,7 @@ export class OverpassApiObjectImp implements OverpassApiObject {
 		options?: OverpassOutputOptions,
 		settings?: OverpassSettings,
 	): string {
-		const state = OverpassStateImp.Build(this.compileUtils, this.filterBuilder);
+		const state = OverpassStateImp.Build(this.compileUtils, this.filterBuilder, this.evaluatorItemBuilder);
 
 		const statements = statementBuilder(state);
 
@@ -228,7 +233,7 @@ export class OverpassApiObjectImp implements OverpassApiObject {
 	): OverpassApiFunction<Args, S, O> {
 		const types = argTypes.map((type, index) => ({ index, type })) as CreateFunctionArgs<Args>;
 
-		const state = OverpassStateImp.Build(this.compileUtils, this.filterBuilder);
+		const state = OverpassStateImp.Build(this.compileUtils, this.filterBuilder, this.evaluatorItemBuilder);
 
 		const builderOutput = statementBuilder(state, ...types);
 

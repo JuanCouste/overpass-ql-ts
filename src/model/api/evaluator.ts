@@ -1,7 +1,9 @@
 import { OverpassExpression } from "@/model/expression";
 import {
+	CompileFunction,
 	OverpassBooleanEvaluator,
 	OverpassDateEvaluator,
+	OverpassEvaluator,
 	OverpassEvaluatorExpression,
 	OverpassNumberEvaluator,
 	OverpassStringEvaluator,
@@ -11,18 +13,25 @@ export interface OverpassEvaluatorBuilder {
 	readonly true: OverpassBooleanEvaluator;
 	readonly false: OverpassBooleanEvaluator;
 
-	conditional<E extends OverpassEvaluatorExpression<any>>(
+	conditional<T, E extends OverpassEvaluator<T>>(
 		condition: OverpassEvaluatorExpression<boolean>,
 		ifTrue: E,
 		ifFalse: E,
 	): E;
 
-	or(...conditions: OverpassEvaluatorExpression<boolean>[]): OverpassBooleanEvaluator;
-	and(...conditions: OverpassEvaluatorExpression<boolean>[]): OverpassBooleanEvaluator;
+	or(
+		condition: OverpassEvaluatorExpression<boolean>,
+		...conditions: OverpassEvaluatorExpression<boolean>[]
+	): OverpassBooleanEvaluator;
+	and(
+		condition: OverpassEvaluatorExpression<boolean>,
+		...conditions: OverpassEvaluatorExpression<boolean>[]
+	): OverpassBooleanEvaluator;
 
-	number(value: OverpassExpression<number>): OverpassNumberEvaluator;
-	string(value: OverpassExpression<string>): OverpassStringEvaluator;
-	date(value: OverpassExpression<Date>): OverpassDateEvaluator;
+	number(value: OverpassExpression<number> | CompileFunction): OverpassNumberEvaluator;
+	string(value: OverpassExpression<string> | CompileFunction): OverpassStringEvaluator;
+	date(value: OverpassExpression<Date> | CompileFunction): OverpassDateEvaluator;
+	boolean(value: OverpassExpression<boolean> | CompileFunction): OverpassBooleanEvaluator;
 }
 
 export interface OverpassItemEvaluatorBuilder extends OverpassEvaluatorBuilder {

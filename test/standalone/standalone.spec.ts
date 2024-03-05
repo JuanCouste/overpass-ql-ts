@@ -4,6 +4,7 @@ import { describe } from "@jest/globals";
 import { standaloneAnyTests } from "./any";
 import { standaloneBBoxTests } from "./bbox";
 import { standaloneByIdTests } from "./id";
+import { standaloneIfFilterTests } from "./ifFilter";
 import { standaloneIntersectTests } from "./intersect";
 import { standalonePolygonTests } from "./polygon";
 import { standaloneQueryTests } from "./query";
@@ -17,4 +18,5 @@ describe("Standalone statements", () => {
 	describe("Intersect", standaloneIntersectTests);
 	describe("Any", standaloneAnyTests);
 	describe("Recurse", standaloneRecurseTests);
+	describe("IfFilter", standaloneIfFilterTests);
 });

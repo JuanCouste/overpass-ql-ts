@@ -1,4 +1,5 @@
 import { describe } from "@jest/globals";
+import { sanitizationBooleanTests } from "./boolean";
 import { sanitizationBoundingBoxTests } from "./boundingbox";
 import { sanitizationDateTests } from "./date";
 import { sanitizationEnumTests } from "./enums";
@@ -15,4 +16,5 @@ export function sanitizationCompileTests() {
 	describe("GeoPos", sanitizationGeoPosTests);
 	describe("BoundingBox", sanitizationBoundingBoxTests);
 	describe("Enums", sanitizationEnumTests);
+	describe("Boolean", sanitizationBooleanTests);
 }

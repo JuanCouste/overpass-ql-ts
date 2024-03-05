@@ -77,9 +77,15 @@ export class OverpassCompileUtils implements CompileUtils {
 	public readonly nl: CompiledItem;
 	public readonly empty: CompiledItem;
 
+	private readonly trueEvaluator: CompiledItem;
+	private readonly falseEvaluator: CompiledItem;
+
 	constructor() {
 		this.nl = this.raw("\n");
 		this.empty = this.raw("");
+
+		this.trueEvaluator = this.raw("1");
+		this.falseEvaluator = this.raw("0");
 	}
 
 	private paramItem<T>(value: OverpassExpression<T>, callback: (item: T) => CompiledItem) {
@@ -244,6 +250,20 @@ export class OverpassCompileUtils implements CompileUtils {
 			lat: this.geoPosCoord(value, "lat"),
 			lon: this.geoPosCoord(value, "lon"),
 		};
+	}
+
+	boolean(value: OverpassExpression<boolean>): CompiledItem {
+		return this.paramItem(value, (boolean) => {
+			if (boolean == null) {
+				throw new OverpassParameterError(`Unexpected boolean value (${boolean})`);
+			}
+
+			if (typeof boolean != "boolean") {
+				throw new OverpassParameterError(`Unexpected boolean value (${boolean})`);
+			}
+
+			return boolean ? this.trueEvaluator : this.falseEvaluator;
+		});
 	}
 
 	isParam<T>(value: OverpassExpression<T>): value is ParamItem<T> {

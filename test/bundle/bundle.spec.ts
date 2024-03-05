@@ -20,7 +20,7 @@ function shouldDoBundlingTests(): boolean {
 }
 
 (shouldDoBundlingTests() ? describe : describe.skip)("Bundle [Optional]", () => {
-	beforeAll(setupBundles, 10000);
+	beforeAll(setupBundles, 15000);
 
 	describe("Node", nodeTests);
 

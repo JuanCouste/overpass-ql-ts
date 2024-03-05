@@ -43,6 +43,9 @@ export interface CompileUtils {
 	 */
 	geoPos(value: OverpassExpression<OverpassGeoPos>): CompiledOverpassGeoPos;
 
+	/** @param value A boolean value for use inside an evaluator */
+	boolean(value: OverpassExpression<boolean>): CompiledItem;
+
 	/** @param value A target that should be prepared */
 	target(value: OverpassExpression<OverpassQueryTarget>): CompiledItem;
 	/** @param value A verbosity that should be prepared */
@@ -69,3 +72,5 @@ export interface CompileUtils {
 	 */
 	template(strings: TemplateStringsArray, ...expr: CompiledItem[]): CompiledItem;
 }
+
+export type CompileFunction = (utils: CompileUtils) => CompiledItem;

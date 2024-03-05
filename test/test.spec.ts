@@ -4,6 +4,7 @@ import "./adapter/adapter.spec";
 import "./api/api.spec";
 import "./bundle/bundle.spec";
 import "./compilation/compilation.spec";
+import "./evaluator/evaluator.spec";
 import "./functions/functions.spec";
 import "./nonsense.spec";
 import "./query.spec";

@@ -31,6 +31,6 @@
 			{ "transform": "typescript-transform-paths", "afterDeclarations": true }
 		]
 	},
-	"include": ["src/**/*", "scripts/**/*", "test/**/*", "rollup.config.ts"],
+	"include": ["src/**/*", "scripts/**/*", "test/**/*", "examples/**/*", "rollup.config.ts"],
 	"exclude": ["node_modules"]
 }

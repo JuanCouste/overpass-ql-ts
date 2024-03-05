@@ -1,8 +1,8 @@
-import { CompiledItem } from "@/model/compilable";
 import { OverpassQueryTarget, OverpassRecurseStmType } from "@/model/enum";
 import { OverpassExpression } from "@/model/expression";
-import { CompileUtils, ComposableOverpassStatement, OverpassStatement } from "@/model/parts";
+import { CompileFunction, ComposableOverpassStatement, OverpassEvaluator, OverpassStatement } from "@/model/parts";
 import { OverpassBoundingBox, OverpassGeoPos } from "@/model/types";
+import { OverpassItemEvaluatorBuilder } from "./evaluator";
 import { OverpassQueryFilter, OverpassQueryFilterFunction } from "./query";
 
 export type OverpassQueryTargetString = "any" | "node" | "way" | "relation";
@@ -23,6 +23,8 @@ export interface OverpassTargetState {
 	byId(id: OverpassExpression<number>): ComposableOverpassStatement;
 	/** The elements that are inside a {@link polygon} */
 	inside(polygon: OverpassPolygonCoordExpression[]): ComposableOverpassStatement;
+	/** Those elements that satisfy {@link predicate} */
+	filter(predicate: (e: OverpassItemEvaluatorBuilder) => OverpassEvaluator<boolean>): ComposableOverpassStatement;
 }
 
 /** Runs the statement for the specified {@link target} */
@@ -50,7 +52,7 @@ export interface OverpassStateMethods {
 	 * Avoid using if possible
 	 */
 	statement(statement: string): OverpassStatement;
-	statement(compile: (utils: CompileUtils) => CompiledItem): OverpassStatement;
+	statement(compile: CompileFunction): OverpassStatement;
 
 	/**
 	 * Fallback for things that are not currently implemented
@@ -58,7 +60,7 @@ export interface OverpassStateMethods {
 	 * This statement is expected to be usable within unions and such.
 	 */
 	composableStatement(statement: string): ComposableOverpassStatement;
-	composableStatement(compile: (utils: CompileUtils) => CompiledItem): ComposableOverpassStatement;
+	composableStatement(compile: CompileFunction): ComposableOverpassStatement;
 
 	/** The contents of {@link set} */
 	set(
