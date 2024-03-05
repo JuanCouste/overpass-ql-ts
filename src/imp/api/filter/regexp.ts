@@ -3,7 +3,10 @@ import { OverpassExpression, OverpassFilter, OverpassFilterHelper } from "@/mode
 import { OverpassFilterHelperBase } from "./base";
 
 export class OverpassRegExpFilterHelper extends OverpassFilterHelperBase {
-	constructor(private readonly regExp: OverpassExpression<RegExp>, negated: boolean) {
+	constructor(
+		private readonly regExp: OverpassExpression<RegExp>,
+		negated: boolean,
+	) {
 		super(negated);
 	}
 

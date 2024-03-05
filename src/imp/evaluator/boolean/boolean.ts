@@ -27,7 +27,10 @@ export class OverpassBooleanEvaluatorNode extends OverpassEvaluatorNodeImp<boole
 }
 
 class OverpassBooleanEvaluatorThenImp<T, E extends OverpassEvaluator<T>> implements OverpassBooleanEvaluatorThen<T, E> {
-	constructor(private readonly condition: OverpassBooleanEvaluator, private readonly ifTrue: E) {}
+	constructor(
+		private readonly condition: OverpassBooleanEvaluator,
+		private readonly ifTrue: E,
+	) {}
 
 	else(ifFalse: E): E {
 		return this.condition.conditional(this.ifTrue, ifFalse);

@@ -49,32 +49,32 @@ export type AnyParamValue =
 export type ActualEnumParamType<T extends OverpassEnum> = T extends OverpassQueryTarget
 	? ParamType.Target
 	: T extends OverpassOutputVerbosity
-	? ParamType.Verbosity
-	: T extends OverpassOutputGeoInfo
-	? ParamType.GeoInfo
-	: T extends OverpassSortOrder
-	? ParamType.SortOrder
-	: T extends OverpassRecurseStmType
-	? ParamType.RecurseStm
-	: never;
+		? ParamType.Verbosity
+		: T extends OverpassOutputGeoInfo
+			? ParamType.GeoInfo
+			: T extends OverpassSortOrder
+				? ParamType.SortOrder
+				: T extends OverpassRecurseStmType
+					? ParamType.RecurseStm
+					: never;
 
 export type ActualParamType<T> = T extends OverpassEnum
 	? ActualEnumParamType<T> | ParamType.Number
 	: T extends number
-	? ParamType.Number
-	: T extends boolean
-	? ParamType.Boolean
-	: T extends string
-	? ParamType.String
-	: T extends RegExp
-	? ParamType.RegExp
-	: T extends Date
-	? ParamType.Date
-	: T extends OverpassBoundingBox
-	? ParamType.BoundingBox
-	: T extends OverpassGeoPos
-	? ParamType.GeoPos
-	: never;
+		? ParamType.Number
+		: T extends boolean
+			? ParamType.Boolean
+			: T extends string
+				? ParamType.String
+				: T extends RegExp
+					? ParamType.RegExp
+					: T extends Date
+						? ParamType.Date
+						: T extends OverpassBoundingBox
+							? ParamType.BoundingBox
+							: T extends OverpassGeoPos
+								? ParamType.GeoPos
+								: never;
 
 export interface ParamItem<T> {
 	readonly index: number;

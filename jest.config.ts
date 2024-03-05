@@ -49,9 +49,9 @@ export default parseYesNo(process.env.OVERPASS_QL_TEST_BUNCH, false)
 			...baseConfig,
 			testMatch: ["**/test.spec.ts"],
 			testPathIgnorePatterns: [],
-	  }
+		}
 	: {
 			...baseConfig,
 			testMatch: ["**/*.spec.ts"],
 			testPathIgnorePatterns: ["test/test.spec.ts"],
-	  };
+		};

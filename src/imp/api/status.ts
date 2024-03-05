@@ -17,7 +17,10 @@ interface RegExpHandler {
 }
 
 export class OverpassStatusValidatorImp implements OverpassStatusValidator {
-	constructor(private readonly statusUrl: URL, private readonly rejectOnUnexpected: boolean = false) {}
+	constructor(
+		private readonly statusUrl: URL,
+		private readonly rejectOnUnexpected: boolean = false,
+	) {}
 
 	private static ConnectedAs(status: TempOverpassStatus, value: string) {
 		status.connectedAs = +value;
