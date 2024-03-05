@@ -1,5 +1,5 @@
 import { OverpassEvaluatorNodeImp } from "@/imp/evaluator/evaluator";
-import { OverpassMagnitudeEvaluatorImp } from "@/imp/evaluator/mangnitude";
+import { OverpassMagnitudeEvaluatorImp } from "@/imp/evaluator/magnitude";
 import {
 	CompileUtils,
 	CompiledItem,

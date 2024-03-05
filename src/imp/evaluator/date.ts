@@ -7,7 +7,7 @@ import {
 	OverpassExpression,
 } from "@/model";
 import { OverpassEvaluatorNodeImp } from "./evaluator";
-import { OverpassMagnitudeEvaluatorImp } from "./mangnitude";
+import { OverpassMagnitudeEvaluatorImp } from "./magnitude";
 
 export class OverpassDateEvaluatorNode extends OverpassEvaluatorNodeImp<Date> {
 	constructor(private readonly expression: OverpassExpression<Date>) {
@@ -15,7 +15,7 @@ export class OverpassDateEvaluatorNode extends OverpassEvaluatorNodeImp<Date> {
 	}
 
 	compile(u: CompileUtils): CompiledItem {
-		return u.template`date(${u.date(this.expression)})`;
+		return u.template`date("${u.date(this.expression)}")`;
 	}
 }
 

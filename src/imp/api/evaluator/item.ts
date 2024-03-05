@@ -1,4 +1,17 @@
-import { OverpassElementIdEvaluatorNode, OverpassNumberEvaluatorImp } from "@/imp/evaluator";
+import {
+	OverpassBooleanEvaluatorImp,
+	OverpassCountByRoleDistinctEvaluatorNode,
+	OverpassCountByRoleEvaluatorNode,
+	OverpassCountMembersDistinctEvaluatorNode,
+	OverpassCountMembersEvaluatorNode,
+	OverpassCountTagsEvaluatorNode,
+	OverpassElementGetTypeEvaluatorNode,
+	OverpassElementHasTypeEvaluatorNode,
+	OverpassElementIdEvaluatorNode,
+	OverpassElementTypeEvaluatorNode,
+	OverpassNumberEvaluatorImp,
+	OverpassStringEvaluatorImp,
+} from "@/imp/evaluator";
 import {
 	OverpassBooleanEvaluator,
 	OverpassEvaluatorExpression,
@@ -12,19 +25,27 @@ import { OverpassEvaluatorBuilderImp } from "./evaluator";
 
 export class OverpassItemEvaluatorCountBuilderImp implements OverpassItemEvaluatorCountBuilder {
 	tags(): OverpassNumberEvaluator {
-		throw new Error("Method not implemented.");
+		return new OverpassNumberEvaluatorImp(new OverpassCountTagsEvaluatorNode());
 	}
+
 	members(): OverpassNumberEvaluator {
-		throw new Error("Method not implemented.");
+		return new OverpassNumberEvaluatorImp(new OverpassCountMembersEvaluatorNode());
 	}
+
 	membersDistinct(): OverpassNumberEvaluator {
-		throw new Error("Method not implemented.");
+		return new OverpassNumberEvaluatorImp(new OverpassCountMembersDistinctEvaluatorNode());
 	}
+
 	byRole(role: OverpassEvaluatorExpression<string>): OverpassNumberEvaluator {
-		throw new Error("Method not implemented.");
+		return new OverpassNumberEvaluatorImp(
+			new OverpassCountByRoleEvaluatorNode(OverpassStringEvaluatorImp.From(role)),
+		);
 	}
+
 	byRoleDistinct(role: OverpassEvaluatorExpression<string>): OverpassNumberEvaluator {
-		throw new Error("Method not implemented.");
+		return new OverpassNumberEvaluatorImp(
+			new OverpassCountByRoleDistinctEvaluatorNode(OverpassStringEvaluatorImp.From(role)),
+		);
 	}
 }
 
@@ -44,14 +65,14 @@ export class OverpassItemEvaluatorBuilderImp
 	}
 
 	type(): OverpassStringEvaluator {
-		throw new Error("Method not implemented.");
+		return new OverpassStringEvaluatorImp(new OverpassElementTypeEvaluatorNode());
 	}
 
 	hasTag(tag: OverpassExpression<string>): OverpassBooleanEvaluator {
-		throw new Error("Method not implemented.");
+		return new OverpassBooleanEvaluatorImp(new OverpassElementHasTypeEvaluatorNode(tag));
 	}
 
 	getTag(tag: OverpassExpression<string>): OverpassStringEvaluator {
-		throw new Error("Method not implemented.");
+		return new OverpassStringEvaluatorImp(new OverpassElementGetTypeEvaluatorNode(tag));
 	}
 }

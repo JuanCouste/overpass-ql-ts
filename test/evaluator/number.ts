@@ -1,93 +1,30 @@
-import { BuildApi, JBO_G_BBOX, JBO_STATUE_ID, ONLY_IDS } from "?/utils";
-import { OverpassApiObject } from "@/model";
-import { expect, it } from "@jest/globals";
+import { JBO_STATUE_ID } from "?/utils";
+import { it } from "@jest/globals";
+import { ExpectJBOEvaluatorFalse, ExpectJBOEvaluatorTrue } from "./utils";
 
 export function numberEvaluatorTests() {
-	it("Should handle evaluator abs", async () => {
-		const api: OverpassApiObject = BuildApi();
+	it("Should handle evaluator abs", async () =>
+		await ExpectJBOEvaluatorTrue((e) => e.id().eq(e.number(-JBO_STATUE_ID).abs())));
 
-		const result = await api.execJson(
-			(s) => s.node.filter((e) => e.id().eq(e.number(-JBO_STATUE_ID).abs())),
-			ONLY_IDS,
-			JBO_G_BBOX,
-		);
+	it("Should handle evaluator plus", async () =>
+		await ExpectJBOEvaluatorTrue((e) => e.id().eq(e.number(JBO_STATUE_ID - 1).plus(1))));
 
-		expect(result.elements.length).toBe(1);
-		const [element] = result.elements;
+	it("Should handle evaluator minus", async () =>
+		await ExpectJBOEvaluatorTrue((e) => e.id().eq(e.number(JBO_STATUE_ID + 1).minus(1))));
 
-		expect(element.id).toEqual(JBO_STATUE_ID);
-		expect(element.type).toBe("node");
-	});
+	it("Should handle evaluator times", async () =>
+		await ExpectJBOEvaluatorTrue((e) =>
+			e.id().eq(
+				e
+					.number(Math.floor(JBO_STATUE_ID / 2))
+					.times(2)
+					.plus(1),
+			),
+		));
 
-	it("Should handle evaluator plus", async () => {
-		const api: OverpassApiObject = BuildApi();
+	it("Should handle evaluator divide", async () =>
+		await ExpectJBOEvaluatorTrue((e) => e.id().eq(e.number(JBO_STATUE_ID * 2).dividedBy(2))));
 
-		const result = await api.execJson(
-			(s) => s.node.filter((e) => e.id().eq(e.number(JBO_STATUE_ID - 1).plus(1))),
-			ONLY_IDS,
-			JBO_G_BBOX,
-		);
-
-		expect(result.elements.length).toBe(1);
-		const [element] = result.elements;
-
-		expect(element.id).toEqual(JBO_STATUE_ID);
-		expect(element.type).toBe("node");
-	});
-
-	it("Should handle evaluator minus", async () => {
-		const api: OverpassApiObject = BuildApi();
-
-		const result = await api.execJson(
-			(s) => s.node.filter((e) => e.id().eq(e.number(JBO_STATUE_ID + 1).minus(1))),
-			ONLY_IDS,
-			JBO_G_BBOX,
-		);
-
-		expect(result.elements.length).toBe(1);
-		const [element] = result.elements;
-
-		expect(element.id).toEqual(JBO_STATUE_ID);
-		expect(element.type).toBe("node");
-	});
-
-	it("Should handle evaluator times", async () => {
-		const api: OverpassApiObject = BuildApi();
-
-		const result = await api.execJson(
-			(s) =>
-				s.node.filter((e) =>
-					e.id().eq(
-						e
-							.number(Math.floor(JBO_STATUE_ID / 2))
-							.times(2)
-							.plus(1),
-					),
-				),
-			ONLY_IDS,
-			JBO_G_BBOX,
-		);
-
-		expect(result.elements.length).toBe(1);
-		const [element] = result.elements;
-
-		expect(element.id).toEqual(JBO_STATUE_ID);
-		expect(element.type).toBe("node");
-	});
-
-	it("Should handle evaluator divide", async () => {
-		const api: OverpassApiObject = BuildApi();
-
-		const result = await api.execJson(
-			(s) => s.node.filter((e) => e.id().eq(e.number(JBO_STATUE_ID * 2).dividedBy(2))),
-			ONLY_IDS,
-			JBO_G_BBOX,
-		);
-
-		expect(result.elements.length).toBe(1);
-		const [element] = result.elements;
-
-		expect(element.id).toEqual(JBO_STATUE_ID);
-		expect(element.type).toBe("node");
-	});
+	it("Should handle evaluator number conditional", async () =>
+		await ExpectJBOEvaluatorFalse((e) => e.true.conditional(e.number(0), e.number(1)).eq(1)));
 }

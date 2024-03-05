@@ -12,6 +12,14 @@ export function compileBooleanEvaluatorsTests() {
 		await expect(withParams).resolves.toEqual(await raw);
 	});
 
+	it("Should compile wrapped boolean evaluator", async () => {
+		const [raw, withParams] = CompileEvaluatorSymetric(
+			(boolean) => OverpassBooleanEvaluatorImp.From(OverpassBooleanEvaluatorImp.From(boolean)),
+			[Symetric.Bool(true)],
+		);
+		await expect(withParams).resolves.toEqual(await raw);
+	});
+
 	it("Should compile not evaluator", async () => {
 		const [raw, withParams] = CompileEvaluatorSymetric(
 			(boolean) => OverpassBooleanEvaluatorImp.From(boolean).not(),
