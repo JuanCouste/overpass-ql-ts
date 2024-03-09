@@ -1,4 +1,4 @@
-import { APP_OSM_XML, BuildApi, JSON_FORMAT, ONLY_IDS, TEXT_CSV } from "?/utils";
+import { APP_OSM_XML, BuildApi, JSON_FORMAT, ONLY_IDS, TEXT_CSV, URUGUAY_ID } from "?/utils";
 import {
 	OverpassApiObject,
 	OverpassApiObjectImp,
@@ -51,6 +51,24 @@ export function apiMethodsTests() {
 		const result = await api.execQuery(query);
 
 		expectUruguay(result);
+	});
+
+	it("Should run queries with execQuery as function", async () => {
+		const api: OverpassApiObject = BuildApi();
+
+		const result = await api.execQuery((u) => u.template`[out:json]; rel(${u.number(URUGUAY_ID)}); out ids;`);
+
+		expectUruguay(result);
+	});
+
+	it("Should not allow params in execQuery", async () => {
+		const api: OverpassApiObject = BuildApi();
+
+		const param: ParamItem<number> = { index: 0, type: ParamType.Number };
+
+		const promise = api.execQuery((u) => u.number(param));
+
+		await expect(promise).rejects.toThrow(Error);
 	});
 
 	it("Should handle multiple or single statements in buildQuery", () => {

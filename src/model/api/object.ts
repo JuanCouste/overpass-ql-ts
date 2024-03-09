@@ -1,5 +1,5 @@
 import { ActualParamType, AnyParamValue, ParamItem } from "@/model/expression";
-import { OverpassStatement } from "@/model/parts";
+import { CompileFunction, OverpassStatement } from "@/model/parts";
 import { OverpassFormat, OverpassOutputOptions, OverpassSettings } from "@/model/query";
 import { OverpassApiOutput, OverpassJsonOutput } from "./output";
 import { OverpassState } from "./state";
@@ -48,7 +48,7 @@ export interface OverpassApiObject {
 	): Promise<OverpassApiOutput<OverpassJsonSettings<S>, O>>;
 
 	/** Executes a raw string query */
-	execQuery(query: string): Promise<OverpassJsonOutput | string>;
+	execQuery(query: string | CompileFunction): Promise<OverpassJsonOutput | string>;
 
 	/**
 	 * Creates a precompiled query that has some arguments
