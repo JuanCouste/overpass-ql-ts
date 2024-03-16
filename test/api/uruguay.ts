@@ -1,7 +1,7 @@
+import { URUGUAY_ID } from "?/utils";
 import { OverpassStatement } from "@/model";
 import { OverpassJsonOutput, OverpassState } from "@/query";
 import { expect } from "@jest/globals";
-import { URUGUAY_ID } from "../utils";
 
 export function expectUruguay(output: OverpassJsonOutput | string) {
 	expect(typeof output).toBe("object");
@@ -13,6 +13,14 @@ export function expectUruguay(output: OverpassJsonOutput | string) {
 
 	expect(element.id).toEqual(URUGUAY_ID);
 	expect(element.type).toBe("relation");
+}
+
+export async function asyncExpectUruguay(promise: Promise<OverpassJsonOutput | string>): Promise<void> {
+	await expect(promise).resolves.toBeInstanceOf(Object);
+
+	const output = await promise;
+
+	expectUruguay(output);
 }
 
 export function uruguayStatementBuilder(s: OverpassState): OverpassStatement[] {

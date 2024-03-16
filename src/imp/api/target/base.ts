@@ -61,7 +61,7 @@ export abstract class OverpassTargetStateBase implements OverpassTargetState {
 			filterData = filter;
 		}
 
-		if (Array.isArray(filterData)) {
+		if (filterData instanceof Array) {
 			filterData.forEach((tuple) => {
 				if (this.isRegExpTuple(tuple)) {
 					const [regExpProp, value] = tuple;
@@ -73,7 +73,7 @@ export abstract class OverpassTargetStateBase implements OverpassTargetState {
 			});
 		} else {
 			Object.entries(filterData).forEach(([prop, anyFilterValue]) => {
-				if (Array.isArray(anyFilterValue)) {
+				if (anyFilterValue instanceof Array) {
 					filters.push(
 						...anyFilterValue.map((anyFilter) => this.anyFilterToHelper(anyFilter).complete(prop)),
 					);

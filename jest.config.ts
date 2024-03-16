@@ -6,7 +6,10 @@ const bunchTestsInOneFile = process.argv.slice(2).includes("--coverage=false");
 export const baseConfig: JestConfigWithTsJest = {
 	preset: "ts-jest",
 	testEnvironment: "node",
-	moduleNameMapper: { "^@/(.*)$": "<rootDir>/src/$1" },
+	moduleNameMapper: {
+		"^@/(.*)$": "<rootDir>/src/$1",
+		"^\\?/(.*)$": "<rootDir>/test/$1",
+	},
 	setupFiles: ["./test/setup.ts"],
 	// Shorter may not complete for main overpass api
 	testTimeout: 2000,

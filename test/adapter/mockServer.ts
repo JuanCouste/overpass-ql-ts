@@ -1,7 +1,7 @@
+import { APP_JSON, JSON_OUTPUT } from "?/utils";
+import { OverpassJsonOutput } from "@/index";
 import { Server, createServer } from "http";
 import { AddressInfo } from "net";
-import { OverpassJsonOutput } from "../../src";
-import { APP_JSON, JSON_OUTPUT } from "../utils";
 
 export function waitForServer(server: Server): Promise<number> {
 	return new Promise((resolve) => {

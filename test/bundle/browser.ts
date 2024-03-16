@@ -1,7 +1,7 @@
+import { MDEO_BBOX, URUGUAY_ID } from "?/utils";
+import { OverpassApiObject, OverpassJsonOutput, OverpassSettingsNoFormat, OverpassState } from "@/index";
 import { afterAll, beforeAll, expect, it } from "@jest/globals";
 import { Browser } from "puppeteer-core";
-import { OverpassApiObject, OverpassJsonOutput, OverpassSettingsNoFormat, OverpassState } from "../../src";
-import { MDEO_BBOX, URUGUAY_ID } from "../utils";
 import { cleanupBrowser, runTestInBrowser, setupBrowser } from "./setupBrowser";
 
 export function browserTests() {

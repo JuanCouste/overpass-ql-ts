@@ -1,6 +1,6 @@
+import { BuildApi, MDEO_BBOX, MDEO_ID, URUGUAY_ID } from "?/utils";
+import { OverpassApiObject, OverpassQueryTarget } from "@/index";
 import { expect, it } from "@jest/globals";
-import { OverpassApiObject, OverpassQueryTarget } from "../../src";
-import { BuildApi, MDEO_BBOX, MDEO_ID, URUGUAY_ID } from "../utils";
 import { fetchFormsOfStatementWithBBox } from "./target";
 
 export function standaloneQueryTests() {

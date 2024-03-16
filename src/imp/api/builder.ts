@@ -1,15 +1,7 @@
 import { enumObjectToArray } from "@/imp/api/enum";
 import { OverpassQueryBuilder } from "@/imp/types";
-import { CompileUtils, CompiledItem, CompiledSubPart, OverpassStatement } from "@/model";
-import {
-	CSVField,
-	OverpassFormat,
-	OverpassOutputGeoInfo,
-	OverpassOutputOptions,
-	OverpassOutputVerbosity,
-	OverpassSettings,
-	OverpassSortOrder,
-} from "@/query";
+import { CompileUtils, CompiledItem, OverpassStatement } from "@/model";
+import { CSVField, OverpassCSVFormatSettings, OverpassFormat, OverpassOutputOptions, OverpassSettings } from "@/query";
 
 const OP_FORMAT: string[] = enumObjectToArray<OverpassFormat, string>({
 	[OverpassFormat.XML]: "xml",
@@ -18,25 +10,6 @@ const OP_FORMAT: string[] = enumObjectToArray<OverpassFormat, string>({
 	[OverpassFormat.CSV]: "csv",
 	[OverpassFormat.Custom]: "custom",
 	[OverpassFormat.Popup]: "popup",
-});
-
-const OP_VERBOSITY: string[] = enumObjectToArray<OverpassOutputVerbosity, string>({
-	[OverpassOutputVerbosity.Ids]: "ids",
-	[OverpassOutputVerbosity.Geometry]: "skel",
-	[OverpassOutputVerbosity.Body]: "body",
-	[OverpassOutputVerbosity.Tags]: "tags",
-	[OverpassOutputVerbosity.Metadata]: "meta",
-});
-
-const OP_GEOINFO: string[] = enumObjectToArray<OverpassOutputGeoInfo, string>({
-	[OverpassOutputGeoInfo.Geometry]: "geom",
-	[OverpassOutputGeoInfo.BoundingBox]: "bb",
-	[OverpassOutputGeoInfo.Center]: "center",
-});
-
-const OP_SORTORDER: string[] = enumObjectToArray<OverpassSortOrder, string>({
-	[OverpassSortOrder.Ascending]: "asc",
-	[OverpassSortOrder.QuadtileIndex]: "qt",
 });
 
 const CSV_FIELDS: { [K in CSVField]: string } = {
@@ -60,64 +33,81 @@ const CSV_FIELDS: { [K in CSVField]: string } = {
 export class OverpassQueryBuilderImp implements OverpassQueryBuilder {
 	constructor(private readonly utils: CompileUtils) {}
 
-	private compileSettings(settings: OverpassSettings): CompiledItem {
-		if (Object.keys(settings).length == 0) {
-			return this.utils.empty;
+	private compileCSVFormat({ fields, delimiterCharacter, headerLine }: OverpassCSVFormatSettings): CompiledItem {
+		const u = this.utils;
+
+		const fieldStr = fields
+			.map((field) => (typeof field == "string" ? field : `::${CSV_FIELDS[field]}`))
+			.join(", ");
+
+		if (headerLine != null || delimiterCharacter != null) {
+			if (delimiterCharacter != null) {
+				return u.raw(`[out:csv(${fieldStr}; ${headerLine ?? true}; "${delimiterCharacter}")]`);
+			} else {
+				return u.raw(`[out:csv(${fieldStr}; ${headerLine})]`);
+			}
 		} else {
-			const options: CompiledItem[] = [];
-			const { timeout, maxSize, format, globalBoundingBox, date, diff } = settings;
-			if (timeout != null) {
-				options.push(this.utils.raw(`[timeout:${timeout}]`));
-			}
-			if (maxSize != null) {
-				options.push(this.utils.raw(`[maxsize:${maxSize}]`));
-			}
-			if (format != null) {
-				if (format != OverpassFormat.CSV) {
-					options.push(this.utils.raw(`[out:${OP_FORMAT[format]}]`));
-				} else {
-					if (settings.csvSettings == null) {
-						throw new Error("csvSettings for format: csv must be supplied");
-					}
-					const { fields, headerLine, delimiterCharacter } = settings.csvSettings;
-					const fieldStr = fields
-						.map((field) => (typeof field == "string" ? field : `::${CSV_FIELDS[field]}`))
-						.join(", ");
-					if (headerLine != null || delimiterCharacter != null) {
-						if (delimiterCharacter != null) {
-							options.push(
-								this.utils.raw(
-									`[out:csv(${fieldStr}; ${headerLine ?? true}; "${delimiterCharacter}")]`,
-								),
-							);
-						} else {
-							options.push(this.utils.raw(`[out:csv(${fieldStr}; ${headerLine})]`));
-						}
-					} else {
-						options.push(this.utils.raw(`[out:csv(${fieldStr})]`));
-					}
-				}
-			}
-			if (globalBoundingBox != null) {
-				const [s, w, n, e] = globalBoundingBox;
-				options.push(this.utils.raw(`[bbox:${s},${w},${n},${e}]`));
-			}
-			if (date != null) {
-				options.push(this.utils.raw(`[date:"${date.toISOString()}"]`));
-			}
-			if (diff != null) {
-				if (Array.isArray(diff)) {
-					const [start, end] = diff;
-					options.push(this.utils.raw(`[diff:"${start.toISOString()}","${end.toISOString()}"]`));
-				}
-			}
-			const { nl } = this.utils;
-			const compiledOptions = this.utils.join(options, "\n");
-			return this.utils.template`/* Settings */${nl}${compiledOptions};${nl}`;
+			return u.raw(`[out:csv(${fieldStr})]`);
 		}
 	}
 
-	private compileOutputOptions({
+	private compileFormat(settings: OverpassSettings): CompiledItem {
+		if (settings.format != OverpassFormat.CSV) {
+			return this.utils.raw(`[out:${OP_FORMAT[settings.format!]}]`);
+		} else {
+			if (settings.csvSettings == null) {
+				throw new Error("csvSettings for format: csv must be supplied");
+			}
+
+			return this.compileCSVFormat(settings.csvSettings);
+		}
+	}
+
+	public buildSettings(settings: OverpassSettings): CompiledItem {
+		const u = this.utils;
+		const { nl, empty } = u;
+
+		if (Object.keys(settings).length == 0) {
+			return empty;
+		}
+
+		const { timeout, maxSize, globalBoundingBox, date, diff } = settings;
+		const options: CompiledItem[] = [];
+
+		if (timeout != null) {
+			options.push(u.template`[timeout:${u.number(timeout)}]`);
+		}
+
+		if (maxSize != null) {
+			options.push(u.template`[maxsize:${u.number(maxSize)}]`);
+		}
+
+		if (settings.format != null) {
+			options.push(this.compileFormat(settings));
+		}
+
+		if (globalBoundingBox != null) {
+			const [s, w, n, e] = u.bbox(globalBoundingBox);
+			options.push(u.template`[bbox:${s},${w},${n},${e}]`);
+		}
+
+		if (date != null) {
+			options.push(u.template`[date:"${u.date(date)}"]`);
+		}
+
+		if (diff != null) {
+			if (diff instanceof Array) {
+				const [start, end] = diff;
+				options.push(u.template`[diff:"${u.date(start)}","${u.date(end)}"]`);
+			} else {
+				options.push(u.template`[diff:"${u.date(diff)}"]`);
+			}
+		}
+
+		return u.template`/* Settings */${nl}${u.join(options, "\n")};${nl}`;
+	}
+
+	public buildOptions({
 		verbosity,
 		geoInfo,
 		boundingBox,
@@ -125,30 +115,34 @@ export class OverpassQueryBuilderImp implements OverpassQueryBuilder {
 		limit,
 		targetSet,
 	}: OverpassOutputOptions): CompiledItem {
+		const u = this.utils;
+		const { nl } = u;
+
 		const params: CompiledItem[] = [];
+
 		if (verbosity != null) {
-			params.push(this.utils.raw(OP_VERBOSITY[verbosity]));
+			params.push(u.verbosity(verbosity));
 		}
 		if (geoInfo != null) {
-			params.push(this.utils.raw(OP_GEOINFO[geoInfo]));
+			params.push(u.geoInfo(geoInfo));
 		}
 		if (boundingBox != null) {
-			const [s, w, n, e] = boundingBox;
-			params.push(this.utils.raw(`(${s},${w},${n},${e})`));
+			const [s, w, n, e] = u.bbox(boundingBox);
+			params.push(u.template`(${s},${w},${n},${e})`);
 		}
 		if (sortOrder != null) {
-			params.push(this.utils.raw(OP_SORTORDER[sortOrder]));
+			params.push(u.sortOrder(sortOrder));
 		}
 		if (limit != null) {
-			params.push(this.utils.raw(limit.toString()));
+			params.push(u.number(limit));
 		}
-		const { nl } = this.utils;
-		const target = this.utils.raw(targetSet ?? "_");
-		const compiledParams = this.utils.join(params, " ");
-		return this.utils.template`/* Output */${nl}.${target} out ${compiledParams};`;
+
+		const target = targetSet == null ? u.raw("_") : u.string(targetSet);
+
+		return u.template`/* Output */${nl}.${target} out ${u.join(params, " ")};`;
 	}
 
-	private prepareStatements(statements: OverpassStatement[]): CompiledItem {
+	public buildStatements(statements: OverpassStatement[]): CompiledItem {
 		const compiledStatements = this.utils.join(
 			statements.map((stm) => this.utils.template`${stm.compile(this.utils)};`),
 			"\n",
@@ -157,13 +151,13 @@ export class OverpassQueryBuilderImp implements OverpassQueryBuilder {
 		return this.utils.template`/* Statements */${nl}${compiledStatements}${nl}`;
 	}
 
-	public build(
+	public buildQuery(
 		settings: OverpassSettings,
 		options: OverpassOutputOptions,
 		statements: OverpassStatement[],
-	): CompiledSubPart[] {
-		const settingsStr = this.compileSettings(settings);
-		const optionsStr = this.compileOutputOptions(options);
-		return this.utils.template`${settingsStr}${this.prepareStatements(statements)}${optionsStr}`.subParts;
+	): CompiledItem {
+		const settingsStr = this.buildSettings(settings);
+		const optionsStr = this.buildOptions(options);
+		return this.utils.template`${settingsStr}${this.buildStatements(statements)}${optionsStr}`;
 	}
 }

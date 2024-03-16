@@ -1,4 +1,4 @@
-import { expect, it } from "@jest/globals";
+import { BuildApi, MDEO_BBOX, MDEO_ID, MDEO_LABEL_ID, ONLY_IDS, PAL_LEG_ID, PLAZA_INDEP_ID } from "?/utils";
 import {
 	OverpassApiObject,
 	OverpassBoundingBox,
@@ -6,8 +6,8 @@ import {
 	OverpassQueryTarget,
 	ParamItem,
 	ParamType,
-} from "../../src";
-import { BuildApi, MDEO_BBOX, MDEO_ID, MDEO_LABEL_ID, ONLY_IDS, PAL_LEG_ID, PLAZA_INDEP_ID } from "../utils";
+} from "@/index";
+import { expect, it } from "@jest/globals";
 
 export function functionsParamTests() {
 	it("Should allow number params", async () => {

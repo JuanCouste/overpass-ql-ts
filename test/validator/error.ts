@@ -1,4 +1,5 @@
-import { expect, it } from "@jest/globals";
+import { GetErrorFile, TEXT_HTML_CH, TEXT_PLAIN } from "?/utils";
+import { OverpassQueryValidatorImp } from "@/imp";
 import {
 	HttpResponse,
 	OverpassErrorType,
@@ -8,9 +9,8 @@ import {
 	OverpassQueryError,
 	OverpassRemarkError,
 	OverpassSettings,
-} from "../../src";
-import { OverpassQueryValidatorImp } from "../../src/imp/api/validator";
-import { GetErrorFile, TEXT_HTML_CH, TEXT_PLAIN } from "../utils";
+} from "@/index";
+import { expect, it } from "@jest/globals";
 
 async function validateHttpResult(result: HttpResponse) {
 	const validator = new OverpassQueryValidatorImp(new URL("http://localhost"));

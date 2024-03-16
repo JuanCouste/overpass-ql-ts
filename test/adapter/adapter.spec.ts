@@ -1,9 +1,5 @@
-import "../checkConnection";
+import "?/checkConnection";
 //
-import { OverpassError, OverpassErrorType } from "@/model";
-import { describe, expect, it } from "@jest/globals";
-import { ClientRequest, IncomingMessage } from "http";
-import fetchFn from "node-fetch";
 import {
 	FetchFunction,
 	FetchRequestAdapter,
@@ -11,7 +7,11 @@ import {
 	NodeHttpRequestAdapter,
 	XMLHttpRequestAdapter,
 	XMLHttpRequestConstructor,
-} from "../../src/imp/api/request";
+} from "@/imp";
+import { OverpassError, OverpassErrorType } from "@/model";
+import { describe, expect, it } from "@jest/globals";
+import { ClientRequest, IncomingMessage } from "http";
+import fetchFn from "node-fetch";
 import { adapterSpecificTests } from "./adapter";
 import { creationTests } from "./creation";
 

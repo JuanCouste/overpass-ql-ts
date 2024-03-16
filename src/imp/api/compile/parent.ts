@@ -1,22 +1,16 @@
-import { CompiledItem, CompiledSubPart, ParentCompiledItem } from "@/model";
+import { CompiledItem } from "@/model";
 
-export class OverpassParentCompiledItem implements ParentCompiledItem {
-	public readonly isParam = false;
-	public readonly subParts: CompiledSubPart[];
+type SubParts = string | CompiledItem;
 
-	constructor(parts: (string | CompiledItem)[]) {
+export class OverpassParentCompiledItem implements CompiledItem {
+	private readonly subParts: SubParts[];
+
+	constructor(
+		parts: SubParts[],
+		private readonly manipulation?: (raw: string) => string,
+	) {
 		this.subParts = parts
-			.map((part) => {
-				if (typeof part == "string") {
-					return [part];
-				} else {
-					if (part.isParam) {
-						return [part];
-					} else {
-						return part.subParts;
-					}
-				}
-			})
+			.map((part) => (part instanceof OverpassParentCompiledItem ? part.flatten() : [part]))
 			.flat();
 
 		for (let i = this.subParts.length - 2; i >= 0; i--) {
@@ -32,11 +26,31 @@ export class OverpassParentCompiledItem implements ParentCompiledItem {
 		}
 	}
 
+	private flatten(): SubParts[] {
+		if (this.manipulation == null) {
+			return this.subParts;
+		} else if (this.subParts.length == 1) {
+			const [part] = this.subParts;
+			return [typeof part == "string" ? this.manipulation(part) : part.withManipulation(this.manipulation)];
+		} else {
+			return [this];
+		}
+	}
+
 	withManipulation(manipulation: (raw: string) => string): CompiledItem {
-		const copy: (string | CompiledItem)[] = [...this.subParts];
-		const lastIndex = copy.length - 1;
-		const last = copy[lastIndex];
-		copy[lastIndex] = typeof last == "string" ? manipulation(last) : last.withManipulation(manipulation);
-		return new OverpassParentCompiledItem(copy);
+		const current = this.manipulation;
+		const partsCopy: SubParts[] = [...this.subParts];
+		return new OverpassParentCompiledItem(
+			partsCopy,
+			current != null ? (raw: string) => manipulation(current(raw)) : manipulation,
+		);
+	}
+
+	compile(params: any[]): string {
+		const raw = this.subParts
+			.map<string>((part) => (typeof part == "string" ? part : part.compile(params)))
+			.join("");
+
+		return this.manipulation != null ? this.manipulation(raw) : raw;
 	}
 }

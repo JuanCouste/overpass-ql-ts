@@ -1,7 +1,7 @@
-import { OverpassFilterHelperBase } from "@/imp/api/filter/base";
 import { OverpassEqualsFilter } from "@/imp/filter";
 import { OverpassExpression, OverpassFilter } from "@/model";
 import { OverpassFilterHelper } from "@/query";
+import { OverpassFilterHelperBase } from "./base";
 
 export class OverpassEqualsFilterHelper extends OverpassFilterHelperBase {
 	constructor(

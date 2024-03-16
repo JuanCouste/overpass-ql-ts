@@ -1,13 +1,14 @@
-import { expect, it } from "@jest/globals";
+import { APP_OSM_XML, BuildApi, JSON_FORMAT, ONLY_IDS, TEXT_CSV } from "?/utils";
 import {
 	OverpassApiObject,
 	OverpassApiObjectImp,
 	OverpassFormat,
 	OverpassQueryValidator,
+	ParamItem,
 	ParamType,
 	RequestAdapter,
-} from "../../src";
-import { BuildApi, JSON_FORMAT, ONLY_IDS, TEXT_CSV } from "../utils";
+} from "@/index";
+import { expect, it } from "@jest/globals";
 import { expectUruguay, uruguayStatementBuilder } from "./uruguay";
 
 function getUnknownFormat(contentType: string | undefined): Promise<OverpassFormat | undefined> {
@@ -64,7 +65,9 @@ export function apiMethodsTests() {
 	it("Should not allow params in buildQuery", () => {
 		const api: OverpassApiObject = BuildApi();
 
-		const fn = () => api.buildQuery((s) => ({ compile: (u) => u.number({ index: 0, type: ParamType.Number }) }));
+		const param: ParamItem<number> = { index: 0, type: ParamType.Number };
+
+		const fn = () => api.buildQuery((s) => s.statement((u) => u.number(param)));
 
 		expect(fn).toThrow(Error);
 	});
@@ -77,5 +80,9 @@ export function apiMethodsTests() {
 		const csv = await getUnknownFormat(TEXT_CSV);
 
 		expect(csv).toBe(OverpassFormat.CSV);
+
+		const xml = await getUnknownFormat(APP_OSM_XML);
+
+		expect(xml).toBe(OverpassFormat.XML);
 	});
 }

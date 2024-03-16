@@ -1,6 +1,6 @@
-import { OverpassStatusValidatorImp } from "@/imp/api/status";
+import { OverpassStatusValidatorImp } from "@/imp";
+import { HttpResponse, OverpassApiError, OverpassErrorType, OverpassStatus } from "@/index";
 import { describe, expect, it } from "@jest/globals";
-import { HttpResponse, OverpassApiError, OverpassErrorType, OverpassStatus } from "../src";
 import { APP_OSM_XML, TEXT_PLAIN } from "./utils";
 
 const noQueriesStr = `Connected as: 2886860801

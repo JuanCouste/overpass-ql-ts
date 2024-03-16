@@ -3,7 +3,7 @@ import * as path from "path";
 import { OutputOptions, rollup } from "rollup";
 import { bundleList } from "../../rollup.config";
 
-export type OverpassQlTsModule = typeof import("../../src");
+export type OverpassQlTsModule = typeof import("@/index");
 
 export const BUNDLE_FOLDER = "./test/bundle/output/";
 export const ESM_BUNDLE = "esmBundle.mjs";

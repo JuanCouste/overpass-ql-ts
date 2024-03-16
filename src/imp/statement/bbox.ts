@@ -1,5 +1,5 @@
-import { ComposableOverpassStatementBase } from "@/imp/statement/base";
 import { CompileUtils, CompiledItem, OverpassBoundingBox, OverpassExpression, OverpassStatementTarget } from "@/model";
+import { ComposableOverpassStatementBase } from "./base";
 
 export class OverpassBBoxStatement extends ComposableOverpassStatementBase {
 	constructor(

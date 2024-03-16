@@ -1,8 +1,8 @@
-import "../checkConnection";
+import "?/checkConnection";
 //
+import { BuildApi } from "?/utils";
+import { OverpassApiObject, OverpassApiObjectImp } from "@/index";
 import { describe, expect, it } from "@jest/globals";
-import { OverpassApiObject, OverpassApiObjectImp } from "../../src";
-import { BuildApi } from "../utils";
 import { apiFormatTests } from "./format";
 import { apiMethodsTests } from "./methods";
 import { apiOutOptionsTests } from "./options";

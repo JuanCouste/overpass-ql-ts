@@ -1,4 +1,12 @@
-import { expect, it } from "@jest/globals";
+import {
+	APP_JSON,
+	JSON_OUTPUT,
+	MEMORY_EXHAUSTION_REMARK,
+	NO_ATTIC_REMARK,
+	TIMEOUT_REMARK,
+	UNKNOWN_REMARK,
+} from "?/utils";
+import { OverpassQueryValidatorImp } from "@/imp";
 import {
 	AnyOverpassElement,
 	OverpassErrorType,
@@ -8,16 +16,8 @@ import {
 	OverpassOutputOptions,
 	OverpassRemarkError,
 	OverpassSettings,
-} from "../../src";
-import { OverpassQueryValidatorImp } from "../../src/imp/api/validator";
-import {
-	APP_JSON,
-	JSON_OUTPUT,
-	MEMORY_EXHAUSTION_REMARK,
-	NO_ATTIC_REMARK,
-	TIMEOUT_REMARK,
-	UNKNOWN_REMARK,
-} from "../utils";
+} from "@/index";
+import { expect, it } from "@jest/globals";
 
 function validateJson(output: OverpassJsonOutput) {
 	const validator = new OverpassQueryValidatorImp(null!);
