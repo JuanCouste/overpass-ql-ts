@@ -23,6 +23,10 @@ export const MDEO_BBOX: OverpassBoundingBox = [
 	-34.95946903427187, -56.336210858065294, -34.70252226444532, -56.090943633590476,
 ];
 
+export const PAL_LEG_BBOX: OverpassBoundingBox = [
+	-34.89313931916607, -56.1902053626241, -34.88892000597966, -56.183711085621454,
+];
+
 export const JSON_OUTPUT: Pick<OverpassJsonOutput, "version" | "generator" | "osm3s"> = {
 	version: 0.6,
 	generator: "Overpass API 0.7.61.5 4133829e",

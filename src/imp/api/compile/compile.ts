@@ -12,6 +12,7 @@ import {
 	OverpassGeoPos,
 	OverpassParameterError,
 	OverpassQueryTarget,
+	OverpassRecurseStmType,
 	ParamItem,
 	ParamType,
 } from "@/model";
@@ -49,6 +50,13 @@ const ENUM_STRINGS: { [K in EnumParamType]: string[] } = {
 	[ParamType.SortOrder]: enumObjectToArray<OverpassSortOrder, string>({
 		[OverpassSortOrder.Ascending]: "asc",
 		[OverpassSortOrder.QuadtileIndex]: "qt",
+	}),
+
+	[ParamType.RecurseStm]: enumObjectToArray<OverpassRecurseStmType, string>({
+		[OverpassRecurseStmType.Up]: "<",
+		[OverpassRecurseStmType.Down]: ">",
+		[OverpassRecurseStmType.UpRelations]: "<<",
+		[OverpassRecurseStmType.DownRelations]: ">>",
 	}),
 };
 
@@ -124,6 +132,8 @@ export class OverpassCompileUtils implements CompileUtils {
 				return OverpassOutputGeoInfo;
 			case ParamType.SortOrder:
 				return OverpassSortOrder;
+			case ParamType.RecurseStm:
+				return OverpassRecurseStmType;
 		}
 	}
 
@@ -157,6 +167,10 @@ export class OverpassCompileUtils implements CompileUtils {
 
 	verbosity(value: OverpassExpression<OverpassOutputVerbosity>): CompiledItem {
 		return this.enum(ParamType.Verbosity, value);
+	}
+
+	recurse(value: OverpassExpression<OverpassRecurseStmType>): CompiledItem {
+		return this.enum(ParamType.RecurseStm, value);
 	}
 
 	regExp(value: OverpassExpression<RegExp>): CompiledItem {

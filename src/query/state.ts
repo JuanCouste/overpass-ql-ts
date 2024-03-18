@@ -6,6 +6,7 @@ import {
 	OverpassExpression,
 	OverpassGeoPos,
 	OverpassQueryTarget,
+	OverpassRecurseStmType,
 	OverpassStatement,
 } from "@/model";
 import { OverpassQueryFilter, OverpassQueryFilterFunction } from "@/query/query";
@@ -77,6 +78,11 @@ export interface OverpassStateMethods {
 		set1: OverpassExpression<string>,
 		...sets: OverpassExpression<string>[]
 	): ComposableOverpassStatement & OverpassTargetState;
+
+	recurse(
+		type: OverpassExpression<OverpassRecurseStmType>,
+		input?: OverpassExpression<string>,
+	): ComposableOverpassStatement;
 }
 
 /**

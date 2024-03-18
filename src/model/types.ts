@@ -30,3 +30,29 @@ export interface OverpassGeoPos {
 }
 
 export type OverpassBoundingBox = [south: number, west: number, north: number, east: number];
+
+/** Recurse standalone statements take an input set, and produce a result set */
+export enum OverpassRecurseStmType {
+	/**
+	 * All ways that have a node which appears in the input set
+	 * All relations that have a node or way which appears in the input set
+	 * All relations that have a way which appears in the result set
+	 */
+	Up,
+	/**
+	 * All nodes that are part of a way which appears in the input set; plus
+	 * All nodes and ways that are members of a relation which appears in the input set; plus
+	 * All nodes that are part of a way which appears in the result set
+	 */
+	Down,
+	/**
+	 * Additional to {@link OverpassRecurseStmType.Up}, it continues to follow backlinks onto the found relations
+	 * until it contains all relations that point to an object in the input or result set.
+	 */
+	UpRelations,
+	/**
+	 * Additional to {@link OverpassRecurseStmType.Down}, it continues to follow the membership links including nodes in ways
+	 * until for every object in its input or result set all the members of that object are in the result set as well.
+	 */
+	DownRelations,
+}

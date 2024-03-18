@@ -4,4 +4,5 @@ export * from "./id";
 export * from "./polygon";
 export * from "./query";
 export * from "./raw";
+export * from "./recurse";
 export * from "./target";

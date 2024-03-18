@@ -1,11 +1,17 @@
 import { OverpassChainableIntersectStatement, OverpassTargetMapStateImp } from "@/imp/api/target";
-import { OverpassComposableRawStatement, OverpassRawStatement, OverpassStatementTargetImp } from "@/imp/statement";
+import {
+	OverapssRecurseStatement,
+	OverpassComposableRawStatement,
+	OverpassRawStatement,
+	OverpassStatementTargetImp,
+} from "@/imp/statement";
 import {
 	CompileUtils,
 	CompiledItem,
 	ComposableOverpassStatement,
 	OverpassExpression,
 	OverpassQueryTarget,
+	OverpassRecurseStmType,
 	OverpassStatement,
 } from "@/model";
 import {
@@ -140,5 +146,12 @@ export class OverpassStateImp implements OverpassStateMethods {
 		const target = AnyTargetToQueryTarget(anyTargetExp);
 		const statementTarget = new OverpassStatementTargetImp(target, [set1, ...sets]);
 		return new OverpassChainableIntersectStatement(statementTarget, this.utils, this.filterBuilder);
+	}
+
+	recurse(
+		type: OverpassExpression<OverpassRecurseStmType>,
+		input?: OverpassExpression<string> | undefined,
+	): ComposableOverpassStatement {
+		return new OverapssRecurseStatement(type, input);
 	}
 }

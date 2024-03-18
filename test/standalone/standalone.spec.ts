@@ -7,6 +7,7 @@ import { standaloneByIdTests } from "./id";
 import { standaloneIntersectTests } from "./intersect";
 import { standalonePolygonTests } from "./polygon";
 import { standaloneQueryTests } from "./query";
+import { standaloneRecurseTests } from "./recurse";
 
 describe("Standalone statements", () => {
 	describe("By id", standaloneByIdTests);
@@ -15,4 +16,5 @@ describe("Standalone statements", () => {
 	describe("Polygon", standalonePolygonTests);
 	describe("Intersect", standaloneIntersectTests);
 	describe("Any", standaloneAnyTests);
+	describe("Recurse", standaloneRecurseTests);
 });
