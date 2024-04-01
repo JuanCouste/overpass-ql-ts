@@ -68,7 +68,7 @@
 			"module": "./lib/esm-bundle.mjs",
 			"import": "./lib/esm-bundle.mjs",
 			"require": "./lib/cjs-bundle.cjs",
-			"types": "./lib/types-bundle.mjs",
+			"types": "./lib/types-bundle.d.ts"
 			"default": "./lib/esm-bundle.mjs"
 		}
 	},
