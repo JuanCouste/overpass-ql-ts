@@ -1,5 +1,5 @@
 import { ActualParamType, OverpassExpression, ParamItem } from "@/model/expression";
-import { OverpassBoundingBox, OverpassGeoPos, OverpassQueryTarget } from "@/model/types";
+import { OverpassBoundingBox, OverpassGeoPos, OverpassQueryTarget, OverpassRecurseStmType } from "@/model/types";
 import { OverpassOutputGeoInfo, OverpassOutputVerbosity, OverpassSortOrder } from "@/query/enum";
 
 export interface CompiledItem {
@@ -58,6 +58,8 @@ export interface CompileUtils {
 	geoInfo(value: OverpassExpression<OverpassOutputGeoInfo>): CompiledItem;
 	/** @param value A sortOrder that should be prepared */
 	sortOrder(value: OverpassExpression<OverpassSortOrder>): CompiledItem;
+	/** @param value A recurse type that should be prepared */
+	recurse(value: OverpassExpression<OverpassRecurseStmType>): CompiledItem;
 
 	isParam<T>(value: OverpassExpression<T>): value is ParamItem<T>;
 	/** @returns wheter {@link value} is a {@link ParamItem<T>} and it's type is {@link type} */

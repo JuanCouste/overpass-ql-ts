@@ -1,6 +1,7 @@
 import { CompileSymetric } from "?/compilation/symetry";
 import { Symetric, SymetricArgsExpression, SymetricArgumentsObject } from "?/utils";
 import {
+	OverapssRecurseStatement,
 	OverpassBBoxStatement,
 	OverpassByIdStatement,
 	OverpassCompileUtils,
@@ -9,7 +10,7 @@ import {
 	OverpassRawStatement,
 	OverpassStatementTargetImp,
 } from "@/imp";
-import { AnyParamValue, OverpassQueryTarget, OverpassStatement, ParamType } from "@/index";
+import { AnyParamValue, OverpassQueryTarget, OverpassRecurseStmType, OverpassStatement, ParamType } from "@/index";
 import { expect, it } from "@jest/globals";
 
 export function compileStatementsTests() {
@@ -89,6 +90,39 @@ export function compileStatementsTests() {
 		);
 
 		await expect(raw).resolves.toMatch(/\(\s*poly\s*:\s*"\s*1\s+2\s+3\s+4\s*"\s*\)/);
+
+		await expect(withParams).resolves.toEqual(await raw);
+	});
+
+	it("Should compile recurse statement", async () => {
+		const [raw, withParams] = CompileStatementsSymetric(
+			(type) => new OverapssRecurseStatement(type),
+			[Symetric.Enum(ParamType.RecurseStm, OverpassRecurseStmType.Up)],
+		);
+
+		await expect(raw).resolves.toMatch(/\</);
+
+		await expect(withParams).resolves.toEqual(await raw);
+	});
+
+	it("Should compile recurse statement with set", async () => {
+		const [raw, withParams] = CompileStatementsSymetric(
+			(input) => new OverapssRecurseStatement(OverpassRecurseStmType.Down, input),
+			[Symetric.String("someSet")],
+		);
+
+		await expect(raw).resolves.toMatch(/\.someSet\b\s*\>/);
+
+		await expect(withParams).resolves.toEqual(await raw);
+	});
+
+	it("Should compile recurse statement with set and type", async () => {
+		const [raw, withParams] = CompileStatementsSymetric<[OverpassRecurseStmType, string]>(
+			(type, input) => new OverapssRecurseStatement(type, input),
+			[Symetric.Enum(ParamType.RecurseStm, OverpassRecurseStmType.UpRelations), Symetric.String("someSet")],
+		);
+
+		await expect(raw).resolves.toMatch(/\.someSet\b\s*\<\</);
 
 		await expect(withParams).resolves.toEqual(await raw);
 	});
