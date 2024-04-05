@@ -1,4 +1,4 @@
-import { CompileUtils, CompiledItem } from "@/model";
+import { CompileFunction, CompileUtils, CompiledItem } from "@/model";
 import { ComposableOverpassStatementBase, OverpassStatementBase } from "./base";
 
 function removeLastSemicolon(statement: string) {
@@ -11,7 +11,7 @@ function removeLastSemicolon(statement: string) {
 }
 
 export class OverpassRawStatement extends OverpassStatementBase {
-	constructor(private readonly compileFn: (u: CompileUtils) => CompiledItem) {
+	constructor(private readonly compileFn: CompileFunction) {
 		super();
 	}
 
@@ -21,7 +21,7 @@ export class OverpassRawStatement extends OverpassStatementBase {
 }
 
 export class OverpassComposableRawStatement extends ComposableOverpassStatementBase {
-	constructor(private readonly compileFn: (u: CompileUtils) => CompiledItem) {
+	constructor(private readonly compileFn: CompileFunction) {
 		super();
 	}
 

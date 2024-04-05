@@ -1,7 +1,15 @@
 import { enumObjectToArray } from "@/imp/api/enum";
 import { OverpassQueryBuilder } from "@/imp/types";
-import { CompileUtils, CompiledItem, OverpassStatement } from "@/model";
-import { CSVField, OverpassCSVFormatSettings, OverpassFormat, OverpassOutputOptions, OverpassSettings } from "@/query";
+import {
+	CSVField,
+	CompileUtils,
+	CompiledItem,
+	OverpassCSVFormatSettings,
+	OverpassFormat,
+	OverpassOutputOptions,
+	OverpassSettings,
+	OverpassStatement,
+} from "@/model";
 
 const OP_FORMAT: string[] = enumObjectToArray<OverpassFormat, string>({
 	[OverpassFormat.XML]: "xml",

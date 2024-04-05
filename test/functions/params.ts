@@ -102,21 +102,26 @@ export function functionsParamTests() {
 			{ globalBoundingBox: MDEO_BBOX },
 		);
 
-		const containsCapRes = await containsProp("capital");
+		await Promise.all([
+			(async function () {
+				const containsCapRes = await containsProp("capital");
 
-		expect(containsCapRes.elements.length).toBe(1);
-		const [cap] = containsCapRes.elements;
+				expect(containsCapRes.elements.length).toBe(1);
+				const [cap] = containsCapRes.elements;
 
-		expect(cap.id).toEqual(MDEO_ID);
-		expect(cap.type).toBe("node");
+				expect(cap.id).toEqual(MDEO_ID);
+				expect(cap.type).toBe("node");
+			})(),
+			(async function () {
+				const containsCapCityRes = await containsProp("capital_city");
 
-		const containsCapCityRes = await containsProp("capital_city");
+				expect(containsCapCityRes.elements.length).toBe(1);
+				const [capCity] = containsCapCityRes.elements;
 
-		expect(containsCapCityRes.elements.length).toBe(1);
-		const [capCity] = containsCapCityRes.elements;
-
-		expect(capCity.id).toEqual(MDEO_LABEL_ID);
-		expect(capCity.type).toBe("node");
+				expect(capCity.id).toEqual(MDEO_LABEL_ID);
+				expect(capCity.type).toBe("node");
+			})(),
+		]);
 	});
 
 	it("Should allow bbox params", async () => {

@@ -1,4 +1,5 @@
-import { OverpassBoundingBox, OverpassExpression } from "@/model";
+import { OverpassExpression } from "@/model/expression";
+import { OverpassBoundingBox } from "@/model/types";
 
 export enum OverpassFormat {
 	XML,

@@ -1,4 +1,4 @@
-import { OverpassStatus } from "@/query";
+import { OverpassStatus } from "@/model";
 import { HttpResponse } from "./http";
 
 export interface OverpassStatusValidator {

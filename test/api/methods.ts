@@ -22,7 +22,7 @@ function getUnknownFormat(contentType: string | undefined): Promise<OverpassForm
 				return null!;
 			},
 		};
-		const api = new OverpassApiObjectImp(adapter, null!, null!, validator, null!, null!, null!, null!);
+		const api = new OverpassApiObjectImp(adapter, null!, null!, validator, null!, null!, null!, null!, null!);
 		api.execQuery("");
 	});
 }

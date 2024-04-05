@@ -1,5 +1,5 @@
-import { CompilableItem } from "@/model/compilable";
 import { OverpassExpression } from "@/model/expression";
+import { CompilableItem } from "./compilable";
 
 export interface OverpassStatement extends CompilableItem {}
 

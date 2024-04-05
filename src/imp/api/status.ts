@@ -1,6 +1,5 @@
 import { HttpResponse, OverpassStatusValidator } from "@/imp/types";
-import { OverpassApiError, OverpassErrorType } from "@/model";
-import { OverpassRunningQuery, OverpassStatus } from "@/query";
+import { OverpassApiError, OverpassErrorType, OverpassRunningQuery, OverpassStatus } from "@/model";
 
 type TempOverpassStatus = { -readonly [K in keyof OverpassStatus]?: OverpassStatus[K] };
 

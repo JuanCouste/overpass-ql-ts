@@ -1,8 +1,8 @@
-import { ActualParamType, AnyParamValue, OverpassStatement, ParamItem } from "@/model";
-import { OverpassApiOutput, OverpassJsonOutput } from "@/query/apiOutput";
-import { OverpassOutputOptions } from "@/query/output";
-import { OverpassFormat, OverpassSettings } from "@/query/settings";
-import { OverpassState } from "@/query/state";
+import { ActualParamType, AnyParamValue, ParamItem } from "@/model/expression";
+import { OverpassStatement } from "@/model/parts";
+import { OverpassFormat, OverpassOutputOptions, OverpassSettings } from "@/model/query";
+import { OverpassApiOutput, OverpassJsonOutput } from "./output";
+import { OverpassState } from "./state";
 import { OverpassStatus } from "./status";
 
 export type OverpassJsonSettings<S extends OverpassSettingsNoFormat> = S & { format: OverpassFormat.JSON };

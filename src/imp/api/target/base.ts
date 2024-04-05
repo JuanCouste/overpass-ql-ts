@@ -1,37 +1,39 @@
 import {
 	OverpassBBoxStatement,
 	OverpassByIdStatement,
+	OverpassIfFilterStatement,
 	OverpassInsidePolygonStatement,
 	OverpassQueryStatement,
 } from "@/imp/statement";
 import {
+	AnyOverpassFilter,
 	CompileUtils,
 	ComposableOverpassStatement,
 	OverpassBoundingBox,
+	OverpassEvaluator,
 	OverpassExpression,
 	OverpassFilter,
-	OverpassGeoPos,
-	OverpassParameterError,
-	OverpassStatementTarget,
-	ParamType,
-} from "@/model";
-import {
-	AnyOverpassFilter,
 	OverpassFilterBuilder,
 	OverpassFilterHelper,
+	OverpassGeoPos,
+	OverpassItemEvaluatorBuilder,
+	OverpassParameterError,
 	OverpassPolygonCoordExpression,
 	OverpassQueryFilter,
 	OverpassQueryFilterFunction,
 	OverpassQueryFilterTuple,
 	OverpassQueryRegExpFilterTuple,
+	OverpassStatementTarget,
 	OverpassTargetState,
-} from "@/query";
+	ParamType,
+} from "@/model";
 
 export abstract class OverpassTargetStateBase implements OverpassTargetState {
 	constructor(
 		protected readonly target: OverpassStatementTarget,
 		protected readonly utils: CompileUtils,
 		protected readonly filterBuilder: OverpassFilterBuilder,
+		protected readonly evaluatorItemBuilder: OverpassItemEvaluatorBuilder,
 	) {}
 
 	private isRegExpTuple(tuple: OverpassQueryFilterTuple): tuple is OverpassQueryRegExpFilterTuple {
@@ -105,5 +107,9 @@ export abstract class OverpassTargetStateBase implements OverpassTargetState {
 				coord instanceof Array ? { lat: coord[0], lon: coord[1] } : coord,
 			),
 		);
+	}
+
+	filter(predicate: (e: OverpassItemEvaluatorBuilder) => OverpassEvaluator<boolean>): ComposableOverpassStatement {
+		return new OverpassIfFilterStatement(this.target, predicate(this.evaluatorItemBuilder));
 	}
 }

@@ -9,5 +9,5 @@
 	},
 
 	"include": ["src/**/*"],
-	"exclude": ["test/**/*", "rollup.config.ts"],
+	"exclude": ["test/**/*", "scripts/**/*", "examples/**/*", "rollup.config.ts"],
 }

@@ -1,4 +1,5 @@
-import { OverpassExpression, OverpassFilter } from "@/model";
+import { OverpassExpression } from "@/model/expression";
+import { OverpassFilter } from "@/model/parts";
 
 export interface OverpassFilterHelper {
 	complete(prop: OverpassExpression<string | RegExp>): OverpassFilter;

@@ -1,12 +1,14 @@
 import { HttpResponse, OverpassQueryValidator } from "@/imp/types";
-import { OverpassErrorType, OverpassQueryError, OverpassRemarkError } from "@/model";
 import {
 	OverpassApiOutput,
+	OverpassErrorType,
 	OverpassFormat,
 	OverpassJsonOutput,
 	OverpassOutputOptions,
+	OverpassQueryError,
+	OverpassRemarkError,
 	OverpassSettings,
-} from "@/query";
+} from "@/model";
 
 interface RegExpRemarkMather {
 	readonly regExp: RegExp;

@@ -1,6 +1,7 @@
 export * from "./api";
 export * from "./builder";
 export * from "./compile";
+export * from "./evaluator";
 export * from "./filter";
 export * from "./request";
 export * from "./state";

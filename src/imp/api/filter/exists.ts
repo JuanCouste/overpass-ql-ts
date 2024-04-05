@@ -1,6 +1,5 @@
 import { OverpassExistsFilter } from "@/imp/filter";
-import { OverpassExpression, OverpassFilter } from "@/model";
-import { OverpassFilterHelper } from "@/query";
+import { OverpassExpression, OverpassFilter, OverpassFilterHelper } from "@/model";
 import { OverpassFilterHelperBase } from "./base";
 
 export class OverpassExistsFilterHelper extends OverpassFilterHelperBase {

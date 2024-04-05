@@ -1,5 +1,4 @@
-import { OverpassExpression } from "@/model";
-import { OverpassFilterBuilder, OverpassFilterHelper } from "@/query";
+import { OverpassExpression, OverpassFilterBuilder, OverpassFilterHelper } from "@/model";
 import { OverpassEqualsFilterHelper } from "./equals";
 import { OverpassExistsFilterHelper } from "./exists";
 import { OverpassRegExpFilterHelper } from "./regexp";

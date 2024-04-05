@@ -1,14 +1,14 @@
 import { BuildApi, MDEO_DEP_ID } from "?/utils";
-import { OverpassBoundingBox } from "@/model";
 import {
 	OverpassApiObject,
+	OverpassBoundingBox,
 	OverpassJsonOutput,
 	OverpassOutputGeoInfo,
 	OverpassOutputVerbosity,
 	OverpassRelation,
 	OverpassSortOrder,
 	OverpassState,
-} from "@/query";
+} from "@/model";
 import { expect, it } from "@jest/globals";
 
 export function apiOutOptionsTests() {

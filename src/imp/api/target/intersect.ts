@@ -1,6 +1,11 @@
 import { OverpassDifferenceStatement, OverpassSetStatement, OverpassUnionStatement } from "@/imp/statement";
-import { CompileUtils, CompiledItem, ComposableOverpassStatement, OverpassExpression } from "@/model";
-import { OverpassTargetState } from "@/query";
+import {
+	CompileUtils,
+	CompiledItem,
+	ComposableOverpassStatement,
+	OverpassExpression,
+	OverpassTargetState,
+} from "@/model";
 import { OverpassTargetStateBase } from "./base";
 
 export class OverpassChainableIntersectStatement

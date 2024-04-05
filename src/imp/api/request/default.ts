@@ -1,4 +1,4 @@
-import { OverpassApiObject } from "@/query";
+import { OverpassApiObject } from "@/model";
 import { FetchOverpassApi } from "./fetch";
 import { HttpOverpassApi } from "./nodejs";
 import { XMLOverpassApi } from "./xmlHttp";

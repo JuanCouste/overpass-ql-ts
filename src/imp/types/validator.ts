@@ -1,4 +1,4 @@
-import { OverpassApiOutput, OverpassFormat, OverpassOutputOptions, OverpassSettings } from "@/query";
+import { OverpassApiOutput, OverpassFormat, OverpassOutputOptions, OverpassSettings } from "@/model";
 import { HttpResponse } from "./http";
 
 export interface OverpassQueryValidator {
