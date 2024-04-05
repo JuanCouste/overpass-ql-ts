@@ -11,6 +11,6 @@ export class OverpassOperatorEvaluatorNode extends OverpassEvaluatorNodeImp<bool
 
 	compile(u: CompileUtils): CompiledItem {
 		const conditions = this.conditions.map((condition) => condition.compile(u));
-		return u.template`(${u.join(conditions, this.operator)})`;
+		return u.template`(${u.join(conditions, ` ${this.operator} `)})`;
 	}
 }

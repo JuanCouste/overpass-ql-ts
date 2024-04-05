@@ -1,22 +1,28 @@
-import { CompileUtils, CompiledItem, OverpassExpression, OverpassGeoPos, OverpassStatementTarget } from "@/model";
-import { ComposableOverpassStatementBase } from "./base";
+import {
+	CompileUtils,
+	CompiledItem,
+	OverpassChainableTargetableState,
+	OverpassExpression,
+	OverpassGeoPos,
+	OverpassStatementTarget,
+} from "@/model";
+import { ChainableOverpassStatementBase } from "./base";
 
-export class OverpassInsidePolygonStatement extends ComposableOverpassStatementBase {
+export class OverpassInsidePolygonStatement extends ChainableOverpassStatementBase {
 	constructor(
-		private readonly target: OverpassStatementTarget,
+		target: OverpassStatementTarget,
+		chain: OverpassChainableTargetableState,
 		private readonly polygon: OverpassExpression<OverpassGeoPos>[],
 	) {
-		super();
+		super(target, chain);
 	}
 
-	compile(u: CompileUtils): CompiledItem {
-		const target = this.target.compile(u);
-
+	compileChainable(u: CompileUtils): CompiledItem[] {
 		const polygon = this.polygon.map((geoPos) => {
 			const { lat, lon } = u.geoPos(geoPos);
 			return u.template`${lat} ${lon}`;
 		});
 
-		return u.template`${target}(poly: "${u.join(polygon, " ")}")`;
+		return [u.template`(poly: "${u.join(polygon, " ")}")`];
 	}
 }

@@ -3,6 +3,7 @@ import "./checkConnection";
 import "./adapter/adapter.spec";
 import "./api/api.spec";
 import "./bundle/bundle.spec";
+import "./chainable.spec";
 import "./compilation/compilation.spec";
 import "./evaluator/evaluator.spec";
 import "./functions/functions.spec";

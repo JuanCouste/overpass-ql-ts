@@ -1,4 +1,5 @@
 import {
+	ChainableOverpassStatementBase,
 	OverpassBBoxStatement,
 	OverpassByIdStatement,
 	OverpassIfFilterStatement,
@@ -8,8 +9,8 @@ import {
 import {
 	AnyOverpassFilter,
 	CompileUtils,
-	ComposableOverpassStatement,
 	OverpassBoundingBox,
+	OverpassChainableTargetableState,
 	OverpassEvaluator,
 	OverpassExpression,
 	OverpassFilter,
@@ -31,10 +32,15 @@ import {
 export abstract class OverpassTargetStateBase implements OverpassTargetState {
 	constructor(
 		protected readonly target: OverpassStatementTarget,
+		protected readonly chain: OverpassChainableTargetableState,
 		protected readonly utils: CompileUtils,
 		protected readonly filterBuilder: OverpassFilterBuilder,
 		protected readonly evaluatorItemBuilder: OverpassItemEvaluatorBuilder,
-	) {}
+	) {
+		if (chain == null) {
+			chain = this;
+		}
+	}
 
 	private isRegExpTuple(tuple: OverpassQueryFilterTuple): tuple is OverpassQueryRegExpFilterTuple {
 		const prop = tuple[0];
@@ -53,7 +59,7 @@ export abstract class OverpassTargetStateBase implements OverpassTargetState {
 		}
 	}
 
-	query(filter: OverpassQueryFilter | OverpassQueryFilterFunction): ComposableOverpassStatement {
+	query(filter: OverpassQueryFilter | OverpassQueryFilterFunction): ChainableOverpassStatementBase {
 		const filters: OverpassFilter[] = [];
 
 		let filterData: OverpassQueryFilter;
@@ -85,31 +91,32 @@ export abstract class OverpassTargetStateBase implements OverpassTargetState {
 			});
 		}
 
-		return new OverpassQueryStatement(this.target, filters);
+		return new OverpassQueryStatement(this.target, this.chain, filters);
 	}
 
-	bbox(south: number, west: number, north: number, east: number): ComposableOverpassStatement;
-	bbox(bbox: OverpassExpression<OverpassBoundingBox>): ComposableOverpassStatement;
-	bbox(p1: number | OverpassExpression<OverpassBoundingBox>, ...rest: number[]): ComposableOverpassStatement {
+	bbox(south: number, west: number, north: number, east: number): ChainableOverpassStatementBase;
+	bbox(bbox: OverpassExpression<OverpassBoundingBox>): ChainableOverpassStatementBase;
+	bbox(p1: number | OverpassExpression<OverpassBoundingBox>, ...rest: number[]): ChainableOverpassStatementBase {
 		const bbox: OverpassExpression<OverpassBoundingBox> =
 			typeof p1 == "number" ? ([p1, ...rest] as OverpassBoundingBox) : p1;
-		return new OverpassBBoxStatement(this.target, bbox);
+		return new OverpassBBoxStatement(this.target, this.chain, bbox);
 	}
 
-	byId(id: OverpassExpression<number>): ComposableOverpassStatement {
-		return new OverpassByIdStatement(this.target, id);
+	byId(id: OverpassExpression<number>): ChainableOverpassStatementBase {
+		return new OverpassByIdStatement(this.target, this.chain, id);
 	}
 
-	inside(polygon: OverpassExpression<OverpassPolygonCoordExpression>[]): ComposableOverpassStatement {
+	inside(polygon: OverpassExpression<OverpassPolygonCoordExpression>[]): ChainableOverpassStatementBase {
 		return new OverpassInsidePolygonStatement(
 			this.target,
+			this.chain,
 			polygon.map<OverpassExpression<OverpassGeoPos>>((coord) =>
 				coord instanceof Array ? { lat: coord[0], lon: coord[1] } : coord,
 			),
 		);
 	}
 
-	filter(predicate: (e: OverpassItemEvaluatorBuilder) => OverpassEvaluator<boolean>): ComposableOverpassStatement {
-		return new OverpassIfFilterStatement(this.target, predicate(this.evaluatorItemBuilder));
+	filter(predicate: (e: OverpassItemEvaluatorBuilder) => OverpassEvaluator<boolean>): ChainableOverpassStatementBase {
+		return new OverpassIfFilterStatement(this.target, this.chain, predicate(this.evaluatorItemBuilder));
 	}
 }

@@ -9,6 +9,7 @@ import {
 import {
 	AnyParamValue,
 	ArgTypes,
+	CompileFunction,
 	CompileUtils,
 	CompiledItem,
 	CreateFunctionArgs,
@@ -175,7 +176,9 @@ export class OverpassApiObjectImp implements OverpassApiObject {
 		}
 	}
 
-	public async execQuery(query: string): Promise<OverpassJsonOutput | string> {
+	public async execQuery(queryInput: string | CompileFunction): Promise<OverpassJsonOutput | string> {
+		const query = typeof queryInput == "string" ? queryInput : queryInput(this.compileUtils).compile([]);
+
 		const httpResponse = await this.doRequest(query);
 
 		const format = this.getUnknownFormat(httpResponse);

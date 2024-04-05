@@ -1,17 +1,24 @@
-import { CompileUtils, CompiledItem, OverpassBoundingBox, OverpassExpression, OverpassStatementTarget } from "@/model";
-import { ComposableOverpassStatementBase } from "./base";
+import {
+	CompileUtils,
+	CompiledItem,
+	OverpassBoundingBox,
+	OverpassChainableTargetableState,
+	OverpassExpression,
+	OverpassStatementTarget,
+} from "@/model";
+import { ChainableOverpassStatementBase } from "./base";
 
-export class OverpassBBoxStatement extends ComposableOverpassStatementBase {
+export class OverpassBBoxStatement extends ChainableOverpassStatementBase {
 	constructor(
-		private readonly target: OverpassStatementTarget,
+		target: OverpassStatementTarget,
+		chain: OverpassChainableTargetableState,
 		private readonly bbox: OverpassExpression<OverpassBoundingBox>,
 	) {
-		super();
+		super(target, chain);
 	}
 
-	compile(u: CompileUtils): CompiledItem {
-		const target = this.target.compile(u);
+	compileChainable(u: CompileUtils): CompiledItem[] {
 		const [south, west, north, east] = u.bbox(this.bbox);
-		return u.template`${target}(${south}, ${west}, ${north}, ${east})`;
+		return [u.template`(${south}, ${west}, ${north}, ${east})`];
 	}
 }

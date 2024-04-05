@@ -1,17 +1,23 @@
-import { CompileUtils, CompiledItem, OverpassExpression, OverpassStatementTarget } from "@/model";
-import { ComposableOverpassStatementBase } from "./base";
+import {
+	CompileUtils,
+	CompiledItem,
+	OverpassChainableTargetableState,
+	OverpassExpression,
+	OverpassStatementTarget,
+} from "@/model";
+import { ChainableOverpassStatementBase } from "./base";
 
-export class OverpassByIdStatement extends ComposableOverpassStatementBase {
+export class OverpassByIdStatement extends ChainableOverpassStatementBase {
 	constructor(
-		private readonly target: OverpassStatementTarget,
+		target: OverpassStatementTarget,
+		chain: OverpassChainableTargetableState,
 		private readonly id: OverpassExpression<number>,
 	) {
-		super();
+		super(target, chain);
 	}
 
-	compile(u: CompileUtils): CompiledItem {
+	compileChainable(u: CompileUtils): CompiledItem[] {
 		const id = u.number(this.id);
-		const target = this.target.compile(u);
-		return u.template`${target}(${id})`;
+		return [u.template`(${id})`];
 	}
 }

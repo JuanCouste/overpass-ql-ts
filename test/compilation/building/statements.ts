@@ -52,7 +52,7 @@ export function compileStatementsTests() {
 
 	it("Should compile bbox statement", async () => {
 		const [raw, withParams] = CompileStatementsSymetric(
-			(bbox) => new OverpassBBoxStatement(staticTarget, bbox),
+			(bbox) => new OverpassBBoxStatement(staticTarget, null!, bbox),
 			[Symetric.BBox([1, 2, 3, 4])],
 		);
 
@@ -63,7 +63,7 @@ export function compileStatementsTests() {
 
 	it("Should compile byId statement", async () => {
 		const [raw, withParams] = CompileStatementsSymetric(
-			(id) => new OverpassByIdStatement(staticTarget, id),
+			(id) => new OverpassByIdStatement(staticTarget, null!, id),
 			[Symetric.Number(1)],
 		);
 
@@ -74,7 +74,7 @@ export function compileStatementsTests() {
 
 	it("Should compile inside statement", async () => {
 		const [raw, withParams] = CompileStatementsSymetric(
-			(...polygon) => new OverpassInsidePolygonStatement(staticTarget, polygon),
+			(...polygon) => new OverpassInsidePolygonStatement(staticTarget, null!, polygon),
 			[Symetric.GeoPos({ lat: 1, lon: 2 })],
 		);
 
@@ -85,7 +85,7 @@ export function compileStatementsTests() {
 
 	it("Should compile inside statement with many coords", async () => {
 		const [raw, withParams] = CompileStatementsSymetric(
-			(...polygon) => new OverpassInsidePolygonStatement(staticTarget, polygon),
+			(...polygon) => new OverpassInsidePolygonStatement(staticTarget, null!, polygon),
 			[Symetric.GeoPos({ lat: 1, lon: 2 }), Symetric.GeoPos({ lat: 3, lon: 4 })],
 		);
 
