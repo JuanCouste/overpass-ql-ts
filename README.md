@@ -8,19 +8,22 @@ You wont need to worry about making small mistakes with syntax, and neither abou
 [![tests](https://github.com/JuanCouste/overpass-ql-ts/actions/workflows/testing.yml/badge.svg)](https://github.com/JuanCouste/overpass-ql-ts/actions/workflows/testing.yml)
 [![Coverage Status](https://coveralls.io/repos/github/JuanCouste/overpass-ql-ts/badge.svg?branch=master)](https://coveralls.io/github/JuanCouste/overpass-ql-ts?branch=master)
 
+<!-- prettier-ignore-start -->
 ```typescript
 import { DefaultOverpassApi, OverpassOutputVerbosity } from "overpass-ql-ts";
 
 const api = DefaultOverpassApi();
 
-const result = await api.execJson((s) => [s.node.query({ name: /^Hospital/, amenity: "hospital" })], {
-	verbosity: OverpassOutputVerbosity.Geometry,
-});
+const result = await api.execJson(
+	(s) => [s.node.query({ name: /^Hospital/, amenity: "hospital" })],
+	{ verbosity: OverpassOutputVerbosity.Geometry }
+);
 
 const someHospital = result.elements[0];
 
 console.log(someHospital.lat, someHospital.lon);
 ```
+<!-- prettier-ignore-end -->
 
 ## Instalation
 
@@ -53,9 +56,12 @@ The package is usable though many features we intend to implement are WIP.
 5.  Around
 6.  etc
 
-## Examples
+## Documentation & Examples
 
-To run the examples you may need to include some options due to the package being a module.
+Checkout the [Wiki](https://github.com/JuanCouste/overpass-ql-ts/wiki) for a more complete understanding of the package.
+
+Examples are not included on npm, you may execute them in a fork/clone.  
+You may need to include some cli options due to the package being a module.
 
 ```shell
 node --experimental-specifier-resolution=node --loader ts-node/esm ./examples/simple.ts
