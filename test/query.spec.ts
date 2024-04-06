@@ -3,8 +3,8 @@ import "./checkConnection";
 import {
 	OverpassApiObject,
 	OverpassJsonOutput,
-	OverpassQueryFilterObject,
-	OverpassQueryFilterTuple,
+	OverpassQueryTagFilterTuple,
+	OverpassQueryTagFitlerObject,
 	OverpassQueryTarget,
 	OverpassSettings,
 	OverpassState,
@@ -14,11 +14,11 @@ import { BuildApi, MDEO_BBOX, MDEO_CITY_ID, MDEO_DEP_ID, MDEO_ID, ONLY_IDS, URUG
 
 async function queryAlternatives(
 	api: OverpassApiObject,
-	query: OverpassQueryFilterObject,
+	query: OverpassQueryTagFitlerObject,
 ): Promise<OverpassJsonOutput[]> {
 	const settings: OverpassSettings = { globalBoundingBox: MDEO_BBOX };
 
-	const tupleArray = Object.entries(query) as OverpassQueryFilterTuple[];
+	const tupleArray = Object.entries(query) as OverpassQueryTagFilterTuple[];
 
 	return await Promise.all<OverpassJsonOutput>([
 		api.execJson((s: OverpassState) => [s.node.query(query)], ONLY_IDS, settings),

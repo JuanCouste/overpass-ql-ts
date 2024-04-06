@@ -1,13 +1,13 @@
-import { OverpassExpression, OverpassFilter, OverpassFilterHelper } from "@/model";
+import { OverpassExpression, OverpassTagFilter, OverpassTagFilterHelper } from "@/model";
 
-export abstract class OverpassFilterHelperBase implements OverpassFilterHelper {
+export abstract class OverpassTagFilterHelperBase implements OverpassTagFilterHelper {
 	constructor(protected readonly negated: boolean) {}
 
-	abstract clone(negated: boolean): OverpassFilterHelper;
+	abstract clone(negated: boolean): OverpassTagFilterHelper;
 
-	not(): OverpassFilterHelper {
+	not(): OverpassTagFilterHelper {
 		return this.clone(!this.negated);
 	}
 
-	abstract complete(prop: OverpassExpression<string | RegExp>): OverpassFilter;
+	abstract complete(prop: OverpassExpression<string | RegExp>): OverpassTagFilter;
 }

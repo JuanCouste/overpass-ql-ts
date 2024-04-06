@@ -2,21 +2,21 @@ import {
 	CompileUtils,
 	CompiledItem,
 	OverpassChainableTargetableState,
-	OverpassFilter,
 	OverpassStatementTarget,
+	OverpassTagFilter,
 } from "@/model";
 import { ChainableOverpassStatementBase } from "./base";
 
-export class OverpassQueryStatement extends ChainableOverpassStatementBase {
+export class OverpassByTagsStatement extends ChainableOverpassStatementBase {
 	constructor(
 		target: OverpassStatementTarget,
 		chain: OverpassChainableTargetableState,
-		private readonly filters: OverpassFilter[],
+		private readonly tags: OverpassTagFilter[],
 	) {
 		super(target, chain);
 	}
 
 	compileChainable(u: CompileUtils): CompiledItem[] {
-		return this.filters.map((filter) => filter.compile(u));
+		return this.tags.map((tag) => tag.compile(u));
 	}
 }

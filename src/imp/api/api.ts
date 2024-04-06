@@ -17,7 +17,6 @@ import {
 	OverpassApiFunction,
 	OverpassApiObject,
 	OverpassApiOutput,
-	OverpassFilterBuilder,
 	OverpassFormat,
 	OverpassItemEvaluatorBuilder,
 	OverpassJsonOutput,
@@ -28,11 +27,12 @@ import {
 	OverpassState,
 	OverpassStatement,
 	OverpassStatus,
+	OverpassTagFilterBuilder,
 } from "@/model";
 import { OverpassQueryBuilderImp } from "./builder";
 import { OverpassCompileUtils } from "./compile";
 import { OverpassItemEvaluatorBuilderImp } from "./evaluator";
-import { OverpassFilterBuilderImp } from "./filter";
+import { OverpassTagFilterBuilderImp } from "./filter";
 import { OverpassStateImp } from "./state";
 import { OverpassStatusValidatorImp } from "./status";
 import { OverpassQueryValidatorImp } from "./validator";
@@ -47,7 +47,7 @@ export class OverpassApiObjectImp implements OverpassApiObject {
 		private readonly queryValidator: OverpassQueryValidator,
 		private readonly statusValidator: OverpassStatusValidator,
 		private readonly compileUtils: CompileUtils,
-		private readonly filterBuilder: OverpassFilterBuilder,
+		private readonly tagBuilder: OverpassTagFilterBuilder,
 		private readonly queryBuilder: OverpassQueryBuilder,
 		private readonly evaluatorItemBuilder: OverpassItemEvaluatorBuilder,
 	) {}
@@ -64,7 +64,7 @@ export class OverpassApiObjectImp implements OverpassApiObject {
 		const statusValidator = new OverpassStatusValidatorImp(statusUrl);
 		const compileUtils = new OverpassCompileUtils();
 		const builder = new OverpassQueryBuilderImp(compileUtils);
-		const filterBuilder = OverpassFilterBuilderImp.Build();
+		const tagBuilder = OverpassTagFilterBuilderImp.Build();
 		const evaluatorItemBuilder = new OverpassItemEvaluatorBuilderImp();
 
 		return new OverpassApiObjectImp(
@@ -74,7 +74,7 @@ export class OverpassApiObjectImp implements OverpassApiObject {
 			queryValidator,
 			statusValidator,
 			compileUtils,
-			filterBuilder,
+			tagBuilder,
 			builder,
 			evaluatorItemBuilder,
 		);
@@ -123,7 +123,7 @@ export class OverpassApiObjectImp implements OverpassApiObject {
 		options?: OverpassOutputOptions,
 		settings?: OverpassSettings,
 	): string {
-		const state = OverpassStateImp.Build(this.compileUtils, this.filterBuilder, this.evaluatorItemBuilder);
+		const state = OverpassStateImp.Build(this.compileUtils, this.tagBuilder, this.evaluatorItemBuilder);
 
 		const statements = statementBuilder(state);
 
@@ -236,7 +236,7 @@ export class OverpassApiObjectImp implements OverpassApiObject {
 	): OverpassApiFunction<Args, S, O> {
 		const types = argTypes.map((type, index) => ({ index, type })) as CreateFunctionArgs<Args>;
 
-		const state = OverpassStateImp.Build(this.compileUtils, this.filterBuilder, this.evaluatorItemBuilder);
+		const state = OverpassStateImp.Build(this.compileUtils, this.tagBuilder, this.evaluatorItemBuilder);
 
 		const builderOutput = statementBuilder(state, ...types);
 

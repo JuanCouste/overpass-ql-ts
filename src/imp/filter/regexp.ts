@@ -1,6 +1,6 @@
-import { CompileUtils, CompiledItem, OverpassExpression, OverpassFilter, ParamType } from "@/model";
+import { CompileUtils, CompiledItem, OverpassExpression, OverpassTagFilter, ParamType } from "@/model";
 
-export class OverpassRegExpFilter implements OverpassFilter {
+export class OverpassRegExpTagFilter implements OverpassTagFilter {
 	constructor(
 		private readonly prop: OverpassExpression<string | RegExp>,
 		private readonly regExp: OverpassExpression<RegExp>,

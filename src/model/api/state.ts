@@ -9,7 +9,7 @@ import {
 } from "@/model/parts";
 import { OverpassBoundingBox, OverpassGeoPos } from "@/model/types";
 import { OverpassItemEvaluatorBuilder } from "./evaluator";
-import { OverpassQueryFilter, OverpassQueryFilterFunction } from "./query";
+import { OverpassQueryTagFilterFunction, OverpassQueryTagFilters } from "./query";
 
 export type OverpassQueryTargetString = "any" | "node" | "way" | "relation";
 
@@ -30,8 +30,13 @@ export interface AndChainableOverpassStatement {
 export type OverpassTargetStateStatement = AndChainableOverpassStatement & ComposableOverpassStatement;
 
 export interface OverpassTargetState {
-	/** The elements that satisfy {@link filter} */
-	query(filter: OverpassQueryFilter | OverpassQueryFilterFunction): OverpassTargetStateStatement;
+	/**
+	 * The elements that satisfy {@link tagFilter}
+	 * @deprecated since 1.8.0 will, be removed on 2.x.x, use {@link byTags}
+	 */
+	query(tagFilter: OverpassQueryTagFilters | OverpassQueryTagFilterFunction): OverpassTargetStateStatement;
+	/** The elements that satisfy {@link tagFilter} */
+	byTags(tagFilter: OverpassQueryTagFilters | OverpassQueryTagFilterFunction): OverpassTargetStateStatement;
 	/** The elements that are inside the bounding box */
 	bbox(...params: OverpassBoundingBox): OverpassTargetStateStatement;
 	bbox(bbox: OverpassExpression<OverpassBoundingBox>): OverpassTargetStateStatement;
