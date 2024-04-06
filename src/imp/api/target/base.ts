@@ -93,7 +93,7 @@ export abstract class OverpassTargetStateBase implements OverpassTargetState {
 	}
 
 	query(tagFilter: OverpassQueryTagFilters | OverpassQueryTagFilterFunction): ChainableOverpassStatementBase {
-		console.warn("Method query has been deprecated since 1.8.0");
+		console.warn("Method query has been deprecated since 1.8.0, will be removed on 2.x.x, use byTags");
 		return this.byTags(tagFilter);
 	}
 

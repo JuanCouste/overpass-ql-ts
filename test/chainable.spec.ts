@@ -11,7 +11,7 @@ describe("Chaining", () => {
 		const { elements } = await api.execJson(
 			(s: OverpassState) =>
 				s.node
-					.query({ name: "Montevideo" })
+					.byTags({ name: "Montevideo" })
 					.and(s.chain.bbox(MDEO_BBOX))
 					.and(s.chain.filter((e) => e.hasTag("capital").and(e.getTag("capital").eq("yes")))),
 			ONLY_IDS,
@@ -30,7 +30,7 @@ describe("Chaining", () => {
 		const { elements } = await api.execJson(
 			(s: OverpassState) =>
 				s.node
-					.query({ name: "Montevideo" })
+					.byTags({ name: "Montevideo" })
 					.and((c) => c.bbox(MDEO_BBOX))
 					.and((c) => c.filter((e) => e.hasTag("capital").and(e.getTag("capital").eq("yes")))),
 			ONLY_IDS,

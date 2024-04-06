@@ -10,8 +10,8 @@ describe("Target", () => {
 		const api: OverpassApiObject = BuildApi();
 
 		const result = await api.execJson((s) => [
-			s.node.query({ name: "Montevideo" }).toSet("mdeo"),
-			s.node.query((b) => ({ population: b.exists() })).toSet("pop"),
+			s.node.byTags({ name: "Montevideo" }).toSet("mdeo"),
+			s.node.byTags((b) => ({ population: b.exists() })).toSet("pop"),
 			s.node.intersect("mdeo", "pop"),
 		]);
 
@@ -27,8 +27,8 @@ describe("Target", () => {
 		const api: OverpassApiObject = BuildApi();
 
 		const result = await api.execJson((s) => [
-			s.node.query({ name: "Montevideo" }).toSet("mdeo"),
-			s.node.query((b) => ({ population: b.exists() })).toSet("pop"),
+			s.node.byTags({ name: "Montevideo" }).toSet("mdeo"),
+			s.node.byTags((b) => ({ population: b.exists() })).toSet("pop"),
 			s
 				.intersect(OverpassQueryTarget.Node, "mdeo", "pop")
 				.bbox(-34.91825445961721, -56.2253878509854, -34.89643102124763, -56.16596617125809),
@@ -46,8 +46,8 @@ describe("Target", () => {
 		const api: OverpassApiObject = BuildApi();
 
 		const result = await api.execJson((s) => [
-			s.node.query({ name: "Montevideo" }).toSet("mdeo"),
-			s.node.query((b) => ({ population: b.exists() })).toSet("pop"),
+			s.node.byTags({ name: "Montevideo" }).toSet("mdeo"),
+			s.node.byTags((b) => ({ population: b.exists() })).toSet("pop"),
 			s.node.intersect("mdeo", "pop").union(s.relation.byId(URUGUAY_ID)),
 		]);
 
@@ -63,8 +63,8 @@ describe("Target", () => {
 		const api: OverpassApiObject = BuildApi();
 
 		const result = await api.execJson((s) => [
-			s.node.query({ name: "Montevideo" }).toSet("mdeo"),
-			s.node.query((b) => ({ population: b.exists() })).toSet("pop"),
+			s.node.byTags({ name: "Montevideo" }).toSet("mdeo"),
+			s.node.byTags((b) => ({ population: b.exists() })).toSet("pop"),
 			s.node.intersect("mdeo", "pop").difference(s.node.byId(MDEO_LABEL_ID)),
 		]);
 
@@ -81,8 +81,8 @@ describe("Target", () => {
 
 		const result = await api.execJson(
 			(s) => [
-				s.node.query({ name: "Montevideo" }).toSet("mdeo"),
-				s.node.query((b) => ({ population: b.exists() })).toSet("pop"),
+				s.node.byTags({ name: "Montevideo" }).toSet("mdeo"),
+				s.node.byTags((b) => ({ population: b.exists() })).toSet("pop"),
 				s.node.intersect("mdeo", "pop").toSet("mdeoPop"),
 			],
 			{ targetSet: "mdeoPop" },
@@ -100,7 +100,7 @@ describe("Target", () => {
 		const api: OverpassApiObject = BuildApi();
 
 		const result = await api.execJson((s) => [
-			s.node.query((b) => ({ name: "Montevideo", population: b.exists() })).toSet("mdeo"),
+			s.node.byTags((b) => ({ name: "Montevideo", population: b.exists() })).toSet("mdeo"),
 			s.set("any", "mdeo"),
 		]);
 

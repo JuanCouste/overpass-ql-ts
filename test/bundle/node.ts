@@ -25,7 +25,7 @@ export function nodeTests() {
 		const settings: OverpassSettingsNoFormat = { globalBoundingBox: MDEO_BBOX };
 
 		const result = await api.execJson(
-			(s: OverpassState) => [s.relation.query({ name: "Uruguay" })],
+			(s: OverpassState) => [s.relation.byTags({ name: "Uruguay" })],
 			undefined,
 			settings,
 		);

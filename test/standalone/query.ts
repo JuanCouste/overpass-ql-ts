@@ -9,7 +9,7 @@ export function standaloneQueryTests() {
 
 		const forms = await fetchFormsOfStatementWithBBox(
 			api,
-			"query",
+			"byTags",
 			["relation", OverpassQueryTarget.Relation],
 			MDEO_BBOX,
 			{ name: "Uruguay" },
@@ -28,7 +28,7 @@ export function standaloneQueryTests() {
 	it("Should fetch node queries", async () => {
 		const api: OverpassApiObject = BuildApi();
 
-		const forms = await fetchFormsOfStatementWithBBox(api, "query", ["node", OverpassQueryTarget.Node], MDEO_BBOX, {
+		const forms = await fetchFormsOfStatementWithBBox(api, "byTags", ["node", OverpassQueryTarget.Node], MDEO_BBOX, {
 			capital: "yes",
 		});
 
@@ -47,7 +47,7 @@ export function standaloneQueryTests() {
 
 		const paranaId = 78119509;
 
-		const forms = await fetchFormsOfStatementWithBBox(api, "query", ["way", OverpassQueryTarget.Way], MDEO_BBOX, {
+		const forms = await fetchFormsOfStatementWithBBox(api, "byTags", ["way", OverpassQueryTarget.Way], MDEO_BBOX, {
 			name: "Paraná",
 		});
 

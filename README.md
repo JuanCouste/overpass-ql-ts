@@ -15,7 +15,7 @@ import { DefaultOverpassApi, OverpassOutputVerbosity } from "overpass-ql-ts";
 const api = DefaultOverpassApi();
 
 const result = await api.execJson(
-	(s) => [s.node.query({ name: /^Hospital/, amenity: "hospital" })],
+	(s) => [s.node.byTags({ name: /^Hospital/, amenity: "hospital" })],
 	{ verbosity: OverpassOutputVerbosity.Geometry }
 );
 

@@ -26,8 +26,8 @@ describe("Statement", () => {
 		const api: OverpassApiObject = BuildApi();
 
 		const result = await api.execJson((s: OverpassState) => {
-			const mdeoStm = s.node.query({ name: "Montevideo" }) as ComposableOverpassStatement;
-			const mdeoNoCap = s.node.query((b) => ({
+			const mdeoStm = s.node.byTags({ name: "Montevideo" }) as ComposableOverpassStatement;
+			const mdeoNoCap = s.node.byTags((b) => ({
 				name: "Montevideo",
 				capital: b.not.exists(),
 			}));

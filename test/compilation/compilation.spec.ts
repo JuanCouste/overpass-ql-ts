@@ -21,6 +21,6 @@ describe("Compilation", () => {
 		const evaluator = new OverpassItemEvaluatorBuilderImp();
 		const state = new OverpassStateImp(utils, tags, evaluator);
 
-		expect(() => state.proxy.node.query({ name: null! as string })).toThrow(OverpassParameterError);
+		expect(() => state.proxy.node.byTags({ name: null! as string })).toThrow(OverpassParameterError);
 	});
 });

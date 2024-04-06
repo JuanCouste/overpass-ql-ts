@@ -60,7 +60,7 @@ export function apiSettingsTests() {
 
 		const result = api.execJson(
 			(s) =>
-				s.node.query((b) => [
+				s.node.byTags((b) => [
 					["name", b.equals("Montevideo")],
 					["capital", b.equals("yes")],
 				]),

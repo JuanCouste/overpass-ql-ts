@@ -32,7 +32,7 @@ export type OverpassTargetStateStatement = AndChainableOverpassStatement & Compo
 export interface OverpassTargetState {
 	/**
 	 * The elements that satisfy {@link tagFilter}
-	 * @deprecated since 1.8.0 will, be removed on 2.x.x, use {@link byTags}
+	 * @deprecated since 1.8.0, will be removed on 2.x.x, use {@link byTags}
 	 */
 	query(tagFilter: OverpassQueryTagFilters | OverpassQueryTagFilterFunction): OverpassTargetStateStatement;
 	/** The elements that satisfy {@link tagFilter} */

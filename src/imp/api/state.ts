@@ -29,9 +29,9 @@ const STATEMENT_METHOD = (function () {
 	const enumObj: { [K in keyof OverpassTargetState]: true } = {
 		bbox: true,
 		byId: true,
-		byTags: true,
-		inside: true,
 		query: true,
+		inside: true,
+		byTags: true,
 		filter: true,
 	};
 	return Object.keys(enumObj);

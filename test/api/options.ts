@@ -15,7 +15,7 @@ export function apiOutOptionsTests() {
 	it("Should run queries with limit", async () => {
 		const api: OverpassApiObject = BuildApi();
 
-		const result = (await api.execJson((s: OverpassState) => [s.node.query({ name: "Montevideo" })], {
+		const result = (await api.execJson((s: OverpassState) => [s.node.byTags({ name: "Montevideo" })], {
 			limit: 1,
 		})) as OverpassJsonOutput;
 
@@ -27,7 +27,7 @@ export function apiOutOptionsTests() {
 
 		const boundingBox: OverpassBoundingBox = [-34.9, -56.2, -34.9, -56.2];
 
-		const query = api.buildQuery((s: OverpassState) => [s.node.query({ name: "Zabala" })], { boundingBox });
+		const query = api.buildQuery((s: OverpassState) => [s.node.byTags({ name: "Zabala" })], { boundingBox });
 
 		expect(query).toMatch(/\(\s*-34.9\s*,\s*-56.2\s*,\s*-34.9\s*,\s*-56.2\s*\)/);
 	});

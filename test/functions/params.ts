@@ -41,7 +41,9 @@ export function functionsParamTests() {
 
 		const getByName = api.createFunction(
 			[ParamType.Target, ParamType.RegExp],
-			(state, target: ParamItem<OverpassQueryTarget>, name: ParamItem<RegExp>) => [state.query(target, { name })],
+			(state, target: ParamItem<OverpassQueryTarget>, name: ParamItem<RegExp>) => [
+				state.byTags(target, { name }),
+			],
 			ONLY_IDS,
 		);
 
@@ -68,7 +70,7 @@ export function functionsParamTests() {
 		const getByName = api.createFunction(
 			[ParamType.Target, ParamType.RegExp, ParamType.RegExp],
 			(state, target: ParamItem<OverpassQueryTarget>, prop: ParamItem<RegExp>, value: ParamItem<RegExp>) => [
-				state.query(target, [[prop, value]]),
+				state.byTags(target, [[prop, value]]),
 			],
 			ONLY_IDS,
 		);
@@ -96,7 +98,7 @@ export function functionsParamTests() {
 		const containsProp = api.createFunction(
 			[ParamType.String],
 			(state, prop: ParamItem<string>) => [
-				state.query(OverpassQueryTarget.NodeWayRelation, (b) => [[prop, b.exists()]]),
+				state.byTags(OverpassQueryTarget.NodeWayRelation, (b) => [[prop, b.exists()]]),
 			],
 			ONLY_IDS,
 			{ globalBoundingBox: MDEO_BBOX },
