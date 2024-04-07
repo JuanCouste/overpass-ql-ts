@@ -3,7 +3,10 @@ import { OverpassExpression, OverpassTagFilter, OverpassTagFilterHelper } from "
 import { OverpassTagFilterHelperBase } from "./base";
 
 export class OverpassRegExpTagFilterHelper extends OverpassTagFilterHelperBase {
-	constructor(private readonly regExp: OverpassExpression<RegExp>, negated: boolean) {
+	constructor(
+		private readonly regExp: OverpassExpression<RegExp>,
+		negated: boolean,
+	) {
 		super(negated);
 	}
 
