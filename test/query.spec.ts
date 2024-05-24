@@ -3,8 +3,8 @@ import "./checkConnection";
 import {
 	OverpassApiObject,
 	OverpassJsonOutput,
-	OverpassQueryFilterObject,
-	OverpassQueryFilterTuple,
+	OverpassQueryTagFilterTuple,
+	OverpassQueryTagFitlerObject,
 	OverpassQueryTarget,
 	OverpassSettings,
 	OverpassState,
@@ -14,17 +14,17 @@ import { BuildApi, MDEO_BBOX, MDEO_CITY_ID, MDEO_DEP_ID, MDEO_ID, ONLY_IDS, URUG
 
 async function queryAlternatives(
 	api: OverpassApiObject,
-	query: OverpassQueryFilterObject,
+	query: OverpassQueryTagFitlerObject,
 ): Promise<OverpassJsonOutput[]> {
 	const settings: OverpassSettings = { globalBoundingBox: MDEO_BBOX };
 
-	const tupleArray = Object.entries(query) as OverpassQueryFilterTuple[];
+	const tupleArray = Object.entries(query) as OverpassQueryTagFilterTuple[];
 
 	return await Promise.all<OverpassJsonOutput>([
-		api.execJson((s: OverpassState) => [s.node.query(query)], ONLY_IDS, settings),
-		api.execJson((s: OverpassState) => [s.node.query(tupleArray)], ONLY_IDS, settings),
-		api.execJson((s: OverpassState) => [s.node.query(() => query)], ONLY_IDS, settings),
-		api.execJson((s: OverpassState) => [s.node.query(() => tupleArray)], ONLY_IDS, settings),
+		api.execJson((s: OverpassState) => [s.node.byTags(query)], ONLY_IDS, settings),
+		api.execJson((s: OverpassState) => [s.node.byTags(tupleArray)], ONLY_IDS, settings),
+		api.execJson((s: OverpassState) => [s.node.byTags(() => query)], ONLY_IDS, settings),
+		api.execJson((s: OverpassState) => [s.node.byTags(() => tupleArray)], ONLY_IDS, settings),
 	]);
 }
 
@@ -49,7 +49,7 @@ describe("Query", () => {
 
 		const result = await api.execJson(
 			(s: OverpassState) => [
-				s.node.query((b) => ({
+				s.node.byTags((b) => ({
 					name: b.equals("Montevideo"),
 					capital: b.equals("yes"),
 				})),
@@ -71,7 +71,7 @@ describe("Query", () => {
 
 		const result = await api.execJson(
 			(s: OverpassState) => [
-				s.node.query((b) => [
+				s.node.byTags((b) => [
 					["name", b.equals("Montevideo")],
 					["capital", b.equals("yes")],
 				]),
@@ -121,7 +121,7 @@ describe("Query", () => {
 
 		const result = await api.execJson(
 			(s: OverpassState) => [
-				s.node.query((b) => [
+				s.node.byTags((b) => [
 					["name", b.regExp(/ontevide/)],
 					["capital", b.regExp(/es$/)],
 				]),
@@ -143,7 +143,7 @@ describe("Query", () => {
 
 		const result = await api.execJson(
 			(s: OverpassState) => [
-				s.node.query(() => [
+				s.node.byTags(() => [
 					[/ame$/, /ontevide/],
 					[/^capita/, /es$/],
 				]),
@@ -165,7 +165,7 @@ describe("Query", () => {
 
 		const result = await api.execJson(
 			(s: OverpassState) => [
-				s.node.query((b) => ({
+				s.node.byTags((b) => ({
 					name: b.exists(),
 					admin_level: b.exists(),
 				})),
@@ -187,7 +187,7 @@ describe("Query", () => {
 
 		const result = await api.execJson(
 			(s: OverpassState) => [
-				s[OverpassQueryTarget.NodeWayRelation].query((b) => [
+				s[OverpassQueryTarget.NodeWayRelation].byTags((b) => [
 					["admin_level", "2"],
 					["capital", b.equals("yes").not()],
 				]),
@@ -209,7 +209,7 @@ describe("Query", () => {
 
 		const result = await api.execJson(
 			(s: OverpassState) => [
-				s[OverpassQueryTarget.NodeWayRelation].query((b) => [
+				s[OverpassQueryTarget.NodeWayRelation].byTags((b) => [
 					["admin_level", "2"],
 					["capital", b.not.equals("yes")],
 				]),
@@ -231,7 +231,7 @@ describe("Query", () => {
 
 		const result = await api.execJson(
 			(s: OverpassState) => [
-				s[OverpassQueryTarget.NodeWayRelation].query((b) => [
+				s[OverpassQueryTarget.NodeWayRelation].byTags((b) => [
 					["admin_level", "2"],
 					["capital", b.exists().not()],
 				]),
@@ -253,7 +253,7 @@ describe("Query", () => {
 
 		const result = await api.execJson(
 			(s: OverpassState) => [
-				s[OverpassQueryTarget.NodeWayRelation].query((b) => [
+				s[OverpassQueryTarget.NodeWayRelation].byTags((b) => [
 					["admin_level", "2"],
 					["capital", b.not.exists()],
 				]),
@@ -275,7 +275,7 @@ describe("Query", () => {
 
 		const result = await api.execJson(
 			(s: OverpassState) => [
-				s[OverpassQueryTarget.NodeWayRelation].query((b) => [
+				s[OverpassQueryTarget.NodeWayRelation].byTags((b) => [
 					["name", "Montevideo"],
 					["admin_level", b.exists()],
 					["admin_level", b.regExp(/^2$/).not()],
@@ -299,7 +299,7 @@ describe("Query", () => {
 
 		const result = await api.execJson(
 			(s: OverpassState) => [
-				s[OverpassQueryTarget.NodeWayRelation].query((b) => [
+				s[OverpassQueryTarget.NodeWayRelation].byTags((b) => [
 					["name", "Montevideo"],
 					["admin_level", b.exists()],
 					["admin_level", b.not.regExp(/^2$/)],
@@ -322,7 +322,7 @@ describe("Query", () => {
 		const settings: OverpassSettings = { globalBoundingBox: MDEO_BBOX };
 
 		const result = await api.execJson(
-			(s: OverpassState) => [s.relation.query(() => ({ name: [/^Monte/, /tevi/, /video$/] }))],
+			(s: OverpassState) => [s.relation.byTags(() => ({ name: [/^Monte/, /tevi/, /video$/] }))],
 			ONLY_IDS,
 			settings,
 		);

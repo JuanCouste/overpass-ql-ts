@@ -1,17 +1,17 @@
-import { OverpassExistsFilter } from "@/imp/filter";
-import { OverpassExpression, OverpassFilter, OverpassFilterHelper } from "@/model";
-import { OverpassFilterHelperBase } from "./base";
+import { OverpassExistsTagFilter } from "@/imp/filter";
+import { OverpassExpression, OverpassTagFilter, OverpassTagFilterHelper } from "@/model";
+import { OverpassTagFilterHelperBase } from "./base";
 
-export class OverpassExistsFilterHelper extends OverpassFilterHelperBase {
+export class OverpassExistsTagFilterHelper extends OverpassTagFilterHelperBase {
 	constructor(negated: boolean) {
 		super(negated);
 	}
 
-	clone(negated: boolean): OverpassFilterHelper {
-		return new OverpassExistsFilterHelper(negated);
+	clone(negated: boolean): OverpassTagFilterHelper {
+		return new OverpassExistsTagFilterHelper(negated);
 	}
 
-	complete(prop: OverpassExpression<string | RegExp>): OverpassFilter {
-		return new OverpassExistsFilter(prop as OverpassExpression<string>, this.negated);
+	complete(prop: OverpassExpression<string | RegExp>): OverpassTagFilter {
+		return new OverpassExistsTagFilter(prop as OverpassExpression<string>, this.negated);
 	}
 }

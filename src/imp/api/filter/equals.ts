@@ -1,8 +1,8 @@
-import { OverpassEqualsFilter } from "@/imp/filter";
-import { OverpassExpression, OverpassFilter, OverpassFilterHelper } from "@/model";
-import { OverpassFilterHelperBase } from "./base";
+import { OverpassEqualsTagFilter } from "@/imp/filter";
+import { OverpassExpression, OverpassTagFilter, OverpassTagFilterHelper } from "@/model";
+import { OverpassTagFilterHelperBase } from "./base";
 
-export class OverpassEqualsFilterHelper extends OverpassFilterHelperBase {
+export class OverpassEqualsTagFilterHelper extends OverpassTagFilterHelperBase {
 	constructor(
 		private readonly value: OverpassExpression<string>,
 		negated: boolean,
@@ -10,11 +10,11 @@ export class OverpassEqualsFilterHelper extends OverpassFilterHelperBase {
 		super(negated);
 	}
 
-	clone(negated: boolean): OverpassFilterHelper {
-		return new OverpassEqualsFilterHelper(this.value, negated);
+	clone(negated: boolean): OverpassTagFilterHelper {
+		return new OverpassEqualsTagFilterHelper(this.value, negated);
 	}
 
-	complete(prop: OverpassExpression<string | RegExp>): OverpassFilter {
-		return new OverpassEqualsFilter(prop as OverpassExpression<string>, this.value, this.negated);
+	complete(prop: OverpassExpression<string | RegExp>): OverpassTagFilter {
+		return new OverpassEqualsTagFilter(prop as OverpassExpression<string>, this.value, this.negated);
 	}
 }

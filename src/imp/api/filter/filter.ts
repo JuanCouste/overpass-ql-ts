@@ -1,31 +1,31 @@
-import { OverpassExpression, OverpassFilterBuilder, OverpassFilterHelper } from "@/model";
-import { OverpassEqualsFilterHelper } from "./equals";
-import { OverpassExistsFilterHelper } from "./exists";
-import { OverpassRegExpFilterHelper } from "./regexp";
+import { OverpassExpression, OverpassTagFilterBuilder, OverpassTagFilterHelper } from "@/model";
+import { OverpassEqualsTagFilterHelper } from "./equals";
+import { OverpassExistsTagFilterHelper } from "./exists";
+import { OverpassRegExpTagFilterHelper } from "./regexp";
 
-export class OverpassFilterBuilderImp implements OverpassFilterBuilder {
+export class OverpassTagFilterBuilderImp implements OverpassTagFilterBuilder {
 	private readonly negated: boolean;
 
-	public readonly not: OverpassFilterBuilder;
+	public readonly not: OverpassTagFilterBuilder;
 
-	static Build(): OverpassFilterBuilder {
-		return new OverpassFilterBuilderImp(false);
+	static Build(): OverpassTagFilterBuilder {
+		return new OverpassTagFilterBuilderImp(false);
 	}
 
-	private constructor(negated: boolean, opposite?: OverpassFilterBuilder) {
+	private constructor(negated: boolean, opposite?: OverpassTagFilterBuilder) {
 		this.negated = negated;
-		this.not = opposite ?? new OverpassFilterBuilderImp(!this.negated, this);
+		this.not = opposite ?? new OverpassTagFilterBuilderImp(!this.negated, this);
 	}
 
-	equals(value: OverpassExpression<string>): OverpassFilterHelper {
-		return new OverpassEqualsFilterHelper(value, this.negated);
+	equals(value: OverpassExpression<string>): OverpassTagFilterHelper {
+		return new OverpassEqualsTagFilterHelper(value, this.negated);
 	}
 
-	exists(): OverpassFilterHelper {
-		return new OverpassExistsFilterHelper(this.negated);
+	exists(): OverpassTagFilterHelper {
+		return new OverpassExistsTagFilterHelper(this.negated);
 	}
 
-	regExp(exp: OverpassExpression<RegExp>): OverpassFilterHelper {
-		return new OverpassRegExpFilterHelper(exp, this.negated);
+	regExp(exp: OverpassExpression<RegExp>): OverpassTagFilterHelper {
+		return new OverpassRegExpTagFilterHelper(exp, this.negated);
 	}
 }

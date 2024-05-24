@@ -8,9 +8,9 @@ export function standaloneIntersectTests() {
 
 		const result = await api.execJson(
 			(s: OverpassState) => [
-				s.node.query({ capital_city: "Montevideo" }).toSet("cap"),
+				s.node.byTags({ capital_city: "Montevideo" }).toSet("cap"),
 				s.node
-					.query((q) => ({
+					.byTags((q) => ({
 						name: "Montevideo",
 						population: q.exists(),
 					}))

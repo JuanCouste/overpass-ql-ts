@@ -2,29 +2,29 @@ import {
 	ChainableOverpassStatementBase,
 	OverpassBBoxStatement,
 	OverpassByIdStatement,
+	OverpassByTagsStatement,
 	OverpassIfFilterStatement,
 	OverpassInsidePolygonStatement,
-	OverpassQueryStatement,
 } from "@/imp/statement";
 import {
-	AnyOverpassFilter,
+	AnyOverpassTagFilter,
 	CompileUtils,
 	OverpassBoundingBox,
 	OverpassChainableTargetableState,
 	OverpassEvaluator,
 	OverpassExpression,
-	OverpassFilter,
-	OverpassFilterBuilder,
-	OverpassFilterHelper,
 	OverpassGeoPos,
 	OverpassItemEvaluatorBuilder,
 	OverpassParameterError,
 	OverpassPolygonCoordExpression,
-	OverpassQueryFilter,
-	OverpassQueryFilterFunction,
-	OverpassQueryFilterTuple,
-	OverpassQueryRegExpFilterTuple,
+	OverpassQueryRegExpTagFilterTuple,
+	OverpassQueryTagFilterFunction,
+	OverpassQueryTagFilterTuple,
+	OverpassQueryTagFilters,
 	OverpassStatementTarget,
+	OverpassTagFilter,
+	OverpassTagFilterBuilder,
+	OverpassTagFilterHelper,
 	OverpassTargetState,
 	ParamType,
 } from "@/model";
@@ -34,7 +34,7 @@ export abstract class OverpassTargetStateBase implements OverpassTargetState {
 		protected readonly target: OverpassStatementTarget,
 		protected readonly chain: OverpassChainableTargetableState,
 		protected readonly utils: CompileUtils,
-		protected readonly filterBuilder: OverpassFilterBuilder,
+		protected readonly tagBuilder: OverpassTagFilterBuilder,
 		protected readonly evaluatorItemBuilder: OverpassItemEvaluatorBuilder,
 	) {
 		if (chain == null) {
@@ -42,56 +42,59 @@ export abstract class OverpassTargetStateBase implements OverpassTargetState {
 		}
 	}
 
-	private isRegExpTuple(tuple: OverpassQueryFilterTuple): tuple is OverpassQueryRegExpFilterTuple {
+	private isRegExpTuple(tuple: OverpassQueryTagFilterTuple): tuple is OverpassQueryRegExpTagFilterTuple {
 		const prop = tuple[0];
 		return prop instanceof RegExp || this.utils.isSpecificParam<RegExp>(prop, ParamType.RegExp);
 	}
 
-	private anyFilterToHelper(anyFilter: AnyOverpassFilter): OverpassFilterHelper {
-		if (anyFilter == null) {
+	private anyFilterToHelper(anyTag: AnyOverpassTagFilter): OverpassTagFilterHelper {
+		if (anyTag == null) {
 			throw new OverpassParameterError(`Unexpected query filter value null`);
-		} else if (typeof anyFilter == "string" || this.utils.isSpecificParam<string>(anyFilter, ParamType.String)) {
-			return this.filterBuilder.equals(anyFilter);
-		} else if (anyFilter instanceof RegExp || this.utils.isSpecificParam<RegExp>(anyFilter, ParamType.RegExp)) {
-			return this.filterBuilder.regExp(anyFilter);
+		} else if (typeof anyTag == "string" || this.utils.isSpecificParam<string>(anyTag, ParamType.String)) {
+			return this.tagBuilder.equals(anyTag);
+		} else if (anyTag instanceof RegExp || this.utils.isSpecificParam<RegExp>(anyTag, ParamType.RegExp)) {
+			return this.tagBuilder.regExp(anyTag);
 		} else {
-			return anyFilter;
+			return anyTag;
 		}
 	}
 
-	query(filter: OverpassQueryFilter | OverpassQueryFilterFunction): ChainableOverpassStatementBase {
-		const filters: OverpassFilter[] = [];
+	byTags(tagInput: OverpassQueryTagFilters | OverpassQueryTagFilterFunction): ChainableOverpassStatementBase {
+		const tags: OverpassTagFilter[] = [];
 
-		let filterData: OverpassQueryFilter;
-		if (typeof filter == "function") {
-			filterData = filter(this.filterBuilder);
+		let tagData: OverpassQueryTagFilters;
+		if (typeof tagInput == "function") {
+			tagData = tagInput(this.tagBuilder);
 		} else {
-			filterData = filter;
+			tagData = tagInput;
 		}
 
-		if (filterData instanceof Array) {
-			filterData.forEach((tuple) => {
+		if (tagData instanceof Array) {
+			tagData.forEach((tuple) => {
 				if (this.isRegExpTuple(tuple)) {
 					const [regExpProp, value] = tuple;
-					filters.push(this.filterBuilder.regExp(value).complete(regExpProp));
+					tags.push(this.tagBuilder.regExp(value).complete(regExpProp));
 				} else {
 					const [prop, value] = tuple;
-					filters.push(this.anyFilterToHelper(value).complete(prop));
+					tags.push(this.anyFilterToHelper(value).complete(prop));
 				}
 			});
 		} else {
-			Object.entries(filterData).forEach(([prop, anyFilterValue]) => {
-				if (anyFilterValue instanceof Array) {
-					filters.push(
-						...anyFilterValue.map((anyFilter) => this.anyFilterToHelper(anyFilter).complete(prop)),
-					);
+			Object.entries(tagData).forEach(([prop, anyTagValue]) => {
+				if (anyTagValue instanceof Array) {
+					tags.push(...anyTagValue.map((anyTag) => this.anyFilterToHelper(anyTag).complete(prop)));
 				} else {
-					filters.push(this.anyFilterToHelper(anyFilterValue).complete(prop));
+					tags.push(this.anyFilterToHelper(anyTagValue).complete(prop));
 				}
 			});
 		}
 
-		return new OverpassQueryStatement(this.target, this.chain, filters);
+		return new OverpassByTagsStatement(this.target, this.chain, tags);
+	}
+
+	query(tagFilter: OverpassQueryTagFilters | OverpassQueryTagFilterFunction): ChainableOverpassStatementBase {
+		console.warn("Method query has been deprecated since 1.8.0, will be removed on 2.x.x, use byTags");
+		return this.byTags(tagFilter);
 	}
 
 	bbox(south: number, west: number, north: number, east: number): ChainableOverpassStatementBase;

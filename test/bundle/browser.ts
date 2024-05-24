@@ -29,7 +29,7 @@ export function browserTests() {
 				const api: OverpassApiObject = module.FetchOverpassApi(url);
 				const settings: OverpassSettingsNoFormat = { globalBoundingBox: montevideoBBox };
 				const result = await api.execJson(
-					(s: OverpassState) => [s.relation.query({ name: "Uruguay" })],
+					(s: OverpassState) => [s.relation.byTags({ name: "Uruguay" })],
 					undefined,
 					settings,
 				);

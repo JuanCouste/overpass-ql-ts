@@ -26,7 +26,7 @@ console.log(theNode.tags?.name);
 /** Get the coordinates of some hospital */
 const hospitals = await api.execJson(
 	(s: OverpassState) => [
-		s.node.query({
+		s.node.byTags({
 			name: /^Hospital/,
 			amenity: "hospital",
 		}),

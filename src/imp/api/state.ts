@@ -12,7 +12,6 @@ import {
 	ComposableOverpassStatement,
 	OverpassChainableTargetableState,
 	OverpassExpression,
-	OverpassFilterBuilder,
 	OverpassItemEvaluatorBuilder,
 	OverpassQueryTarget,
 	OverpassQueryTargetExpression,
@@ -21,6 +20,7 @@ import {
 	OverpassState,
 	OverpassStateMethods,
 	OverpassStatement,
+	OverpassTagFilterBuilder,
 	OverpassTargetMapState,
 	OverpassTargetState,
 } from "@/model";
@@ -29,8 +29,9 @@ const STATEMENT_METHOD = (function () {
 	const enumObj: { [K in keyof OverpassTargetState]: true } = {
 		bbox: true,
 		byId: true,
-		inside: true,
 		query: true,
+		inside: true,
+		byTags: true,
 		filter: true,
 	};
 	return Object.keys(enumObj);
@@ -71,7 +72,7 @@ export class OverpassStateImp implements OverpassStateMethods {
 
 	constructor(
 		private readonly utils: CompileUtils,
-		private readonly filterBuilder: OverpassFilterBuilder,
+		private readonly tagBuilder: OverpassTagFilterBuilder,
 		private readonly evaluatorItemBuilder: OverpassItemEvaluatorBuilder,
 	) {
 		const stateProxy = new Proxy<OverpassStateImp>(this, { get: this.proxyGet });
@@ -80,17 +81,17 @@ export class OverpassStateImp implements OverpassStateMethods {
 			null!,
 			null!,
 			this.utils,
-			this.filterBuilder,
+			this.tagBuilder,
 			this.evaluatorItemBuilder,
 		);
 	}
 
 	static Build(
 		utils: CompileUtils,
-		filterBuilder: OverpassFilterBuilder,
+		tagBuilder: OverpassTagFilterBuilder,
 		evaluatorItemBuilder: OverpassItemEvaluatorBuilder,
 	): OverpassState {
-		const state = new OverpassStateImp(utils, filterBuilder, evaluatorItemBuilder);
+		const state = new OverpassStateImp(utils, tagBuilder, evaluatorItemBuilder);
 		return state.proxy;
 	}
 
@@ -103,7 +104,7 @@ export class OverpassStateImp implements OverpassStateMethods {
 				statementTarget,
 				this.chain,
 				this.utils,
-				this.filterBuilder,
+				this.tagBuilder,
 				this.evaluatorItemBuilder,
 			);
 			this.targets.set(target, targetState);
@@ -169,7 +170,7 @@ export class OverpassStateImp implements OverpassStateMethods {
 			statementTarget,
 			this.chain,
 			this.utils,
-			this.filterBuilder,
+			this.tagBuilder,
 			this.evaluatorItemBuilder,
 		);
 	}

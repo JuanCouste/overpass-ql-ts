@@ -16,7 +16,7 @@ on:
 env:
   OVERPASS_QL_TS_URL: "http://localhost/api/interpreter"
   OVERPASS_QL_BUNDLING: "Yes"
-  PACKAGE-VERSION: null
+  PACKAGE-VERSION: ""
 
 jobs:
   publish:
@@ -59,14 +59,14 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Ensure tests passing
-        run: npm run test
-
       - name: Update version
         run: |
           npm --no-git-tag-version version ${{ github.event.inputs.version-type }}
           newversion=$(npm pkg get version | tr -d \")
           echo "PACKAGE-VERSION=${newversion}" >> $GITHUB_ENV
+
+      - name: Ensure tests passing
+        run: npm run test
 
       - name: Build bundles & Update README.md
         run: |

@@ -1,8 +1,8 @@
 import {
 	OverpassCompileUtils,
-	OverpassFilterBuilderImp,
 	OverpassItemEvaluatorBuilderImp,
 	OverpassStateImp,
+	OverpassTagFilterBuilderImp,
 } from "@/imp";
 import { OverpassParameterError } from "@/model";
 import { describe, expect } from "@jest/globals";
@@ -17,10 +17,10 @@ describe("Compilation", () => {
 
 	describe("Query", () => {
 		const utils = new OverpassCompileUtils();
-		const filter = OverpassFilterBuilderImp.Build();
+		const tags = OverpassTagFilterBuilderImp.Build();
 		const evaluator = new OverpassItemEvaluatorBuilderImp();
-		const state = new OverpassStateImp(utils, filter, evaluator);
+		const state = new OverpassStateImp(utils, tags, evaluator);
 
-		expect(() => state.proxy.node.query({ name: null! as string })).toThrow(OverpassParameterError);
+		expect(() => state.proxy.node.byTags({ name: null! as string })).toThrow(OverpassParameterError);
 	});
 });
