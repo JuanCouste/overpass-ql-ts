@@ -25,7 +25,7 @@ console.log(someHospital.lat, someHospital.lon);
 ```
 <!-- prettier-ignore-end -->
 
-More quick examples [here](https://github.com/JuanCouste/overpass-ql-ts/wiki/Evaluators).
+More quick examples [here](https://github.com/JuanCouste/overpass-ql-ts/wiki/Examples).
 
 ## Instalation
 
