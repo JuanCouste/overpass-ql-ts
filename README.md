@@ -51,7 +51,7 @@ The package is usable though many features we intend to implement are WIP.
 
 ### Roadmap
 
-1.  String sanitization
+1.  Better String sanitization
 2.  Recurse filter, way_cnt, way_link
 3.  More evaluator support
 4.  Flow control statements
