@@ -3,6 +3,7 @@ import "?/checkConnection";
 import { BuildApi } from "?/utils";
 import { NaiveOverpassStringSanitizer, NoOverpassStringSanitizer } from "@/imp";
 import { GetSanitizer } from "@/imp/api/apiBuild";
+import { BuildOverpassApi, InterpreterUrlFrom, StatusUrlFrom } from "@/imp/api/apiBuild";
 import { OverpassApiObject, OverpassApiObjectImp } from "@/index";
 import { describe, expect, it } from "@jest/globals";
 import { apiFormatTests } from "./format";
@@ -25,23 +26,23 @@ describe("Api", () => {
 	});
 
 	it("Should expect a status url if interpreter is custom", () => {
-		expect(() => OverpassApiObjectImp.Build(null!, "http://localhost/custom")).toThrow(Error);
+		expect(() => BuildOverpassApi(null!, { interpreterUrl: "http://localhost/custom" })).toThrow(Error);
 	});
 
 	it("Should create status url from string", () => {
-		const url = OverpassApiObjectImp.StatusUrlFrom(null!, "http://localhost");
+		const url = StatusUrlFrom(null!, "http://localhost");
 
 		expect(url).toEqual(new URL("http://localhost"));
 	});
 
 	it("Should create status url from url", () => {
-		const url = OverpassApiObjectImp.StatusUrlFrom(null!, new URL("http://localhost"));
+		const url = StatusUrlFrom(null!, new URL("http://localhost"));
 
 		expect(url).toEqual(new URL("http://localhost"));
 	});
 
 	it("Should default to main instance", () => {
-		const url = OverpassApiObjectImp.InterpreterUrlFrom();
+		const url = InterpreterUrlFrom();
 
 		expect(url.host).toEqual("overpass-api.de");
 	});

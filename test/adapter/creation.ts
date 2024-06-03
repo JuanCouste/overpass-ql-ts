@@ -1,3 +1,4 @@
+import { NOT_AN_API } from "?/utils";
 import { FetchRequestAdapter, NodeHttpRequestAdapter, XMLHttpRequestAdapter } from "@/imp";
 import {
 	DefaultOverpassApi,
@@ -15,7 +16,6 @@ function expectAdapterToBe(api: OverpassApiObject, adapterClass: new () => Reque
 }
 
 export function creationTests() {
-	const notAnApi = new URL("http://not.an.api:12345/api/interpreter");
 	const partialGlobal = globalThis as Partial<typeof globalThis>;
 	const fetchFn = (() => {}) as unknown as typeof fetch;
 	const XmlClass = class {} as typeof XMLHttpRequest;
@@ -26,32 +26,32 @@ export function creationTests() {
 	it(`Should create an api with ${FetchRequestAdapter.name}`, () => {
 		globalThis.fetch = fetchFn;
 
-		expectAdapterToBe(FetchOverpassApi(notAnApi), FetchRequestAdapter);
+		expectAdapterToBe(FetchOverpassApi({ interpreterUrl: NOT_AN_API }), FetchRequestAdapter);
 
 		delete partialGlobal.fetch;
 	});
 
 	it(`Should create an api with ${XMLHttpRequestAdapter.name}`, () =>
-		expectAdapterToBe(XMLOverpassApi(notAnApi), XMLHttpRequestAdapter));
+		expectAdapterToBe(XMLOverpassApi({ interpreterUrl: NOT_AN_API }), XMLHttpRequestAdapter));
 
 	it(`Should create an api with ${NodeHttpRequestAdapter.name}`, () =>
-		expectAdapterToBe(HttpOverpassApi(notAnApi), NodeHttpRequestAdapter));
+		expectAdapterToBe(HttpOverpassApi({ interpreterUrl: NOT_AN_API }), NodeHttpRequestAdapter));
 
 	it("Should create an api with fetch", () => {
 		globalThis.fetch = fetchFn;
 
-		expectAdapterToBe(FetchOverpassApi(notAnApi), FetchRequestAdapter);
+		expectAdapterToBe(FetchOverpassApi({ interpreterUrl: NOT_AN_API }), FetchRequestAdapter);
 
 		delete partialGlobal.fetch;
 	});
 
 	it(`Should create ${NodeHttpRequestAdapter.name} by default`, () =>
-		expectAdapterToBe(DefaultOverpassApi(notAnApi), NodeHttpRequestAdapter));
+		expectAdapterToBe(DefaultOverpassApi({ interpreterUrl: NOT_AN_API }), NodeHttpRequestAdapter));
 
 	it(`Should create ${XMLHttpRequestAdapter.name} when aviable`, () => {
 		globalThis.XMLHttpRequest = XmlClass;
 
-		expectAdapterToBe(DefaultOverpassApi(notAnApi), XMLHttpRequestAdapter);
+		expectAdapterToBe(DefaultOverpassApi({ interpreterUrl: NOT_AN_API }), XMLHttpRequestAdapter);
 
 		delete partialGlobal.XMLHttpRequest;
 	});
@@ -59,7 +59,7 @@ export function creationTests() {
 	it(`Should create ${FetchRequestAdapter.name} when aviable`, () => {
 		globalThis.fetch = fetchFn;
 
-		expectAdapterToBe(DefaultOverpassApi(notAnApi), FetchRequestAdapter);
+		expectAdapterToBe(DefaultOverpassApi({ interpreterUrl: NOT_AN_API }), FetchRequestAdapter);
 
 		delete partialGlobal.fetch;
 	});
@@ -68,7 +68,7 @@ export function creationTests() {
 		globalThis.fetch = fetchFn;
 		globalThis.XMLHttpRequest = XmlClass;
 
-		expectAdapterToBe(DefaultOverpassApi(notAnApi), FetchRequestAdapter);
+		expectAdapterToBe(DefaultOverpassApi({ interpreterUrl: NOT_AN_API }), FetchRequestAdapter);
 
 		delete partialGlobal.fetch;
 		delete partialGlobal.XMLHttpRequest;
