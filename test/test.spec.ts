@@ -12,5 +12,6 @@ import "./query.spec";
 import "./standalone/standalone.spec";
 import "./statement.spec";
 import "./status.spec";
+import "./stringSanitization.spec";
 import "./target.spec";
 import "./validator/validator.spec";

@@ -1,3 +1,4 @@
+import { NO_SANITIZER } from "?/compilation/nosanitizer";
 import { CompileSymetric } from "?/compilation/symetry";
 import { Symetric, SymetricArgsExpression, SymetricArgumentsObject } from "?/utils";
 import { OverpassCompileUtils, OverpassQueryBuilderImp } from "@/imp";
@@ -83,7 +84,7 @@ function CompileOptionsSymetric<Args extends AnyParamValue[]>(
 	buildOptions: (...args: SymetricArgsExpression<Args>) => OverpassOutputOptions,
 	args: SymetricArgumentsObject<Args>,
 ) {
-	const utils = new OverpassCompileUtils();
+	const utils = new OverpassCompileUtils(NO_SANITIZER);
 	const builder = new OverpassQueryBuilderImp(utils);
 
 	return CompileSymetric<Args>((...args) => builder.buildOptions(buildOptions(...args)), args);

@@ -1,4 +1,4 @@
-import { OverpassApiObjectImp } from "@/imp/api/api";
+import { BuildOverpassApi, OverpassApiObjectOptions } from "@/imp/api/apiBuild";
 import { HttpMethod, HttpRequest, HttpResponse, RequestAdapter } from "@/imp/types";
 import { OverpassApiObject } from "@/model";
 import { METHOD, NetworkError } from "./adapter";
@@ -7,8 +7,14 @@ export type HttpRequestMethod = typeof import("http").request;
 export type HttpsRequestMethod = typeof import("https").request;
 export type HttpRequestMethods = [HttpRequestMethod, HttpsRequestMethod];
 
-export function HttpOverpassApi(interpreterUrl?: string | URL, statusUrl?: string | URL): OverpassApiObject {
-	return OverpassApiObjectImp.Build(new NodeHttpRequestAdapter(), interpreterUrl, statusUrl);
+export function HttpOverpassApi(options: OverpassApiObjectOptions): OverpassApiObject;
+/** @deprecated since 1.8.1, will be removed on 2.x.x, use {@link HttpOverpassApi} with {@link OverpassApiObjectOptions}*/
+export function HttpOverpassApi(interpreterUrl?: string | URL, statusUrl?: string | URL): OverpassApiObject;
+export function HttpOverpassApi(
+	optionsOrUrl?: OverpassApiObjectOptions | string | URL,
+	statusUrl?: string | URL,
+): OverpassApiObject {
+	return BuildOverpassApi(new NodeHttpRequestAdapter(), optionsOrUrl as URL, statusUrl);
 }
 
 export class NodeHttpRequestAdapter implements RequestAdapter {

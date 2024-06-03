@@ -1,4 +1,5 @@
 export * from "./api";
+export * from "./apiBuild";
 export * from "./builder";
 export * from "./compile";
 export * from "./evaluator";

@@ -1,3 +1,4 @@
+import { NO_SANITIZER } from "?/compilation/nosanitizer";
 import { Symetric } from "?/utils";
 import { OverpassCompileUtils } from "@/imp";
 import { OverpassBoundingBox, OverpassExpression } from "@/index";
@@ -7,7 +8,7 @@ import { ExpectCompileRejects, ExpectCompileResolves } from "./utils";
 type CardinalDirection = "south" | "west" | "north" | "east";
 
 function BuildBBox(value: OverpassExpression<OverpassBoundingBox>) {
-	const u = new OverpassCompileUtils();
+	const u = new OverpassCompileUtils(NO_SANITIZER);
 
 	return u.join(u.bbox(value), ",");
 }
@@ -44,7 +45,7 @@ export function sanitizationBoundingBoxTests() {
 			bbox[dirIndex] = number;
 
 			it(`Should error when bbox ${direction} is ${number}`, async () => {
-				const u = new OverpassCompileUtils();
+				const u = new OverpassCompileUtils(NO_SANITIZER);
 
 				await ExpectCompileRejects((value) => u.join(u.bbox(value), ","), [Symetric.BBox(bbox)]);
 			});
@@ -58,7 +59,7 @@ export function sanitizationBoundingBoxTests() {
 			const signStr = sign >= 0 ? "+" : "-";
 
 			it(`Should error when bbox ${direction} out of range [${signStr}]`, async () => {
-				const u = new OverpassCompileUtils();
+				const u = new OverpassCompileUtils(NO_SANITIZER);
 
 				await ExpectCompileRejects((value) => u.join(u.bbox(value), ","), [Symetric.BBox(bbox)]);
 			});

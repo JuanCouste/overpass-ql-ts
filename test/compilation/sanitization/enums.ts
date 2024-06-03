@@ -1,3 +1,4 @@
+import { NO_SANITIZER } from "?/compilation/nosanitizer";
 import { Symetric } from "?/utils";
 import { OverpassCompileUtils } from "@/imp";
 import {
@@ -30,7 +31,7 @@ export function sanitizationEnumTests() {
 			const numericValues = Object.values(enumObj).filter<number>((n): n is number => typeof n == "number")!;
 
 			it(`Should be fine when ${ParamType[paramType]} is fine`, async () => {
-				const utils = new OverpassCompileUtils();
+				const utils = new OverpassCompileUtils(NO_SANITIZER);
 
 				await ExpectCompileResolves(
 					(value) => compile(utils, value),
@@ -42,7 +43,7 @@ export function sanitizationEnumTests() {
 
 			Array<number>(NaN, Infinity, null!, undefined!, -1, max + 1).forEach((number) => {
 				it(`Should error when ${ParamType[paramType]} is ${number}`, async () => {
-					const utils = new OverpassCompileUtils();
+					const utils = new OverpassCompileUtils(NO_SANITIZER);
 
 					await ExpectCompileRejects(
 						(value) => compile(utils, value),
@@ -52,7 +53,7 @@ export function sanitizationEnumTests() {
 			});
 
 			it(`Should error when parameter is not a ${ParamType[paramType]}`, async () => {
-				const utils = new OverpassCompileUtils();
+				const utils = new OverpassCompileUtils(NO_SANITIZER);
 
 				await ExpectCompileRejects(
 					(value) => compile(utils, value),

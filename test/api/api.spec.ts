@@ -1,6 +1,8 @@
 import "?/checkConnection";
 //
 import { BuildApi } from "?/utils";
+import { NaiveOverpassStringSanitizer, NoOverpassStringSanitizer } from "@/imp";
+import { GetSanitizer } from "@/imp/api/apiBuild";
 import { OverpassApiObject, OverpassApiObjectImp } from "@/index";
 import { describe, expect, it } from "@jest/globals";
 import { apiFormatTests } from "./format";
@@ -42,5 +44,19 @@ describe("Api", () => {
 		const url = OverpassApiObjectImp.InterpreterUrlFrom();
 
 		expect(url.host).toEqual("overpass-api.de");
+	});
+
+	it("Should allow for using custom sanitizer", () => {
+		const sanitizer = new NoOverpassStringSanitizer();
+		expect(GetSanitizer(sanitizer)).toBe(sanitizer);
+	});
+
+	it("Should default to no sanitization", () => {
+		expect(GetSanitizer(false)).toBeInstanceOf(NoOverpassStringSanitizer);
+		expect(GetSanitizer(undefined)).toBeInstanceOf(NoOverpassStringSanitizer);
+	});
+
+	it("Should use sanitization when specified", () => {
+		expect(GetSanitizer(true)).toBeInstanceOf(NaiveOverpassStringSanitizer);
 	});
 });

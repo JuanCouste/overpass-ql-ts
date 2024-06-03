@@ -16,6 +16,7 @@ import {
 	OverpassQueryTarget,
 	OverpassRecurseStmType,
 	OverpassSortOrder,
+	OverpassStringSanitizer,
 	ParamItem,
 	ParamType,
 } from "@/model";
@@ -80,7 +81,7 @@ export class OverpassCompileUtils implements CompileUtils {
 	private readonly trueEvaluator: CompiledItem;
 	private readonly falseEvaluator: CompiledItem;
 
-	constructor() {
+	constructor(private readonly sanitizer: OverpassStringSanitizer) {
 		this.nl = this.raw("\n");
 		this.empty = this.raw("");
 
@@ -112,7 +113,9 @@ export class OverpassCompileUtils implements CompileUtils {
 				throw new OverpassParameterError(`Unexpected string value (${string})`);
 			}
 
-			return this.template`"${this.raw(string)}"`;
+			const sanitized = this.sanitizer.sanitize(string);
+
+			return this.template`"${this.raw(sanitized)}"`;
 		});
 	}
 
