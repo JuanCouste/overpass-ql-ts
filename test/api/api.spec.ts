@@ -1,10 +1,15 @@
 import "?/checkConnection";
 //
 import { BuildApi } from "?/utils";
-import { NaiveOverpassStringSanitizer, NoOverpassStringSanitizer } from "@/imp";
-import { GetSanitizer } from "@/imp/api/apiBuild";
-import { BuildOverpassApi, InterpreterUrlFrom, StatusUrlFrom } from "@/imp/api/apiBuild";
-import { OverpassApiObject, OverpassApiObjectImp } from "@/index";
+import {
+	BuildOverpassApi,
+	GetSanitizer,
+	InterpreterUrlFrom,
+	NaiveOverpassStringSanitizer,
+	NoOverpassStringSanitizer,
+	StatusUrlFrom,
+} from "@/imp";
+import { OverpassApiObject } from "@/model";
 import { describe, expect, it } from "@jest/globals";
 import { apiFormatTests } from "./format";
 import { apiMethodsTests } from "./methods";

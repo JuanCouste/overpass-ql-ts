@@ -1,4 +1,4 @@
-import { BuildOverpassApi, OverpassApiObjectOptions } from "@/imp/api/apiBuild";
+import { BuildOverpassApi, OverpassApiObjectOptions } from "@/imp/api/build";
 import { HttpMethod, HttpRequest, HttpResponse, RequestAdapter } from "@/imp/types";
 import { OverpassApiObject } from "@/model";
 import { METHOD, NetworkError } from "./adapter";

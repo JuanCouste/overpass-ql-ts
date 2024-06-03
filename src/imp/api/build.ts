@@ -2,10 +2,10 @@ import { NaiveOverpassStringSanitizer, NoOverpassStringSanitizer } from "@/imp/s
 import { RequestAdapter } from "@/imp/types";
 import { OverpassStringSanitizer } from "@/model";
 import { OverpassApiObjectImp } from "./api";
-import { OverpassQueryBuilderImp } from "./builder";
 import { OverpassCompileUtils } from "./compile";
 import { OverpassItemEvaluatorBuilderImp } from "./evaluator";
 import { OverpassTagFilterBuilderImp } from "./filter";
+import { OverpassQueryBuilderImp } from "./queryBuilder";
 import { OverpassStatusValidatorImp } from "./status";
 import { OverpassQueryValidatorImp } from "./validator";
 

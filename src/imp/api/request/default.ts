@@ -1,4 +1,4 @@
-import { OverpassApiObjectOptions } from "@/imp/api/apiBuild";
+import { OverpassApiObjectOptions } from "@/imp/api/build";
 import { OverpassApiObject } from "@/model";
 import { FetchOverpassApi } from "./fetch";
 import { HttpOverpassApi } from "./nodejs";
