@@ -9,14 +9,14 @@ import { describe, expect } from "@jest/globals";
 import { symetryUtilsTests } from "./building";
 import { compileItemTests } from "./items";
 import { NO_SANITIZER } from "./nosanitizer";
-import { sanitizationCompileTests } from "./sanitization";
-import { sanitizerTests } from "./sanitizer";
+import { parametersCompileTests } from "./sanitization";
+
+/** For information regarding tests see /test/README.md */
 
 describe("Compilation", () => {
 	describe("Item", compileItemTests);
 	describe("Symetry", symetryUtilsTests);
-	describe("Sanitization", sanitizationCompileTests);
-	describe("Sanitizer", sanitizerTests);
+	describe("Parameters", parametersCompileTests);
 
 	describe("Query", () => {
 		const utils = new OverpassCompileUtils(NO_SANITIZER);

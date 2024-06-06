@@ -4,7 +4,7 @@ import { OverpassCompileUtils } from "@/imp";
 import { describe, it } from "@jest/globals";
 import { ExpectCompileRejects, ExpectCompileResolves } from "./utils";
 
-export function sanitizationStringTests() {
+export function parametersStringTests() {
 	describe("Quoted", () => {
 		it("Should be fine when strings are fine", async () => {
 			const utils = new OverpassCompileUtils(NO_SANITIZER);

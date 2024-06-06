@@ -1,8 +1,10 @@
-import "./checkConnection";
+import "../checkConnection";
 //
 import { OverpassApiObject, OverpassSettingsNoFormat, OverpassState, OverpassStatement } from "@/index";
 import { describe, expect, it } from "@jest/globals";
-import { BuildApi, ONLY_IDS } from "./utils";
+import { BuildApi, ONLY_IDS } from "../utils";
+
+/** For information regarding tests see /test/README.md */
 
 async function CheckSanitizer(statementBuilder: (state: OverpassState) => OverpassStatement[] | OverpassStatement) {
 	const settings: OverpassSettingsNoFormat = { globalBoundingBox: [0, 0, 0, 0] };

@@ -5,6 +5,8 @@ import { describe, it } from "@jest/globals";
 import expect from "expect";
 import { BuildApi, MDEO_ID, MDEO_LABEL_ID, URUGUAY_ID } from "./utils";
 
+/** For information regarding tests see /test/README.md */
+
 describe("Target", () => {
 	it("Should handle intersections", async () => {
 		const api: OverpassApiObject = BuildApi();

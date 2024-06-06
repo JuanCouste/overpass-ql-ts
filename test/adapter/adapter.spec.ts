@@ -19,6 +19,8 @@ import { creationTests } from "./creation";
 // @ts-ignore
 import { XMLHttpRequest } from "xmlhttprequest";
 
+/** For information regarding tests see /test/README.md */
+
 describe("Adapter", () => {
 	describe("Creation", creationTests);
 	describe("NodeHttp", () => {
@@ -35,7 +37,7 @@ describe("Adapter", () => {
 								},
 							} as IncomingMessage);
 					},
-				}) as ClientRequest;
+				} as ClientRequest);
 
 			const adapter = new NodeHttpRequestAdapter([method, method]);
 			const promise = adapter.request(new URL("https://localhost"));

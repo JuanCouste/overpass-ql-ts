@@ -10,6 +10,8 @@ import { standalonePolygonTests } from "./polygon";
 import { standaloneQueryTests } from "./query";
 import { standaloneRecurseTests } from "./recurse";
 
+/** For information regarding tests see /test/README.md */
+
 describe("Standalone statements", () => {
 	describe("By id", standaloneByIdTests);
 	describe("BBox", standaloneBBoxTests);

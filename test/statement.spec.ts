@@ -4,6 +4,8 @@ import { ComposableOverpassStatement, OverpassApiObject, OverpassState } from "@
 import { describe, expect, it } from "@jest/globals";
 import { BuildApi, MDEO_ID, ONLY_IDS, URUGUAY_ID } from "./utils";
 
+/** For information regarding tests see /test/README.md */
+
 describe("Statement", () => {
 	it("Should fetch statement unions", async () => {
 		const api: OverpassApiObject = BuildApi();

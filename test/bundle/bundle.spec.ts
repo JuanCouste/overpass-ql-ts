@@ -5,6 +5,8 @@ import { browserTests } from "./browser";
 import { nodeTests } from "./node";
 import { cleanupBundles, setupBundles } from "./setupBundles";
 
+/** For information regarding tests see /test/README.md */
+
 function shouldDoBundlingTests(): boolean {
 	switch (process.env.OVERPASS_QL_BUNDLING?.toLocaleLowerCase()) {
 		case "yes":

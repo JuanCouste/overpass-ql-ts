@@ -4,7 +4,7 @@ import { OverpassCompileUtils } from "@/imp";
 import { it } from "@jest/globals";
 import { ExpectCompileRejects, ExpectCompileResolves } from "./utils";
 
-export function sanitizationDateTests() {
+export function parametersDateTests() {
 	it("Should be fine when Dates are fine", async () => {
 		const utils = new OverpassCompileUtils(NO_SANITIZER);
 

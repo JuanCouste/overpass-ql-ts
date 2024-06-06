@@ -2,6 +2,8 @@ import { NaiveOverpassStringSanitizer } from "@/imp";
 import { OverpassStringSanitizer, StringQuoteType } from "@/model";
 import { expect, it } from "@jest/globals";
 
+/** For information regarding tests see /test/README.md */
+
 export function sanitizerTests() {
 	it("Should not do anything to the selected quote", () => {
 		const sanitizer = new NaiveOverpassStringSanitizer();

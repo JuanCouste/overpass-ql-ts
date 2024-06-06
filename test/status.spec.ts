@@ -3,6 +3,8 @@ import { HttpResponse, OverpassApiError, OverpassErrorType, OverpassStatus } fro
 import { describe, expect, it } from "@jest/globals";
 import { APP_OSM_XML, TEXT_PLAIN } from "./utils";
 
+/** For information regarding tests see /test/README.md */
+
 const noQueriesStr = `Connected as: 2886860801
 Current time: 2023-12-23T06:14:08Z
 Announced endpoint: none

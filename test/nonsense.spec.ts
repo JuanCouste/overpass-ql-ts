@@ -4,6 +4,8 @@ import { beforeAll, describe, expect, it } from "@jest/globals";
 import * as fs from "fs/promises";
 import { NOT_AN_API } from "./utils";
 
+/** For information regarding tests see /test/README.md */
+
 describe("Nonsense", () => {
 	it("Should not affect coverage", async () => {
 		new OverpassError(0);

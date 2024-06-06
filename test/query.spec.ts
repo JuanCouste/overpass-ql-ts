@@ -12,6 +12,8 @@ import {
 import { describe, expect, it } from "@jest/globals";
 import { BuildApi, MDEO_BBOX, MDEO_CITY_ID, MDEO_DEP_ID, MDEO_ID, ONLY_IDS, URUGUAY_ID } from "./utils";
 
+/** For information regarding tests see /test/README.md */
+
 async function queryAlternatives(
 	api: OverpassApiObject,
 	query: OverpassQueryTagFitlerObject,

@@ -2,6 +2,8 @@ import { BuildApi } from "?/utils";
 import { afterAll, beforeAll } from "@jest/globals";
 import { baseConfig } from "../jest.config";
 
+// Validation of api reachability
+
 let promises: Promise<void>[];
 
 beforeAll(async () => {

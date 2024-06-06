@@ -13,7 +13,7 @@ function BuildBBox(value: OverpassExpression<OverpassBoundingBox>) {
 	return u.join(u.bbox(value), ",");
 }
 
-export function sanitizationBoundingBoxTests() {
+export function parametersBoundingBoxTests() {
 	it("Should be fine when bboxs are fine", async () => {
 		await ExpectCompileResolves(BuildBBox, [Symetric.BBox([1, 2, 3, 4])]);
 	});

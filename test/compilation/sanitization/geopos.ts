@@ -11,7 +11,7 @@ function BuildGeoPos(value: OverpassExpression<OverpassGeoPos>) {
 	return u.join([lat, lon], ",");
 }
 
-export function sanitizationGeoPosTests() {
+export function parametersGeoPosTests() {
 	it("Should be fine when geopos are fine", async () => {
 		await ExpectCompileResolves(BuildGeoPos, [Symetric.GeoPos({ lat: 1, lon: 2 })]);
 	});

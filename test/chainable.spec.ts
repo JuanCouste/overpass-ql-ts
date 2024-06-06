@@ -4,6 +4,8 @@ import { OverpassApiObject, OverpassState } from "@/index";
 import { describe, expect, it } from "@jest/globals";
 import { BuildApi, MDEO_BBOX, MDEO_ID, ONLY_IDS } from "./utils";
 
+/** For information regarding tests see /test/README.md */
+
 describe("Chaining", () => {
 	it("Should allow chaining", async () => {
 		const api: OverpassApiObject = BuildApi();

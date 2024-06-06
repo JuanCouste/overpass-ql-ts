@@ -23,7 +23,7 @@ const ENUMS: { [K in EnumParamType]: [any, (u: CompileUtils, v: any) => Compiled
 	[ParamType.RecurseStm]: [OverpassRecurseStmType, (u, v: OverpassRecurseStmType) => u.recurse(v)],
 };
 
-export function sanitizationEnumTests() {
+export function parametersEnumTests() {
 	Object.entries(ENUMS).forEach(([enumStr, [enumObj, compile]]) => {
 		const paramType: EnumParamType = +enumStr;
 

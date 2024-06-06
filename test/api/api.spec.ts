@@ -16,6 +16,8 @@ import { apiMethodsTests } from "./methods";
 import { apiOutOptionsTests } from "./options";
 import { apiSettingsTests } from "./settings";
 
+/** For information regarding tests see /test/README.md */
+
 describe("Api", () => {
 	describe("Format", apiFormatTests);
 	describe("Settings", apiSettingsTests);
