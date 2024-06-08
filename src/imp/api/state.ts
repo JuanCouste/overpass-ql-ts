@@ -1,8 +1,8 @@
 import { OverpassChainableIntersectStatement, OverpassTargetMapStateImp } from "@/imp/api/target";
 import {
-	OverapssRecurseStatement,
 	OverpassComposableRawStatement,
 	OverpassRawStatement,
+	OverpassRecurseStatement,
 	OverpassStatementTargetImp,
 } from "@/imp/statement";
 import {
@@ -179,6 +179,6 @@ export class OverpassStateImp implements OverpassStateMethods {
 		type: OverpassExpression<OverpassRecurseStmType>,
 		input?: OverpassExpression<string> | undefined,
 	): ComposableOverpassStatement {
-		return new OverapssRecurseStatement(type, input);
+		return new OverpassRecurseStatement(type, input);
 	}
 }

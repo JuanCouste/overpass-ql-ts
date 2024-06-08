@@ -15,7 +15,7 @@ export type OverpassQueryTargetString = "any" | "node" | "way" | "relation";
 
 export type AnyOverpassQueryTarget = OverpassQueryTarget | OverpassQueryTargetString;
 
-export type OverpassPolygonCoordExpression = [number, number] | OverpassExpression<OverpassGeoPos>;
+export type OverpassPositionLiteralExpression = [number, number] | OverpassExpression<OverpassGeoPos>;
 
 export type OverpassQueryTargetExpression = AnyOverpassQueryTarget | OverpassExpression<OverpassQueryTarget>;
 
@@ -43,7 +43,7 @@ export interface OverpassTargetState {
 	/** Fetch by {@link id} */
 	byId(id: OverpassExpression<number>): OverpassTargetStateStatement;
 	/** The elements that are inside a {@link polygon} */
-	inside(polygon: OverpassPolygonCoordExpression[]): OverpassTargetStateStatement;
+	inside(polygon: OverpassPositionLiteralExpression[]): OverpassTargetStateStatement;
 	/** Those elements that satisfy {@link predicate} */
 	filter(predicate: (e: OverpassItemEvaluatorBuilder) => OverpassEvaluator<boolean>): OverpassTargetStateStatement;
 }

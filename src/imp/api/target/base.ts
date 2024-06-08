@@ -16,7 +16,7 @@ import {
 	OverpassGeoPos,
 	OverpassItemEvaluatorBuilder,
 	OverpassParameterError,
-	OverpassPolygonCoordExpression,
+	OverpassPositionLiteralExpression,
 	OverpassQueryRegExpTagFilterTuple,
 	OverpassQueryTagFilterFunction,
 	OverpassQueryTagFilterTuple,
@@ -109,13 +109,17 @@ export abstract class OverpassTargetStateBase implements OverpassTargetState {
 		return new OverpassByIdStatement(this.target, this.chain, id);
 	}
 
-	inside(polygon: OverpassExpression<OverpassPolygonCoordExpression>[]): ChainableOverpassStatementBase {
+	private static PositionLiteralToGeoPosExp(
+		literal: OverpassPositionLiteralExpression,
+	): OverpassExpression<OverpassGeoPos> {
+		return literal instanceof Array ? { lat: literal[0], lon: literal[1] } : literal;
+	}
+
+	inside(polygon: OverpassPositionLiteralExpression[]): ChainableOverpassStatementBase {
 		return new OverpassInsidePolygonStatement(
 			this.target,
 			this.chain,
-			polygon.map<OverpassExpression<OverpassGeoPos>>((coord) =>
-				coord instanceof Array ? { lat: coord[0], lon: coord[1] } : coord,
-			),
+			polygon.map(OverpassTargetStateBase.PositionLiteralToGeoPosExp),
 		);
 	}
 

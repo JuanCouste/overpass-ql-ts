@@ -2,13 +2,13 @@ import { NO_SANITIZER } from "?/compilation/nosanitizer";
 import { CompileSymetric } from "?/compilation/symetry";
 import { Symetric, SymetricArgsExpression, SymetricArgumentsObject } from "?/utils";
 import {
-	OverapssRecurseStatement,
 	OverpassBBoxStatement,
 	OverpassByIdStatement,
 	OverpassCompileUtils,
 	OverpassInsidePolygonStatement,
 	OverpassQueryBuilderImp,
 	OverpassRawStatement,
+	OverpassRecurseStatement,
 	OverpassStatementTargetImp,
 } from "@/imp";
 import { AnyParamValue, OverpassQueryTarget, OverpassRecurseStmType, OverpassStatement, ParamType } from "@/index";
@@ -97,7 +97,7 @@ export function compileStatementsTests() {
 
 	it("Should compile recurse statement", async () => {
 		const [raw, withParams] = CompileStatementsSymetric(
-			(type) => new OverapssRecurseStatement(type),
+			(type) => new OverpassRecurseStatement(type),
 			[Symetric.Enum(ParamType.RecurseStm, OverpassRecurseStmType.Up)],
 		);
 
@@ -108,7 +108,7 @@ export function compileStatementsTests() {
 
 	it("Should compile recurse statement with set", async () => {
 		const [raw, withParams] = CompileStatementsSymetric(
-			(input) => new OverapssRecurseStatement(OverpassRecurseStmType.Down, input),
+			(input) => new OverpassRecurseStatement(OverpassRecurseStmType.Down, input),
 			[Symetric.String("someSet")],
 		);
 
@@ -119,7 +119,7 @@ export function compileStatementsTests() {
 
 	it("Should compile recurse statement with set and type", async () => {
 		const [raw, withParams] = CompileStatementsSymetric<[OverpassRecurseStmType, string]>(
-			(type, input) => new OverapssRecurseStatement(type, input),
+			(type, input) => new OverpassRecurseStatement(type, input),
 			[Symetric.Enum(ParamType.RecurseStm, OverpassRecurseStmType.UpRelations), Symetric.String("someSet")],
 		);
 
