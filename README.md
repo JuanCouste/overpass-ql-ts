@@ -35,8 +35,6 @@ npm install overpass-ql-ts
 
 ## Features & "Roadmap"
 
-The package is usable though many features we intend to implement are WIP.
-
 ### This package can:
 
 1.  Build queries declaratively
@@ -49,14 +47,21 @@ The package is usable though many features we intend to implement are WIP.
 8.  Use nodejs http or https
 9.  Use any other http client that you adapt to this package
 
+> Core functionality is ready, small changes will be made before breaking 2.0.0.  
+> 2.0.0 will address some deprecations & pending name changes to methods and types.
+>
+> 1.  Some OverpassApiObjectImp static methods that will be standalone functions.
+> 2.  FetchOverpassApi, HttpOverpassApi, XMLOverpassApi & DefaultOverpassApi had changed parameter structure
+> 3.  OverpassState query changed name to byTags
+> 4.  Some inner types with very unhappy names, this may or may not affect you, very likely not
+
 ### Roadmap
 
 1.  Better String sanitization
 2.  Recurse filter, way_cnt, way_link
 3.  More evaluator support
 4.  Flow control statements
-5.  Around
-6.  etc
+5.  etc
 
 ## Documentation & Examples
 

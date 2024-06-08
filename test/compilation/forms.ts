@@ -13,6 +13,15 @@ import {
 import { expect, it } from "@jest/globals";
 
 export function targetFormTests() {
+	it(`Should build around center for all targets`, () =>
+		CheckAllFormsOfStatement((target) => target.aroundCenter(100, { lat: 10, lon: 10 })));
+
+	it(`Should build around set for all targets`, () =>
+		CheckAllFormsOfStatement((target) => target.aroundSet(100, "set")));
+
+	it(`Should build around line for all targets`, () =>
+		CheckAllFormsOfStatement((target) => target.aroundLine(100, [[10, 2], { lat: 10, lon: 2 }])));
+
 	it(`Should build bbox for all targets`, () => CheckAllFormsOfStatement((target) => target.bbox(MDEO_BBOX)));
 
 	it(`Should build byTags for all targets`, () =>

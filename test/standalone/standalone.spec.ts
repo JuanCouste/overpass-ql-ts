@@ -2,6 +2,7 @@ import "?/checkConnection";
 //
 import { describe } from "@jest/globals";
 import { standaloneAnyTests } from "./any";
+import { standaloneAroundTests } from "./around";
 import { standaloneBBoxTests } from "./bbox";
 import { standaloneByTagsTests } from "./byTags";
 import { standaloneByIdTests } from "./id";
@@ -21,4 +22,5 @@ describe("Standalone statements", () => {
 	describe("Any", standaloneAnyTests);
 	describe("Recurse", standaloneRecurseTests);
 	describe("IfFilter", standaloneIfFilterTests);
+	describe("Around", standaloneAroundTests);
 });

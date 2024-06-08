@@ -46,6 +46,28 @@ export interface OverpassTargetState {
 	inside(polygon: OverpassPositionLiteralExpression[]): OverpassTargetStateStatement;
 	/** Those elements that satisfy {@link predicate} */
 	filter(predicate: (e: OverpassItemEvaluatorBuilder) => OverpassEvaluator<boolean>): OverpassTargetStateStatement;
+	/**
+	 * Those elements within a certain {@link radius} around the {@link center}
+	 * @param radius in meters
+	 */
+	aroundCenter(
+		radius: OverpassExpression<number>,
+		center: OverpassExpression<OverpassGeoPos>,
+	): OverpassTargetStateStatement;
+	/**
+	 * Those elements within a certain {@link radius} around the elements in the input {@link set}
+	 * @param radius in meters
+	 * @param set if unspecified asumes the default set
+	 */
+	aroundSet(radius: OverpassExpression<number>, set?: OverpassExpression<string>): OverpassTargetStateStatement;
+	/**
+	 * Those elements within a certain {@link radius} around the specified {@link line}
+	 * @param radius in meters
+	 */
+	aroundLine(
+		radius: OverpassExpression<number>,
+		line: OverpassPositionLiteralExpression[],
+	): OverpassTargetStateStatement;
 }
 
 /** Runs the statement for the specified {@link target} */

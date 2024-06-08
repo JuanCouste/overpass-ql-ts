@@ -1,5 +1,8 @@
 import {
 	ChainableOverpassStatementBase,
+	OverpassAroundCenterStatement,
+	OverpassAroundLineStatement,
+	OverpassAroundSetStatement,
 	OverpassBBoxStatement,
 	OverpassByIdStatement,
 	OverpassByTagsStatement,
@@ -125,5 +128,28 @@ export abstract class OverpassTargetStateBase implements OverpassTargetState {
 
 	filter(predicate: (e: OverpassItemEvaluatorBuilder) => OverpassEvaluator<boolean>): ChainableOverpassStatementBase {
 		return new OverpassIfFilterStatement(this.target, this.chain, predicate(this.evaluatorItemBuilder));
+	}
+
+	aroundCenter(
+		radius: OverpassExpression<number>,
+		center: OverpassExpression<OverpassGeoPos>,
+	): ChainableOverpassStatementBase {
+		return new OverpassAroundCenterStatement(this.target, this.chain, radius, center);
+	}
+
+	aroundSet(radius: OverpassExpression<number>, set?: OverpassExpression<string>): ChainableOverpassStatementBase {
+		return new OverpassAroundSetStatement(this.target, this.chain, radius, set);
+	}
+
+	aroundLine(
+		radius: OverpassExpression<number>,
+		line: OverpassPositionLiteralExpression[],
+	): ChainableOverpassStatementBase {
+		return new OverpassAroundLineStatement(
+			this.target,
+			this.chain,
+			radius,
+			line.map(OverpassTargetStateBase.PositionLiteralToGeoPosExp),
+		);
 	}
 }
