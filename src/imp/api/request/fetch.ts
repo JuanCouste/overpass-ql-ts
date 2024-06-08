@@ -5,14 +5,19 @@ import { METHOD, NetworkError } from "./adapter";
 
 export type FetchFunction = (input: RequestInfo | URL | string, init?: RequestInit) => Promise<Response>;
 
-export function FetchOverpassApi(options: OverpassApiObjectOptions): OverpassApiObject;
+export function FetchOverpassApi(options?: OverpassApiObjectOptions): OverpassApiObject;
 /** @deprecated since 1.8.1, will be removed on 2.x.x, use {@link FetchOverpassApi} with {@link OverpassApiObjectOptions}*/
 export function FetchOverpassApi(interpreterUrl?: string | URL, statusUrl?: string | URL): OverpassApiObject;
+/** @deprecated since 1.8.1, will be removed on 2.x.x, use {@link FetchOverpassApi} with {@link OverpassApiObjectOptions}*/
+export function FetchOverpassApi(
+	optionsOrUrl?: OverpassApiObjectOptions | string | URL,
+	statusUrl?: string | URL,
+): OverpassApiObject;
 export function FetchOverpassApi(
 	optionsOrUrl?: OverpassApiObjectOptions | string | URL,
 	statusUrl?: string | URL,
 ): OverpassApiObject {
-	return BuildOverpassApi(new FetchRequestAdapter(), optionsOrUrl as URL, statusUrl);
+	return BuildOverpassApi(new FetchRequestAdapter(), optionsOrUrl, statusUrl);
 }
 
 export class FetchRequestAdapter implements RequestAdapter {

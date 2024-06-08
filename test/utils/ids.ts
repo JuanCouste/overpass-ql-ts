@@ -1,6 +1,7 @@
 import {
 	OverpassBoundingBox,
 	OverpassFormat,
+	OverpassGeoPos,
 	OverpassJsonOutput,
 	OverpassOutputOptions,
 	OverpassOutputVerbosity,
@@ -16,6 +17,7 @@ export const URUGUAY_ID = 287072;
 export const PLAZA_INDEP_ID = 1219079;
 export const PAL_LEG_ID = 81683741;
 export const JBO_STATUE_ID = 4422097133;
+export const PAL_LEG_REL_ID = 1217750;
 
 export const ONLY_IDS: OverpassOutputOptions = { verbosity: OverpassOutputVerbosity.Ids };
 
@@ -28,6 +30,8 @@ export const MDEO_BBOX: OverpassBoundingBox = [
 export const PAL_LEG_BBOX: OverpassBoundingBox = [
 	-34.89313931916607, -56.1902053626241, -34.88892000597966, -56.183711085621454,
 ];
+
+export const PAL_LEG_POS: OverpassGeoPos = { lat: -34.89125610045163, lon: -56.18720140918277 };
 
 export const JBO_BBOX: OverpassBoundingBox = [-34.8899369, -56.1865393, -34.8899369, -56.1865393];
 

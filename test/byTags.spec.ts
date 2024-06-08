@@ -1,48 +1,26 @@
 import "./checkConnection";
 //
-import {
-	OverpassApiObject,
-	OverpassJsonOutput,
-	OverpassQueryTagFilterTuple,
-	OverpassQueryTagFitlerObject,
-	OverpassQueryTarget,
-	OverpassSettings,
-	OverpassState,
-} from "@/index";
+import { OverpassApiObject, OverpassQueryTarget, OverpassSettings, OverpassState } from "@/index";
 import { describe, expect, it } from "@jest/globals";
 import { BuildApi, MDEO_BBOX, MDEO_CITY_ID, MDEO_DEP_ID, MDEO_ID, ONLY_IDS, URUGUAY_ID } from "./utils";
 
 /** For information regarding tests see /test/README.md */
 
-async function queryAlternatives(
-	api: OverpassApiObject,
-	query: OverpassQueryTagFitlerObject,
-): Promise<OverpassJsonOutput[]> {
-	const settings: OverpassSettings = { globalBoundingBox: MDEO_BBOX };
-
-	const tupleArray = Object.entries(query) as OverpassQueryTagFilterTuple[];
-
-	return await Promise.all<OverpassJsonOutput>([
-		api.execJson((s: OverpassState) => [s.node.byTags(query)], ONLY_IDS, settings),
-		api.execJson((s: OverpassState) => [s.node.byTags(tupleArray)], ONLY_IDS, settings),
-		api.execJson((s: OverpassState) => [s.node.byTags(() => query)], ONLY_IDS, settings),
-		api.execJson((s: OverpassState) => [s.node.byTags(() => tupleArray)], ONLY_IDS, settings),
-	]);
-}
-
 describe("Query", () => {
 	it("Should fetch queries with string values", async () => {
 		const api: OverpassApiObject = BuildApi();
 
-		const forms = await queryAlternatives(api, { name: "Montevideo", capital: "yes" });
+		const { elements } = await api.execJson(
+			(s: OverpassState) => [s.node.byTags({ name: "Montevideo", capital: "yes" })],
+			ONLY_IDS,
+			{ globalBoundingBox: MDEO_BBOX },
+		);
 
-		forms.forEach(({ elements }) => {
-			expect(elements.length).toBe(1);
-			const [element] = elements;
+		expect(elements.length).toBe(1);
+		const [element] = elements;
 
-			expect(element.id).toEqual(MDEO_ID);
-			expect(element.type).toBe("node");
-		});
+		expect(element.id).toEqual(MDEO_ID);
+		expect(element.type).toBe("node");
 	});
 
 	it("Should fetch queries with filter objects", async () => {
@@ -92,29 +70,33 @@ describe("Query", () => {
 	it("Should fetch regexp queries", async () => {
 		const api: OverpassApiObject = BuildApi();
 
-		const forms = await queryAlternatives(api, { name: /^Montevideo$/, capital: /^yes$/ });
+		const { elements } = await api.execJson(
+			(s: OverpassState) => [s.node.byTags({ name: /^Montevideo$/, capital: /^yes$/ })],
+			ONLY_IDS,
+			{ globalBoundingBox: MDEO_BBOX },
+		);
 
-		forms.forEach(({ elements }) => {
-			expect(elements.length).toBe(1);
-			const [element] = elements;
+		expect(elements.length).toBe(1);
+		const [element] = elements;
 
-			expect(element.id).toEqual(MDEO_ID);
-			expect(element.type).toBe("node");
-		});
+		expect(element.id).toEqual(MDEO_ID);
+		expect(element.type).toBe("node");
 	});
 
 	it("Should fetch half regexp queries", async () => {
 		const api: OverpassApiObject = BuildApi();
 
-		const forms = await queryAlternatives(api, { name: /ontevide/, capital: /es$/ });
+		const { elements } = await api.execJson(
+			(s: OverpassState) => [s.node.byTags({ name: /ontevide/, capital: /es$/ })],
+			ONLY_IDS,
+			{ globalBoundingBox: MDEO_BBOX },
+		);
 
-		forms.forEach(({ elements }) => {
-			expect(elements.length).toBe(1);
-			const [element] = elements;
+		expect(elements.length).toBe(1);
+		const [element] = elements;
 
-			expect(element.id).toEqual(MDEO_ID);
-			expect(element.type).toBe("node");
-		});
+		expect(element.id).toEqual(MDEO_ID);
+		expect(element.type).toBe("node");
 	});
 
 	it("Should fetch regexp tuples", async () => {

@@ -5,14 +5,19 @@ import { METHOD, NetworkError } from "./adapter";
 
 export type XMLHttpRequestConstructor = new () => XMLHttpRequest;
 
-export function XMLOverpassApi(options: OverpassApiObjectOptions): OverpassApiObject;
+export function XMLOverpassApi(options?: OverpassApiObjectOptions): OverpassApiObject;
 /** @deprecated since 1.8.1, will be removed on 2.x.x, use {@link XMLOverpassApi} with {@link OverpassApiObjectOptions}*/
 export function XMLOverpassApi(interpreterUrl?: string | URL, statusUrl?: string | URL): OverpassApiObject;
+/** @deprecated since 1.8.1, will be removed on 2.x.x, use {@link XMLOverpassApi} with {@link OverpassApiObjectOptions}*/
+export function XMLOverpassApi(
+	optionsOrUrl?: OverpassApiObjectOptions | string | URL,
+	statusUrl?: string | URL,
+): OverpassApiObject;
 export function XMLOverpassApi(
 	optionsOrUrl?: OverpassApiObjectOptions | string | URL,
 	statusUrl?: string | URL,
 ): OverpassApiObject {
-	return BuildOverpassApi(new XMLHttpRequestAdapter(), optionsOrUrl as URL, statusUrl);
+	return BuildOverpassApi(new XMLHttpRequestAdapter(), optionsOrUrl, statusUrl);
 }
 
 export class XMLHttpRequestAdapter implements RequestAdapter {

@@ -96,6 +96,8 @@ If you would like to add just more tests to improve coverage and edge case handl
 
 ## Testing
 
+Checkout [./test/README.md](https://github.com/JuanCouste/overpass-ql-ts/tree/master/test/README.md)
+
 We currently use jest with ts-jest preset, test are run on pushes or pull requests to master.  
 We've setup a docker image with static data, to facilitate testing.
 

@@ -1,11 +1,11 @@
 import { NaiveOverpassStringSanitizer } from "@/imp";
 import { OverpassStringSanitizer, StringQuoteType } from "@/model";
-import { expect, it } from "@jest/globals";
+import { describe, expect, it } from "@jest/globals";
 
 /** For information regarding tests see /test/README.md */
 
-export function sanitizerTests() {
-	it("Should not do anything to the selected quote", () => {
+describe("Naive string sanitizer", () => {
+	it("Should not escape quotes other than the specified", () => {
 		const sanitizer = new NaiveOverpassStringSanitizer();
 
 		expect(sanitizer.sanitize('"Test"', StringQuoteType.Single)).toEqual('"Test"');
@@ -47,9 +47,9 @@ export function sanitizerTests() {
 		expect(sanitizer.sanitize("\\\\Test\\\\")).toEqual("\\\\Test\\\\");
 	});
 
-	it("Should compilete single escapes", () => {
+	it("Should complete single escapes", () => {
 		const sanitizer = new NaiveOverpassStringSanitizer();
 
 		expect(sanitizer.sanitize("\\Test")).toEqual("\\\\Test");
 	});
-}
+});

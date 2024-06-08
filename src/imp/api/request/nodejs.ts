@@ -7,14 +7,19 @@ export type HttpRequestMethod = typeof import("http").request;
 export type HttpsRequestMethod = typeof import("https").request;
 export type HttpRequestMethods = [HttpRequestMethod, HttpsRequestMethod];
 
-export function HttpOverpassApi(options: OverpassApiObjectOptions): OverpassApiObject;
+export function HttpOverpassApi(options?: OverpassApiObjectOptions): OverpassApiObject;
 /** @deprecated since 1.8.1, will be removed on 2.x.x, use {@link HttpOverpassApi} with {@link OverpassApiObjectOptions}*/
 export function HttpOverpassApi(interpreterUrl?: string | URL, statusUrl?: string | URL): OverpassApiObject;
+/** @deprecated since 1.8.1, will be removed on 2.x.x, use {@link HttpOverpassApi} with {@link OverpassApiObjectOptions}*/
+export function HttpOverpassApi(
+	optionsOrUrl?: OverpassApiObjectOptions | string | URL,
+	statusUrl?: string | URL,
+): OverpassApiObject;
 export function HttpOverpassApi(
 	optionsOrUrl?: OverpassApiObjectOptions | string | URL,
 	statusUrl?: string | URL,
 ): OverpassApiObject {
-	return BuildOverpassApi(new NodeHttpRequestAdapter(), optionsOrUrl as URL, statusUrl);
+	return BuildOverpassApi(new NodeHttpRequestAdapter(), optionsOrUrl, statusUrl);
 }
 
 export class NodeHttpRequestAdapter implements RequestAdapter {

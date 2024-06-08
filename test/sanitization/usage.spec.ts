@@ -17,7 +17,7 @@ async function CheckSanitizer(statementBuilder: (state: OverpassState) => Overpa
 	await expect(apiWithoutSanitizer.execJson(statementBuilder, ONLY_IDS, settings)).rejects.toThrowError(Error);
 }
 
-describe("String sanitizer", () => {
+describe("String sanitizer usage", () => {
 	it("Should sanitize tag equals", async () => {
 		await CheckSanitizer((s) => s.node.byTags((b) => ({ ["name\\"]: b.equals("Montevideo") })));
 	});

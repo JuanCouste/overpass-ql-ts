@@ -25,10 +25,17 @@ export function GetSanitizer(sanitization: OverpassApiObjectOptions["sanitizatio
 	}
 }
 
-export function BuildOverpassApi(adapter: RequestAdapter, options: OverpassApiObjectOptions): OverpassApiObjectImp;
+export function BuildOverpassApi(adapter: RequestAdapter, options?: OverpassApiObjectOptions): OverpassApiObjectImp;
+/** @deprecated since 1.8.1, will be removed on 2.x.x, use {@link BuildOverpassApi} with {@link OverpassApiObjectOptions}*/
 export function BuildOverpassApi(
 	adapter: RequestAdapter,
 	interpreterUrl?: string | URL,
+	statusUrl?: string | URL,
+): OverpassApiObjectImp;
+/** @deprecated since 1.8.1, will be removed on 2.x.x, use {@link BuildOverpassApi} with {@link OverpassApiObjectOptions}*/
+export function BuildOverpassApi(
+	adapter: RequestAdapter,
+	optionsOrUrl?: OverpassApiObjectOptions | string | URL,
 	statusUrl?: string | URL,
 ): OverpassApiObjectImp;
 export function BuildOverpassApi(
@@ -36,12 +43,12 @@ export function BuildOverpassApi(
 	optionsOrUrl?: OverpassApiObjectOptions | string | URL,
 	statusUrl?: string | URL,
 ): OverpassApiObjectImp {
-	if (typeof optionsOrUrl == "string" || optionsOrUrl instanceof URL || optionsOrUrl == undefined) {
+	if (typeof optionsOrUrl == "string" || optionsOrUrl instanceof URL) {
 		console.warn("Building overpass api without OverpassApiObjectOptions has been deprecated since 1.8.1");
 		console.warn("Will be removed on 2.x.x, use with OverpassApiObjectOptions");
 		return PrivateBuildOverPassApi(adapter, { interpreterUrl: optionsOrUrl, statusUrl: statusUrl });
 	} else {
-		return PrivateBuildOverPassApi(adapter, optionsOrUrl);
+		return PrivateBuildOverPassApi(adapter, optionsOrUrl ?? {});
 	}
 }
 
