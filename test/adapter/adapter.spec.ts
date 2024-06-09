@@ -19,6 +19,8 @@ import { creationTests } from "./creation";
 // @ts-ignore
 import { XMLHttpRequest } from "xmlhttprequest";
 
+/** For information regarding tests see /test/README.md */
+
 describe("Adapter", () => {
 	describe("Creation", creationTests);
 	describe("NodeHttp", () => {

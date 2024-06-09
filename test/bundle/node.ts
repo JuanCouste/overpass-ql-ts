@@ -9,7 +9,7 @@ export function nodeTests() {
 	beforeAll(async () => (module = await import(`./output/${CJS_BUNDLE}`)));
 
 	it("Should fetch status with cjs bundle", async () => {
-		const api: OverpassApiObject = module.HttpOverpassApi(process.env.OVERPASS_QL_TS_URL!);
+		const api: OverpassApiObject = module.HttpOverpassApi({ interpreterUrl: process.env.OVERPASS_QL_TS_URL! });
 
 		const status = await api.status();
 
@@ -21,7 +21,7 @@ export function nodeTests() {
 	});
 
 	it("Should run query with cjs bundle", async () => {
-		const api: OverpassApiObject = module.HttpOverpassApi(process.env.OVERPASS_QL_TS_URL!);
+		const api: OverpassApiObject = module.HttpOverpassApi({ interpreterUrl: process.env.OVERPASS_QL_TS_URL! });
 		const settings: OverpassSettingsNoFormat = { globalBoundingBox: MDEO_BBOX };
 
 		const result = await api.execJson(

@@ -1,3 +1,4 @@
+import { NO_SANITIZER } from "?/compilation/nosanitizer";
 import { CompileSymetric } from "?/compilation/symetry";
 import { Symetric, SymetricArgsExpression, SymetricArgumentsObject } from "?/utils";
 import { OverpassCompileUtils, OverpassEqualsTagFilter, OverpassExistsTagFilter, OverpassRegExpTagFilter } from "@/imp";
@@ -109,7 +110,7 @@ function CompileFiterSymetric<Args extends AnyParamValue[]>(
 	buildFilter: (...args: SymetricArgsExpression<Args>) => OverpassTagFilter,
 	args: SymetricArgumentsObject<Args>,
 ) {
-	const utils = new OverpassCompileUtils();
+	const utils = new OverpassCompileUtils(NO_SANITIZER);
 
 	return CompileSymetric<Args>((...args) => buildFilter(...args).compile(utils), args);
 }

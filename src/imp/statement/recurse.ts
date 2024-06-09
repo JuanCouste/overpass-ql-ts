@@ -1,7 +1,7 @@
 import { ComposableOverpassStatementBase } from "@/imp/statement/base";
 import { CompileUtils, CompiledItem, OverpassExpression, OverpassRecurseStmType } from "@/model";
 
-export class OverapssRecurseStatement extends ComposableOverpassStatementBase {
+export class OverpassRecurseStatement extends ComposableOverpassStatementBase {
 	constructor(
 		private readonly recurseType: OverpassExpression<OverpassRecurseStmType>,
 		private readonly set?: OverpassExpression<string>,

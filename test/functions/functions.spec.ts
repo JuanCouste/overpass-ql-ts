@@ -5,6 +5,8 @@ import { OverpassApiObject, OverpassJsonOutput, OverpassQueryTarget, ParamItem, 
 import { describe, expect, it } from "@jest/globals";
 import { functionsParamTests } from "./params";
 
+/** For information regarding tests see /test/README.md */
+
 describe("Statement", () => {
 	describe("Params", functionsParamTests);
 

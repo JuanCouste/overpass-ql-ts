@@ -11,7 +11,7 @@ import { OVERPASS_QL_TS_URL } from "./env.js";
 // This creates the query builder using platform provided http[s] clients
 // You may use a specific one or leave it up to DefaultOverpassApi
 // If you dont provide an url, it will default to OverpassApi main instance
-const api: OverpassApiObject = DefaultOverpassApi(OVERPASS_QL_TS_URL);
+const api: OverpassApiObject = DefaultOverpassApi({ interpreterUrl: OVERPASS_QL_TS_URL });
 
 /** Get the name of some node */
 

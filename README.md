@@ -51,7 +51,7 @@ The package is usable though many features we intend to implement are WIP.
 
 ### Roadmap
 
-1.  String sanitization
+1.  Better String sanitization
 2.  Recurse filter, way_cnt, way_link
 3.  More evaluator support
 4.  Flow control statements
@@ -95,6 +95,8 @@ We would prefer to avoid production dependencies, though development dependencie
 If you would like to add just more tests to improve coverage and edge case handling, thank you!
 
 ## Testing
+
+Checkout [./test/README.md](https://github.com/JuanCouste/overpass-ql-ts/tree/master/test/README.md)
 
 We currently use jest with ts-jest preset, test are run on pushes or pull requests to master.  
 We've setup a docker image with static data, to facilitate testing.

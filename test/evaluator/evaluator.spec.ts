@@ -9,6 +9,8 @@ import { numberEvaluatorTests } from "./number";
 import { stringEvaluatorTests } from "./string";
 import { ExpectJBOEvaluatorFalse } from "./utils";
 
+/** For information regarding tests see /test/README.md */
+
 describe("Evaluator", () => {
 	describe("Evaluator", evaluatorTests);
 	describe("Element", elementEvaluatorTests);

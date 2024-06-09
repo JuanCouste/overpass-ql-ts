@@ -1,26 +1,15 @@
 import "?/checkConnection";
 //
+import { GetEnvTimeout, ParseYesNo } from "?/utils/env";
 import { afterAll, beforeAll, describe } from "@jest/globals";
 import { browserTests } from "./browser";
 import { nodeTests } from "./node";
 import { cleanupBundles, setupBundles } from "./setupBundles";
 
-function shouldDoBundlingTests(): boolean {
-	switch (process.env.OVERPASS_QL_BUNDLING?.toLocaleLowerCase()) {
-		case "yes":
-		case "y":
-		case "true":
-			return true;
-		case "no":
-		case "n":
-		case "false":
-		default:
-			return false;
-	}
-}
+/** For information regarding tests see /test/README.md */
 
-(shouldDoBundlingTests() ? describe : describe.skip)("Bundle [Optional]", () => {
-	beforeAll(setupBundles, 15000);
+(ParseYesNo("OVERPASS_QL_BUNDLING", false) ? describe : describe.skip)("Bundle [Optional]", () => {
+	beforeAll(setupBundles, GetEnvTimeout(7));
 
 	describe("Node", nodeTests);
 

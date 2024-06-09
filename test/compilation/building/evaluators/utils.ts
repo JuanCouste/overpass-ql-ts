@@ -1,3 +1,4 @@
+import { NO_SANITIZER } from "?/compilation/nosanitizer";
 import { CompileSymetric } from "?/compilation/symetry";
 import { SymetricArgsExpression, SymetricArgumentsObject } from "?/utils";
 import { OverpassCompileUtils } from "@/imp";
@@ -7,7 +8,7 @@ export function CompileEvaluatorSymetric<Args extends AnyParamValue[]>(
 	buildEvaluator: (...args: SymetricArgsExpression<Args>) => OverpassEvaluator<any>,
 	args: SymetricArgumentsObject<Args>,
 ) {
-	const utils = new OverpassCompileUtils();
+	const utils = new OverpassCompileUtils(NO_SANITIZER);
 
 	return CompileSymetric<Args>((...args) => buildEvaluator(...args).compile(utils), args);
 }

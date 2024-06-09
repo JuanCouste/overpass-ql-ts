@@ -29,13 +29,7 @@ import {
 	OverpassStatus,
 	OverpassTagFilterBuilder,
 } from "@/model";
-import { OverpassQueryBuilderImp } from "./builder";
-import { OverpassCompileUtils } from "./compile";
-import { OverpassItemEvaluatorBuilderImp } from "./evaluator";
-import { OverpassTagFilterBuilderImp } from "./filter";
 import { OverpassStateImp } from "./state";
-import { OverpassStatusValidatorImp } from "./status";
-import { OverpassQueryValidatorImp } from "./validator";
 
 export class OverpassApiObjectImp implements OverpassApiObject {
 	public static readonly MAIN_INSTANCE = new URL("https://overpass-api.de/api/interpreter");
@@ -52,54 +46,48 @@ export class OverpassApiObjectImp implements OverpassApiObject {
 		private readonly evaluatorItemBuilder: OverpassItemEvaluatorBuilder,
 	) {}
 
+	static BuildDeprecated: (
+		adapter: RequestAdapter,
+		interpreterUrlInput?: string | URL,
+		statusUrlInput?: string | URL,
+	) => OverpassApiObjectImp;
+
+	static InterpreterUrlFromDeprecated: (interpreterUrlInput?: string | URL) => URL;
+
+	static StatusUrlFromDeprecated: (interpreterUrl: URL, statusUrl?: string | URL) => URL;
+
+	static StatusUrlFromInterpreterUrlDeprecated: (interpreterUrl: URL) => URL;
+
+	/** @deprecated since 1.8.1, will be removed on 2.x.x, use root function {@link BuildOverpassApi} */
 	public static Build(
 		adapter: RequestAdapter,
 		interpreterUrlInput?: string | URL,
 		statusUrlInput?: string | URL,
 	): OverpassApiObjectImp {
-		const interpreterUrl = OverpassApiObjectImp.InterpreterUrlFrom(interpreterUrlInput);
-		const statusUrl = OverpassApiObjectImp.StatusUrlFrom(interpreterUrl, statusUrlInput);
-
-		const queryValidator = new OverpassQueryValidatorImp(interpreterUrl);
-		const statusValidator = new OverpassStatusValidatorImp(statusUrl);
-		const compileUtils = new OverpassCompileUtils();
-		const builder = new OverpassQueryBuilderImp(compileUtils);
-		const tagBuilder = OverpassTagFilterBuilderImp.Build();
-		const evaluatorItemBuilder = new OverpassItemEvaluatorBuilderImp();
-
-		return new OverpassApiObjectImp(
-			adapter,
-			interpreterUrl,
-			statusUrl,
-			queryValidator,
-			statusValidator,
-			compileUtils,
-			tagBuilder,
-			builder,
-			evaluatorItemBuilder,
-		);
+		console.warn("Method OverpassApiObjectImp.Build has been deprecated since 1.8.1");
+		console.warn("Will be removed on 2.x.x, use root function BuildOverpassApi");
+		return OverpassApiObjectImp.BuildDeprecated(adapter, interpreterUrlInput, statusUrlInput);
 	}
 
+	/** @deprecated since 1.8.1, will be removed on 2.x.x, use root function {@link InterpreterUrlFrom} */
 	public static InterpreterUrlFrom(interpreterUrlInput?: string | URL): URL {
-		return typeof interpreterUrlInput == "string"
-			? new URL(interpreterUrlInput)
-			: interpreterUrlInput ?? OverpassApiObjectImp.MAIN_INSTANCE;
+		console.warn("Method OverpassApiObjectImp.InterpreterUrlFrom has been deprecated since 1.8.1");
+		console.warn("Will be removed on 2.x.x, use root function InterpreterUrlFrom");
+		return OverpassApiObjectImp.InterpreterUrlFromDeprecated(interpreterUrlInput);
 	}
 
+	/** @deprecated since 1.8.1, will be removed on 2.x.x, use root function {@link StatusUrlFrom} */
 	public static StatusUrlFrom(interpreterUrl: URL, statusUrl?: string | URL): URL {
-		return typeof statusUrl == "string"
-			? new URL(statusUrl)
-			: statusUrl ?? OverpassApiObjectImp.StatusUrlFromInterpreterUrl(interpreterUrl);
+		console.warn("Method OverpassApiObjectImp.StatusUrlFrom has been deprecated since 1.8.1");
+		console.warn("Will be removed on 2.x.x, use root function StatusUrlFrom");
+		return OverpassApiObjectImp.StatusUrlFromDeprecated(interpreterUrl, statusUrl);
 	}
 
+	/** @deprecated since 1.8.1, will be removed on 2.x.x, use root function {@link StatusUrlFromInterpreterUrl} */
 	public static StatusUrlFromInterpreterUrl(interpreterUrl: URL): URL {
-		const statusUrl = new URL(interpreterUrl);
-		const parts = statusUrl.pathname.split("/").filter((part) => part != "");
-		if (parts.slice(-2).join("/") != "api/interpreter") {
-			throw new Error(`You should provide a status url for non standard interpreter ${interpreterUrl}`);
-		}
-		statusUrl.pathname = [...parts.slice(0, -1), "status"].join("/");
-		return statusUrl;
+		console.warn("Method OverpassApiObjectImp.StatusUrlFromInterpreterUrl has been deprecated since 1.8.1");
+		console.warn("Will be removed on 2.x.x, use root function StatusUrlFromInterpreterUrl");
+		return OverpassApiObjectImp.StatusUrlFromInterpreterUrlDeprecated(interpreterUrl);
 	}
 
 	public get __adapter__() {

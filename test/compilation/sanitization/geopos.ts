@@ -1,3 +1,4 @@
+import { NO_SANITIZER } from "?/compilation/nosanitizer";
 import { Symetric } from "?/utils";
 import { OverpassCompileUtils } from "@/imp";
 import { OverpassExpression, OverpassGeoPos } from "@/index";
@@ -5,12 +6,12 @@ import { it } from "@jest/globals";
 import { ExpectCompileRejects, ExpectCompileResolves } from "./utils";
 
 function BuildGeoPos(value: OverpassExpression<OverpassGeoPos>) {
-	const u = new OverpassCompileUtils();
+	const u = new OverpassCompileUtils(NO_SANITIZER);
 	const { lat, lon } = u.geoPos(value);
 	return u.join([lat, lon], ",");
 }
 
-export function sanitizationGeoPosTests() {
+export function parametersGeoPosTests() {
 	it("Should be fine when geopos are fine", async () => {
 		await ExpectCompileResolves(BuildGeoPos, [Symetric.GeoPos({ lat: 1, lon: 2 })]);
 	});
