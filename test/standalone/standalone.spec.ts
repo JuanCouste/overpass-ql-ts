@@ -7,6 +7,7 @@ import { standaloneBBoxTests } from "./bbox";
 import { standaloneByTagsTests } from "./byTags";
 import { standaloneByIdTests } from "./id";
 import { standaloneIfFilterTests } from "./ifFilter";
+import { standaloneInAreaTests } from "./inArea";
 import { standaloneIntersectTests } from "./intersect";
 import { standalonePolygonTests } from "./polygon";
 import { standaloneRecurseTests } from "./recurse";
@@ -23,4 +24,5 @@ describe("Standalone statements", () => {
 	describe("Recurse", standaloneRecurseTests);
 	describe("IfFilter", standaloneIfFilterTests);
 	describe("Around", standaloneAroundTests);
+	describe("In area", standaloneInAreaTests);
 });

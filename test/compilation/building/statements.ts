@@ -2,6 +2,7 @@ import { NO_SANITIZER } from "?/compilation/nosanitizer";
 import { CompileSymetric } from "?/compilation/symetry";
 import { Symetric, SymetricArgsExpression, SymetricArgumentsObject } from "?/utils";
 import {
+	OverpassAreaStatement,
 	OverpassAroundCenterStatement,
 	OverpassAroundLineStatement,
 	OverpassAroundSetStatement,
@@ -190,6 +191,17 @@ export function compileStatementsTests() {
 		);
 
 		await expect(raw).resolves.toMatch(/\(\s*around\s*:\s*1\s*,\s*2\s*,\s*3\s*,\s*4\s*,\s*5\s*\)/);
+
+		await expect(withParams).resolves.toEqual(await raw);
+	});
+
+	it("Should compile area statement with set", async () => {
+		const [raw, withParams] = CompileStatementsSymetric<[string]>(
+			(set) => new OverpassAreaStatement(staticTarget, null!, set),
+			[Symetric.String("set")],
+		);
+
+		await expect(raw).resolves.toMatch(/\(\s*area\.set\s*\)/);
 
 		await expect(withParams).resolves.toEqual(await raw);
 	});

@@ -42,6 +42,8 @@ export function targetFormTests() {
 
 	it(`Should build inside polygon for all targets`, () =>
 		CheckAllFormsOfStatement((target) => target.inside(PolygonFromBBox(MDEO_BBOX))));
+
+	it(`Should build in area for all targets`, () => CheckAllFormsOfStatement((target) => target.inArea("set")));
 }
 
 const TARGETS: [OverpassQueryTargetString, OverpassQueryTarget][] = [

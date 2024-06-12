@@ -1,3 +1,4 @@
+export * from "./area";
 export * from "./around";
 export * from "./base";
 export * from "./bbox";

@@ -68,6 +68,11 @@ export interface OverpassTargetState {
 		radius: OverpassExpression<number>,
 		line: OverpassPositionLiteralExpression[],
 	): OverpassTargetStateStatement;
+	/**
+	 * Those elements that are inside the given area or areas in the specified {@link set}.
+	 * @param set if unspecified asumes the default set
+	 */
+	inArea(set?: OverpassExpression<string>): OverpassTargetStateStatement;
 }
 
 /** Runs the statement for the specified {@link target} */

@@ -1,5 +1,6 @@
 import {
 	ChainableOverpassStatementBase,
+	OverpassAreaStatement,
 	OverpassAroundCenterStatement,
 	OverpassAroundLineStatement,
 	OverpassAroundSetStatement,
@@ -151,5 +152,9 @@ export abstract class OverpassTargetStateBase implements OverpassTargetState {
 			radius,
 			line.map(OverpassTargetStateBase.PositionLiteralToGeoPosExp),
 		);
+	}
+
+	inArea(set?: OverpassExpression<string> | undefined): ChainableOverpassStatementBase {
+		return new OverpassAreaStatement(this.target, this.chain, set);
 	}
 }
