@@ -9,6 +9,7 @@ import {
 	OverpassByTagsStatement,
 	OverpassIfFilterStatement,
 	OverpassInsidePolygonStatement,
+	OverpassPivotStatement,
 } from "@/imp/statement";
 import {
 	AnyOverpassTagFilter,
@@ -156,5 +157,9 @@ export abstract class OverpassTargetStateBase implements OverpassTargetState {
 
 	inArea(set?: OverpassExpression<string> | undefined): ChainableOverpassStatementBase {
 		return new OverpassAreaStatement(this.target, this.chain, set);
+	}
+
+	pivot(set?: OverpassExpression<string> | undefined): ChainableOverpassStatementBase {
+		return new OverpassPivotStatement(this.target, this.chain, set);
 	}
 }

@@ -73,6 +73,12 @@ export interface OverpassTargetState {
 	 * @param set if unspecified asumes the default set
 	 */
 	inArea(set?: OverpassExpression<string>): OverpassTargetStateStatement;
+	/**
+	 * The elements that defines the outline of the given areas specified in {@link set}
+	 * Does not work with nodes {@link OverpassQueryTarget.Node}
+	 * @param set if unspecified asumes the default set
+	 */
+	pivot(set?: OverpassExpression<string>): OverpassTargetStateStatement;
 }
 
 /** Runs the statement for the specified {@link target} */

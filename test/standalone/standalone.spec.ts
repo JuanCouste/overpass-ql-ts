@@ -9,6 +9,7 @@ import { standaloneByIdTests } from "./id";
 import { standaloneIfFilterTests } from "./ifFilter";
 import { standaloneInAreaTests } from "./inArea";
 import { standaloneIntersectTests } from "./intersect";
+import { standalonePivotTests } from "./pivot";
 import { standalonePolygonTests } from "./polygon";
 import { standaloneRecurseTests } from "./recurse";
 
@@ -25,4 +26,5 @@ describe("Standalone statements", () => {
 	describe("IfFilter", standaloneIfFilterTests);
 	describe("Around", standaloneAroundTests);
 	describe("In area", standaloneInAreaTests);
+	describe("Pivot", standalonePivotTests);
 });

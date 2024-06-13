@@ -44,19 +44,30 @@ export function targetFormTests() {
 		CheckAllFormsOfStatement((target) => target.inside(PolygonFromBBox(MDEO_BBOX))));
 
 	it(`Should build in area for all targets`, () => CheckAllFormsOfStatement((target) => target.inArea("set")));
+
+	it(`Should build in area for ways and relations`, () =>
+		CheckAllFormsOfStatement((target) => target.pivot("set"), [ways, relations]));
 }
 
-const TARGETS: [OverpassQueryTargetString, OverpassQueryTarget][] = [
-	["relation", OverpassQueryTarget.Relation],
+type Targets = [OverpassQueryTargetString, OverpassQueryTarget];
+
+const ways: Targets = ["way", OverpassQueryTarget.Way];
+const relations: Targets = ["relation", OverpassQueryTarget.Relation];
+
+const TARGETS: Targets[] = [
 	["node", OverpassQueryTarget.Node],
-	["way", OverpassQueryTarget.Way],
+	ways,
+	relations,
 	["any", OverpassQueryTarget.NodeWayRelation],
 ];
 
-function CheckAllFormsOfStatement(callback: (state: OverpassTargetState) => OverpassStatement): void {
+function CheckAllFormsOfStatement(
+	callback: (state: OverpassTargetState) => OverpassStatement,
+	targets: Targets[] = TARGETS,
+): void {
 	const api: OverpassApiObject = BuildOverpassApi(null!, { interpreterUrl: NOT_AN_API });
 
-	TARGETS.forEach((subTargets) => {
+	targets.forEach((subTargets) => {
 		const forms = subTargets
 			.map((target) => [
 				api.buildQuery((s) => callback(s[target])),

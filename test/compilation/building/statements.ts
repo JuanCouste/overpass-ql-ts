@@ -10,6 +10,7 @@ import {
 	OverpassByIdStatement,
 	OverpassCompileUtils,
 	OverpassInsidePolygonStatement,
+	OverpassPivotStatement,
 	OverpassQueryBuilderImp,
 	OverpassRawStatement,
 	OverpassRecurseStatement,
@@ -202,6 +203,17 @@ export function compileStatementsTests() {
 		);
 
 		await expect(raw).resolves.toMatch(/\(\s*area\.set\s*\)/);
+
+		await expect(withParams).resolves.toEqual(await raw);
+	});
+
+	it("Should compile pivot statement with set", async () => {
+		const [raw, withParams] = CompileStatementsSymetric<[string]>(
+			(set) => new OverpassPivotStatement(staticTarget, null!, set),
+			[Symetric.String("set")],
+		);
+
+		await expect(raw).resolves.toMatch(/\(\s*pivot\.set\s*\)/);
 
 		await expect(withParams).resolves.toEqual(await raw);
 	});

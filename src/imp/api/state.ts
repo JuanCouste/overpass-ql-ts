@@ -37,6 +37,7 @@ const STATEMENT_METHOD = (function () {
 		aroundLine: true,
 		aroundSet: true,
 		inArea: true,
+		pivot: true,
 	};
 	return Object.keys(enumObj);
 })();
