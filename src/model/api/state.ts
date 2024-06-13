@@ -41,7 +41,7 @@ export interface OverpassTargetState {
 	bbox(...params: OverpassBoundingBox): OverpassTargetStateStatement;
 	bbox(bbox: OverpassExpression<OverpassBoundingBox>): OverpassTargetStateStatement;
 	/** Fetch by {@link id} */
-	byId(id: OverpassExpression<number>): OverpassTargetStateStatement;
+	byId(id: OverpassExpression<number> | OverpassExpression<number>[]): OverpassTargetStateStatement;
 	/** The elements that are inside a {@link polygon} */
 	inside(polygon: OverpassPositionLiteralExpression[]): OverpassTargetStateStatement;
 	/** Those elements that satisfy {@link predicate} */

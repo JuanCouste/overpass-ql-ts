@@ -110,7 +110,7 @@ export abstract class OverpassTargetStateBase implements OverpassTargetState {
 		return new OverpassBBoxStatement(this.target, this.chain, bbox);
 	}
 
-	byId(id: OverpassExpression<number>): ChainableOverpassStatementBase {
+	byId(id: OverpassExpression<number> | OverpassExpression<number>[]): ChainableOverpassStatementBase {
 		return new OverpassByIdStatement(this.target, this.chain, id);
 	}
 
