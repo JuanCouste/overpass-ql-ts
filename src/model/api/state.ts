@@ -10,6 +10,7 @@ import {
 import { OverpassOutputOptions } from "@/model/query";
 import { OverpassBoundingBox, OverpassGeoPos } from "@/model/types";
 import { OverpassItemEvaluatorBuilder } from "./evaluator";
+import { OverpassForEachBodyFunction } from "./for";
 import { OverpassQueryTagFilterFunction, OverpassQueryTagFilters } from "./query";
 
 export type OverpassQueryTargetString = "any" | "node" | "way" | "relation";
@@ -143,6 +144,20 @@ export interface OverpassStateMethods {
 	): ComposableOverpassStatement;
 
 	out(options: OverpassOutputOptions): OverpassStatement;
+
+	/** Iterate over the elements of the default set */
+	forEach(body: OverpassForEachBodyFunction): OverpassStatement;
+	/** Iterate over the elements of {@link set} */
+	forEach(set: OverpassExpression<string>, body: OverpassForEachBodyFunction): OverpassStatement;
+	/**
+	 * Iterate over the elements of {@link set} with a variable for {@link item}
+	 * @param set if null uses the default set
+	 */
+	forEach(
+		set: OverpassExpression<string> | null,
+		item: OverpassExpression<string>,
+		body: OverpassForEachBodyFunction,
+	): OverpassStatement;
 }
 
 /**

@@ -4,7 +4,7 @@ import { it } from "@jest/globals";
 import expect from "expect";
 
 export function standaloneOutTests() {
-	it("Should handle custom outs ", async () => {
+	it("Should handle custom outs", async () => {
 		const api: OverpassApiObject = BuildApi();
 
 		const { elements } = await api.execJson(

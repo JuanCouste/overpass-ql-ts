@@ -2,6 +2,7 @@ export * from "./area";
 export * from "./around";
 export * from "./base";
 export * from "./bbox";
+export * from "./forEach";
 export * from "./id";
 export * from "./ifFilter";
 export * from "./out";
