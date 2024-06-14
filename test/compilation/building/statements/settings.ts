@@ -1,15 +1,16 @@
 import { NO_SANITIZER } from "?/compilation/nosanitizer";
 import { CompileSymetric } from "?/compilation/symetry";
 import { Symetric, SymetricArgsExpression, SymetricArgumentsObject } from "?/utils";
-import { OverpassCompileUtils, OverpassQueryBuilderImp } from "@/imp";
+import { OverpassCompileUtils, OverpassSettingsStatement } from "@/imp";
 import { AnyParamValue, OverpassSettings } from "@/index";
 import { expect, it } from "@jest/globals";
 
-export function compileSettingsTests() {
+export function compileSettingsStatementsTests() {
 	it("Should compile empty settings", async () => {
 		const [raw, withParams] = CompileSettingsSymetric(() => ({}), []);
 
-		await expect(withParams).resolves.toEqual(await raw);
+		await expect(raw).rejects.toThrowError(Error);
+		await expect(withParams).rejects.toThrowError(Error);
 	});
 
 	it("Should compile settings with timeout", async () => {
@@ -76,7 +77,9 @@ function CompileSettingsSymetric<Args extends AnyParamValue[]>(
 	args: SymetricArgumentsObject<Args>,
 ) {
 	const utils = new OverpassCompileUtils(NO_SANITIZER);
-	const builder = new OverpassQueryBuilderImp(utils);
 
-	return CompileSymetric<Args>((...args) => builder.buildSettings(buildSettings(...args)), args);
+	return CompileSymetric<Args>(
+		(...args) => OverpassSettingsStatement.BuildSettings(buildSettings(...args)).compile(utils),
+		args,
+	);
 }

@@ -3,7 +3,6 @@ export * from "./build";
 export * from "./compile";
 export * from "./evaluator";
 export * from "./filter";
-export * from "./queryBuilder";
 export * from "./request";
 export * from "./state";
 export * from "./status";

@@ -14,7 +14,6 @@ export interface CompilableItem {
 }
 
 export interface CompileUtils {
-	readonly empty: CompiledItem;
 	readonly nl: CompiledItem;
 
 	/**

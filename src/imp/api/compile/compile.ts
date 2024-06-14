@@ -76,14 +76,12 @@ const AXIS_RANGE: { [K in Axis]: number } = { [Axis.Lat]: 90, [Axis.Lon]: 180 };
 
 export class OverpassCompileUtils implements CompileUtils {
 	public readonly nl: CompiledItem;
-	public readonly empty: CompiledItem;
 
 	private readonly trueEvaluator: CompiledItem;
 	private readonly falseEvaluator: CompiledItem;
 
 	constructor(private readonly sanitizer: OverpassStringSanitizer) {
 		this.nl = this.raw("\n");
-		this.empty = this.raw("");
 
 		this.trueEvaluator = this.raw("1");
 		this.falseEvaluator = this.raw("0");

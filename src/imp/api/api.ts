@@ -1,12 +1,5 @@
-import { OverpassOutStatement } from "@/imp/statement";
-import {
-	HttpMethod,
-	HttpResponse,
-	OverpassQueryBuilder,
-	OverpassQueryValidator,
-	OverpassStatusValidator,
-	RequestAdapter,
-} from "@/imp/types";
+import { OverpassOutStatement, OverpassSettingsStatement } from "@/imp/statement";
+import { HttpMethod, HttpResponse, OverpassQueryValidator, OverpassStatusValidator, RequestAdapter } from "@/imp/types";
 import {
 	AnyParamValue,
 	ArgTypes,
@@ -43,7 +36,6 @@ export class OverpassApiObjectImp implements OverpassApiObject {
 		private readonly statusValidator: OverpassStatusValidator,
 		private readonly compileUtils: CompileUtils,
 		private readonly tagBuilder: OverpassTagFilterBuilder,
-		private readonly queryBuilder: OverpassQueryBuilder,
 		private readonly evaluatorItemBuilder: OverpassItemEvaluatorBuilder,
 	) {}
 
@@ -104,7 +96,16 @@ export class OverpassApiObjectImp implements OverpassApiObject {
 			throw new Error(`You should provide at least 1 statement ... try node.byId(5431618355)`);
 		}
 
-		return this.queryBuilder.buildQuery({ ...settings }, [...statements, new OverpassOutStatement({ ...options })]);
+		const actualStatements = [...statements, new OverpassOutStatement({ ...options })];
+
+		if (OverpassSettingsStatement.HasSettings(settings)) {
+			actualStatements.unshift(OverpassSettingsStatement.BuildSettings(settings));
+		}
+
+		return this.compileUtils.join(
+			actualStatements.map((stm) => this.compileUtils.template`${stm.compile(this.compileUtils)};`),
+			"\n",
+		);
 	}
 
 	public buildQuery(

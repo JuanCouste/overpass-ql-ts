@@ -9,4 +9,5 @@ export * from "./polygon";
 export * from "./query";
 export * from "./raw";
 export * from "./recurse";
+export * from "./settings";
 export * from "./target";

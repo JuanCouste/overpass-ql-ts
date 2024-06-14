@@ -30,6 +30,6 @@ export class OverpassOutStatement extends OverpassStatementBase {
 
 		const target = targetSet == null ? u.raw("_") : u.set(targetSet);
 
-		return u.template`.${target} out ${u.join(params, " ")};`;
+		return u.template`.${target} out ${u.join(params, " ")}`;
 	}
 }

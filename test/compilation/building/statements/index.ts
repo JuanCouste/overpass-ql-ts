@@ -8,7 +8,6 @@ import {
 	OverpassCompileUtils,
 	OverpassInsidePolygonStatement,
 	OverpassPivotStatement,
-	OverpassQueryBuilderImp,
 	OverpassRawStatement,
 	OverpassStatementTargetImp,
 } from "@/imp";
@@ -18,6 +17,7 @@ import { compileAroundStatementTests } from "./around";
 import { CompileStatementsSymetric } from "./compile";
 import { compileOutStatementTests } from "./options";
 import { compileRecurseStatementTests } from "./recurse";
+import { compileSettingsStatementsTests } from "./settings";
 import { compileTargetStatementTests } from "./target";
 
 export function compileStatementsTests() {
@@ -25,19 +25,24 @@ export function compileStatementsTests() {
 	describe("Target", compileTargetStatementTests);
 	describe("Around", compileAroundStatementTests);
 	describe("Out", compileOutStatementTests);
+	describe("Settings", compileSettingsStatementsTests);
 
 	const staticTarget = new OverpassStatementTargetImp(OverpassQueryTarget.Node, []);
 
 	it("Should compile statements", async () => {
 		const utils = new OverpassCompileUtils(NO_SANITIZER);
-		const builder = new OverpassQueryBuilderImp(utils);
+
+		const statements = [
+			new OverpassRawStatement((u) => u.raw("Foo")),
+			new OverpassRawStatement((u) => u.raw("Bar")),
+		];
 
 		const [raw, withParams] = CompileSymetric(
 			() =>
-				builder.buildQuery({}, [
-					new OverpassRawStatement((u) => u.raw("Foo")),
-					new OverpassRawStatement((u) => u.raw("Bar")),
-				]),
+				utils.join(
+					statements.map((stm) => stm.compile(utils)),
+					" ",
+				),
 			[],
 		);
 
