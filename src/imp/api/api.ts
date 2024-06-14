@@ -97,14 +97,18 @@ export class OverpassApiObjectImp implements OverpassApiObject {
 			throw new Error(`You should provide at least 1 statement ... try node.byId(5431618355)`);
 		}
 
-		const actualStatements = [...statements, new OverpassOutStatement({ ...options })];
+		const stmCopy = statements.concat();
 
 		if (OverpassSettingsStatement.HasSettings(settings)) {
-			actualStatements.unshift(OverpassSettingsStatement.BuildSettings(settings));
+			stmCopy.unshift(OverpassSettingsStatement.BuildSettings(settings));
+		}
+
+		if (!options?.noGlobalOut) {
+			stmCopy.push(new OverpassOutStatement({ ...options }));
 		}
 
 		return this.compileUtils.join(
-			actualStatements.map((stm) => this.compileUtils.template`${stm.compile(this.compileUtils)};`),
+			stmCopy.map((stm) => this.compileUtils.template`${stm.compile(this.compileUtils)};`),
 			"\n",
 		);
 	}

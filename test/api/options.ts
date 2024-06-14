@@ -62,4 +62,12 @@ export function apiOutOptionsTests() {
 
 		expect(query).toMatch(/\.\s*\bsomeset\b\s*out/);
 	});
+
+	it("Should not include out when specified", () => {
+		const api: OverpassApiObject = BuildApi();
+
+		const query = api.buildQuery((s: OverpassState) => [s.node.byId(0)], { noGlobalOut: true });
+
+		expect(query).not.toMatch(/.*out.*/);
+	});
 }
