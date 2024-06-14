@@ -145,7 +145,7 @@ export class OverpassQueryBuilderImp implements OverpassQueryBuilder {
 			params.push(u.number(limit));
 		}
 
-		const target = targetSet == null ? u.raw("_") : u.string(targetSet);
+		const target = targetSet == null ? u.raw("_") : u.set(targetSet);
 
 		return u.template`/* Output */${nl}.${target} out ${u.join(params, " ")};`;
 	}

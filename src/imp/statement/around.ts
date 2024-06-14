@@ -37,7 +37,7 @@ export class OverpassAroundSetStatement extends ChainableOverpassStatementBase {
 
 	compileChainable(u: CompileUtils): CompiledItem[] {
 		const radius = u.number(this.radius);
-		if (this.set != null) return [u.template`(around.${u.string(this.set)}: ${radius})`];
+		if (this.set != null) return [u.template`(around.${u.set(this.set)}: ${radius})`];
 		else return [u.template`(around: ${radius})`];
 	}
 }

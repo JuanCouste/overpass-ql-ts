@@ -19,11 +19,6 @@ export interface CompileUtils {
 
 	/**
 	 * @param value A string that should be sanitized
-	 * @returns the prepared string without quotes
-	 */
-	string(value: OverpassExpression<string>): CompiledItem;
-	/**
-	 * @param value A string that should be sanitized
 	 * @returns the prepared string with quotes included
 	 */
 	qString(value: OverpassExpression<string>): CompiledItem;
@@ -42,6 +37,8 @@ export interface CompileUtils {
 	 * @returns the respective prepared parts { lat, lon }
 	 */
 	geoPos(value: OverpassExpression<OverpassGeoPos>): CompiledOverpassGeoPos;
+	/** @param value A set name */
+	set(value: OverpassExpression<string>): CompiledItem;
 
 	/** @param value A boolean value for use inside an evaluator */
 	boolean(value: OverpassExpression<boolean>): CompiledItem;

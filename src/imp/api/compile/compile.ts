@@ -97,16 +97,6 @@ export class OverpassCompileUtils implements CompileUtils {
 		}
 	}
 
-	string(value: OverpassExpression<string>): CompiledItem {
-		return this.paramItem(value, (string) => {
-			if (typeof string != "string") {
-				throw new OverpassParameterError(`Unexpected string value (${string})`);
-			}
-
-			return this.raw(string);
-		});
-	}
-
 	qString(value: OverpassExpression<string>): CompiledItem {
 		return this.paramItem(value, (string) => {
 			if (typeof string != "string") {
@@ -130,6 +120,16 @@ export class OverpassCompileUtils implements CompileUtils {
 			}
 
 			return this.raw(number.toString());
+		});
+	}
+
+	set(value: OverpassExpression<string>): CompiledItem {
+		return this.paramItem(value, (set) => {
+			if (typeof set != "string") {
+				throw new OverpassParameterError(`Unexpected set value (${set})`);
+			}
+
+			return this.raw(set);
 		});
 	}
 

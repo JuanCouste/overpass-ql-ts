@@ -3,7 +3,7 @@ import { CompiledItem, OverpassOutputOptions, OverpassSettings, OverpassStatemen
 export interface OverpassQueryBuilder {
 	buildSettings(settings: OverpassSettings): CompiledItem;
 
-	buildOptions(settings: OverpassOutputOptions): CompiledItem;
+	buildOptions(options: OverpassOutputOptions): CompiledItem;
 
 	buildStatements(statements: OverpassStatement[]): CompiledItem;
 

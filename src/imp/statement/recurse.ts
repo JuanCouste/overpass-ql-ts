@@ -12,7 +12,7 @@ export class OverpassRecurseStatement extends ComposableOverpassStatementBase {
 	compile(u: CompileUtils): CompiledItem {
 		const recurse = u.recurse(this.recurseType);
 		if (this.set != null) {
-			return u.template`.${u.string(this.set)} ${recurse}`;
+			return u.template`.${u.set(this.set)} ${recurse}`;
 		} else {
 			return recurse;
 		}
