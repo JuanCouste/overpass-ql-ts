@@ -1,3 +1,4 @@
+import { OverpassOutStatement } from "@/imp/statement";
 import {
 	HttpMethod,
 	HttpResponse,
@@ -103,7 +104,7 @@ export class OverpassApiObjectImp implements OverpassApiObject {
 			throw new Error(`You should provide at least 1 statement ... try node.byId(5431618355)`);
 		}
 
-		return this.queryBuilder.buildQuery({ ...settings }, { ...options }, statements);
+		return this.queryBuilder.buildQuery({ ...settings }, [...statements, new OverpassOutStatement({ ...options })]);
 	}
 
 	public buildQuery(

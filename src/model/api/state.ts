@@ -7,6 +7,7 @@ import {
 	OverpassEvaluator,
 	OverpassStatement,
 } from "@/model/parts";
+import { OverpassOutputOptions } from "@/model/query";
 import { OverpassBoundingBox, OverpassGeoPos } from "@/model/types";
 import { OverpassItemEvaluatorBuilder } from "./evaluator";
 import { OverpassQueryTagFilterFunction, OverpassQueryTagFilters } from "./query";
@@ -140,6 +141,8 @@ export interface OverpassStateMethods {
 		type: OverpassExpression<OverpassRecurseStmType>,
 		input?: OverpassExpression<string>,
 	): ComposableOverpassStatement;
+
+	out(options: OverpassOutputOptions): OverpassStatement;
 }
 
 /**

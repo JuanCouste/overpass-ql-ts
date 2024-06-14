@@ -4,6 +4,7 @@ export * from "./base";
 export * from "./bbox";
 export * from "./id";
 export * from "./ifFilter";
+export * from "./out";
 export * from "./polygon";
 export * from "./query";
 export * from "./raw";

@@ -6,7 +6,6 @@ import {
 	CompiledItem,
 	OverpassCSVFormatSettings,
 	OverpassFormat,
-	OverpassOutputOptions,
 	OverpassSettings,
 	OverpassStatement,
 } from "@/model";
@@ -73,10 +72,9 @@ export class OverpassQueryBuilderImp implements OverpassQueryBuilder {
 
 	public buildSettings(settings: OverpassSettings): CompiledItem {
 		const u = this.utils;
-		const { nl, empty } = u;
 
 		if (Object.keys(settings).length == 0) {
-			return empty;
+			return u.empty;
 		}
 
 		const { timeout, maxSize, globalBoundingBox, date, diff } = settings;
@@ -112,60 +110,16 @@ export class OverpassQueryBuilderImp implements OverpassQueryBuilder {
 			}
 		}
 
-		return u.template`/* Settings */${nl}${u.join(options, "\n")};${nl}`;
+		return u.template`${u.join(options, "\n")};`;
 	}
 
-	public buildOptions({
-		verbosity,
-		geoInfo,
-		boundingBox,
-		sortOrder,
-		limit,
-		targetSet,
-	}: OverpassOutputOptions): CompiledItem {
-		const u = this.utils;
-		const { nl } = u;
-
-		const params: CompiledItem[] = [];
-
-		if (verbosity != null) {
-			params.push(u.verbosity(verbosity));
-		}
-		if (geoInfo != null) {
-			params.push(u.geoInfo(geoInfo));
-		}
-		if (boundingBox != null) {
-			const [s, w, n, e] = u.bbox(boundingBox);
-			params.push(u.template`(${s},${w},${n},${e})`);
-		}
-		if (sortOrder != null) {
-			params.push(u.sortOrder(sortOrder));
-		}
-		if (limit != null) {
-			params.push(u.number(limit));
-		}
-
-		const target = targetSet == null ? u.raw("_") : u.set(targetSet);
-
-		return u.template`/* Output */${nl}.${target} out ${u.join(params, " ")};`;
-	}
-
-	public buildStatements(statements: OverpassStatement[]): CompiledItem {
-		const compiledStatements = this.utils.join(
-			statements.map((stm) => this.utils.template`${stm.compile(this.utils)};`),
+	public buildQuery(settings: OverpassSettings, stms: OverpassStatement[]): CompiledItem {
+		const { nl } = this.utils;
+		const settStr = this.buildSettings(settings);
+		const stmStr = this.utils.join(
+			stms.map((stm) => this.utils.template`${stm.compile(this.utils)};`),
 			"\n",
 		);
-		const { nl } = this.utils;
-		return this.utils.template`/* Statements */${nl}${compiledStatements}${nl}`;
-	}
-
-	public buildQuery(
-		settings: OverpassSettings,
-		options: OverpassOutputOptions,
-		statements: OverpassStatement[],
-	): CompiledItem {
-		const settingsStr = this.buildSettings(settings);
-		const optionsStr = this.buildOptions(options);
-		return this.utils.template`${settingsStr}${this.buildStatements(statements)}${optionsStr}`;
+		return this.utils.template`/* Settings */${nl}${settStr}${nl}/* Statements */${nl}${stmStr}${nl}`;
 	}
 }

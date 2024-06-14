@@ -1,7 +1,7 @@
 import { NO_SANITIZER } from "?/compilation/nosanitizer";
 import { CompileSymetric } from "?/compilation/symetry";
 import { Symetric, SymetricArgsExpression, SymetricArgumentsObject } from "?/utils";
-import { OverpassCompileUtils, OverpassQueryBuilderImp } from "@/imp";
+import { OverpassCompileUtils, OverpassOutStatement } from "@/imp";
 import {
 	AnyParamValue,
 	OverpassOutputGeoInfo,
@@ -12,15 +12,15 @@ import {
 } from "@/index";
 import { expect, it } from "@jest/globals";
 
-export function compileOptionsTests() {
+export function compileOutStatementTests() {
 	it("Should compile empty options", async () => {
-		const [raw, withParams] = CompileOptionsSymetric(() => ({}), []);
+		const [raw, withParams] = CompileOutStmSymetric(() => ({}), []);
 
 		await expect(withParams).resolves.toEqual(await raw);
 	});
 
 	it("Should compile options with limit", async () => {
-		const [raw, withParams] = CompileOptionsSymetric((limit) => ({ limit }), [Symetric.Number(12345)]);
+		const [raw, withParams] = CompileOutStmSymetric((limit) => ({ limit }), [Symetric.Number(12345)]);
 
 		await expect(raw).resolves.toMatch(/\b12345\b/);
 
@@ -28,7 +28,7 @@ export function compileOptionsTests() {
 	});
 
 	it("Should compile options with target", async () => {
-		const [raw, withParams] = CompileOptionsSymetric((targetSet) => ({ targetSet }), [Symetric.String("someSet")]);
+		const [raw, withParams] = CompileOutStmSymetric((targetSet) => ({ targetSet }), [Symetric.String("someSet")]);
 
 		await expect(raw).resolves.toMatch(/\.\bsomeSet\b/);
 
@@ -36,7 +36,7 @@ export function compileOptionsTests() {
 	});
 
 	it("Should compile options with bbox", async () => {
-		const [raw, withParams] = CompileOptionsSymetric(
+		const [raw, withParams] = CompileOutStmSymetric(
 			(bbox) => ({ boundingBox: bbox }),
 			[Symetric.BBox([1, 2, 3, 4])],
 		);
@@ -47,7 +47,7 @@ export function compileOptionsTests() {
 	});
 
 	it("Should compile options with verbosity", async () => {
-		const [raw, withParams] = CompileOptionsSymetric(
+		const [raw, withParams] = CompileOutStmSymetric(
 			(verbosity) => ({ verbosity }),
 			[Symetric.Enum(ParamType.Verbosity, OverpassOutputVerbosity.Metadata)],
 		);
@@ -58,7 +58,7 @@ export function compileOptionsTests() {
 	});
 
 	it("Should compile options with sort order", async () => {
-		const [raw, withParams] = CompileOptionsSymetric(
+		const [raw, withParams] = CompileOutStmSymetric(
 			(sortOrder) => ({ sortOrder }),
 			[Symetric.Enum(ParamType.SortOrder, OverpassSortOrder.QuadtileIndex)],
 		);
@@ -69,7 +69,7 @@ export function compileOptionsTests() {
 	});
 
 	it("Should compile options with geo info", async () => {
-		const [raw, withParams] = CompileOptionsSymetric(
+		const [raw, withParams] = CompileOutStmSymetric(
 			(geoInfo) => ({ geoInfo }),
 			[Symetric.Enum(ParamType.GeoInfo, OverpassOutputGeoInfo.Geometry)],
 		);
@@ -80,12 +80,11 @@ export function compileOptionsTests() {
 	});
 }
 
-function CompileOptionsSymetric<Args extends AnyParamValue[]>(
+function CompileOutStmSymetric<Args extends AnyParamValue[]>(
 	buildOptions: (...args: SymetricArgsExpression<Args>) => OverpassOutputOptions,
 	args: SymetricArgumentsObject<Args>,
 ) {
 	const utils = new OverpassCompileUtils(NO_SANITIZER);
-	const builder = new OverpassQueryBuilderImp(utils);
 
-	return CompileSymetric<Args>((...args) => builder.buildOptions(buildOptions(...args)), args);
+	return CompileSymetric<Args>((...args) => new OverpassOutStatement(buildOptions(...args)).compile(utils), args);
 }
