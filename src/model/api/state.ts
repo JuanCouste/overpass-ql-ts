@@ -7,6 +7,7 @@ import {
 	OverpassEvaluator,
 	OverpassStatement,
 } from "@/model/parts";
+import { OverpassOutputOptions } from "@/model/query";
 import { OverpassBoundingBox, OverpassGeoPos } from "@/model/types";
 import { OverpassItemEvaluatorBuilder } from "./evaluator";
 import { OverpassQueryTagFilterFunction, OverpassQueryTagFilters } from "./query";
@@ -41,11 +42,44 @@ export interface OverpassTargetState {
 	bbox(...params: OverpassBoundingBox): OverpassTargetStateStatement;
 	bbox(bbox: OverpassExpression<OverpassBoundingBox>): OverpassTargetStateStatement;
 	/** Fetch by {@link id} */
-	byId(id: OverpassExpression<number>): OverpassTargetStateStatement;
+	byId(id: OverpassExpression<number> | OverpassExpression<number>[]): OverpassTargetStateStatement;
 	/** The elements that are inside a {@link polygon} */
 	inside(polygon: OverpassPositionLiteralExpression[]): OverpassTargetStateStatement;
 	/** Those elements that satisfy {@link predicate} */
 	filter(predicate: (e: OverpassItemEvaluatorBuilder) => OverpassEvaluator<boolean>): OverpassTargetStateStatement;
+	/**
+	 * Those elements within a certain {@link radius} around the {@link center}
+	 * @param radius in meters
+	 */
+	aroundCenter(
+		radius: OverpassExpression<number>,
+		center: OverpassExpression<OverpassGeoPos>,
+	): OverpassTargetStateStatement;
+	/**
+	 * Those elements within a certain {@link radius} around the elements in the input {@link set}
+	 * @param radius in meters
+	 * @param set if unspecified asumes the default set
+	 */
+	aroundSet(radius: OverpassExpression<number>, set?: OverpassExpression<string>): OverpassTargetStateStatement;
+	/**
+	 * Those elements within a certain {@link radius} around the specified {@link line}
+	 * @param radius in meters
+	 */
+	aroundLine(
+		radius: OverpassExpression<number>,
+		line: OverpassPositionLiteralExpression[],
+	): OverpassTargetStateStatement;
+	/**
+	 * Those elements that are inside the given area or areas in the specified {@link set}.
+	 * @param set if unspecified asumes the default set
+	 */
+	inArea(set?: OverpassExpression<string>): OverpassTargetStateStatement;
+	/**
+	 * The elements that defines the outline of the given areas specified in {@link set}
+	 * Does not work with nodes {@link OverpassQueryTarget.Node}
+	 * @param set if unspecified asumes the default set
+	 */
+	pivot(set?: OverpassExpression<string>): OverpassTargetStateStatement;
 }
 
 /** Runs the statement for the specified {@link target} */
@@ -107,6 +141,8 @@ export interface OverpassStateMethods {
 		type: OverpassExpression<OverpassRecurseStmType>,
 		input?: OverpassExpression<string>,
 	): ComposableOverpassStatement;
+
+	out(options: OverpassOutputOptions): OverpassStatement;
 }
 
 /**

@@ -17,7 +17,7 @@ export class OverpassStatementTargetImp implements OverpassStatementTarget {
 			return target;
 		} else {
 			// ie: node.set1.set2 => node.set1.set2(id)
-			const sets = this.sets.map((set) => u.string(set));
+			const sets = this.sets.map((set) => u.set(set));
 			return u.template`${target}.${u.join(sets, ".")}`;
 		}
 	}

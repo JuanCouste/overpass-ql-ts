@@ -1,3 +1,4 @@
+import { OverpassBooleanEvaluatorImp } from "@/imp/evaluator/boolean";
 import { OverpassDateEvaluatorImp } from "@/imp/evaluator/date";
 import { OverpassEvaluatorImp, OverpassEvaluatorNodeImp } from "@/imp/evaluator/evaluator";
 import { OverpassNumberEvaluatorImp } from "@/imp/evaluator/number";
@@ -13,7 +14,6 @@ import {
 	OverpassNumberEvaluator,
 	OverpassStringEvaluator,
 } from "@/model";
-import { OverpassBooleanEvaluatorImp } from "../boolean";
 import { OverpassAsBooleanEvaluatorNode } from "./boolean";
 import { OverpassIsDateEvaluatorNode, OverpassParseDateEvaluatorNode } from "./date";
 import { OverpassIsNumberEvaluatorNode, OverpassParseNumberEvaluatorNode } from "./number";

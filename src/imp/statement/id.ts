@@ -11,13 +11,17 @@ export class OverpassByIdStatement extends ChainableOverpassStatementBase {
 	constructor(
 		target: OverpassStatementTarget,
 		chain: OverpassChainableTargetableState,
-		private readonly id: OverpassExpression<number>,
+		private readonly id: OverpassExpression<number> | OverpassExpression<number>[],
 	) {
 		super(target, chain);
 	}
 
 	compileChainable(u: CompileUtils): CompiledItem[] {
-		const id = u.number(this.id);
-		return [u.template`(${id})`];
+		if (this.id instanceof Array) {
+			const ids = this.id.map((id) => u.number(id));
+			return [u.template`(id:${u.join(ids, ", ")})`];
+		} else {
+			return [u.template`(${u.number(this.id)})`];
+		}
 	}
 }

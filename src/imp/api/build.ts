@@ -5,7 +5,6 @@ import { OverpassApiObjectImp } from "./api";
 import { OverpassCompileUtils } from "./compile";
 import { OverpassItemEvaluatorBuilderImp } from "./evaluator";
 import { OverpassTagFilterBuilderImp } from "./filter";
-import { OverpassQueryBuilderImp } from "./queryBuilder";
 import { OverpassStatusValidatorImp } from "./status";
 import { OverpassQueryValidatorImp } from "./validator";
 
@@ -60,7 +59,6 @@ function PrivateBuildOverPassApi(adapter: RequestAdapter, options: OverpassApiOb
 	const statusValidator = new OverpassStatusValidatorImp(statusUrl);
 	const sanitizer = GetSanitizer(options.sanitization);
 	const compileUtils = new OverpassCompileUtils(sanitizer);
-	const builder = new OverpassQueryBuilderImp(compileUtils);
 	const tagBuilder = OverpassTagFilterBuilderImp.Build();
 	const evaluatorItemBuilder = new OverpassItemEvaluatorBuilderImp();
 
@@ -72,7 +70,6 @@ function PrivateBuildOverPassApi(adapter: RequestAdapter, options: OverpassApiOb
 		statusValidator,
 		compileUtils,
 		tagBuilder,
-		builder,
 		evaluatorItemBuilder,
 	);
 }

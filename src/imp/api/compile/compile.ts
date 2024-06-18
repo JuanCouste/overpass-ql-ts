@@ -76,14 +76,12 @@ const AXIS_RANGE: { [K in Axis]: number } = { [Axis.Lat]: 90, [Axis.Lon]: 180 };
 
 export class OverpassCompileUtils implements CompileUtils {
 	public readonly nl: CompiledItem;
-	public readonly empty: CompiledItem;
 
 	private readonly trueEvaluator: CompiledItem;
 	private readonly falseEvaluator: CompiledItem;
 
 	constructor(private readonly sanitizer: OverpassStringSanitizer) {
 		this.nl = this.raw("\n");
-		this.empty = this.raw("");
 
 		this.trueEvaluator = this.raw("1");
 		this.falseEvaluator = this.raw("0");
@@ -95,16 +93,6 @@ export class OverpassCompileUtils implements CompileUtils {
 		} else {
 			return callback(value);
 		}
-	}
-
-	string(value: OverpassExpression<string>): CompiledItem {
-		return this.paramItem(value, (string) => {
-			if (typeof string != "string") {
-				throw new OverpassParameterError(`Unexpected string value (${string})`);
-			}
-
-			return this.raw(string);
-		});
 	}
 
 	qString(value: OverpassExpression<string>): CompiledItem {
@@ -130,6 +118,16 @@ export class OverpassCompileUtils implements CompileUtils {
 			}
 
 			return this.raw(number.toString());
+		});
+	}
+
+	set(value: OverpassExpression<string>): CompiledItem {
+		return this.paramItem(value, (set) => {
+			if (typeof set != "string") {
+				throw new OverpassParameterError(`Unexpected set value (${set})`);
+			}
+
+			return this.raw(set);
 		});
 	}
 

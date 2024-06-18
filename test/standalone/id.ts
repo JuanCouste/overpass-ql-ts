@@ -1,4 +1,4 @@
-import { BuildApi, MDEO_ID, URUGUAY_ID } from "?/utils";
+import { BuildApi, MDEO_ID, MDEO_LABEL_ID, URUGUAY_ID } from "?/utils";
 import { OverpassApiObject } from "@/index";
 import { expect, it } from "@jest/globals";
 
@@ -42,5 +42,17 @@ export function standaloneByIdTests() {
 
 		expect(element.id).toEqual(av18deJulio1);
 		expect(element.type).toBe("way");
+	});
+
+	it("Should fetch by multiple ids", async () => {
+		const api: OverpassApiObject = BuildApi();
+
+		const { elements } = await api.execJson((s) => s.node.byId([MDEO_ID, MDEO_LABEL_ID]));
+
+		expect(elements.length).toEqual(2);
+
+		const ids = elements.map((el) => el.id);
+
+		expect(ids).toEqual([MDEO_ID, MDEO_LABEL_ID]);
 	});
 }

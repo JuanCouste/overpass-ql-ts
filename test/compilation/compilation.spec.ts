@@ -1,9 +1,4 @@
-import {
-	OverpassCompileUtils,
-	OverpassItemEvaluatorBuilderImp,
-	OverpassStateImp,
-	OverpassTagFilterBuilderImp,
-} from "@/imp";
+import { OverpassCompileUtils, OverpassStateImp, OverpassTagFilterBuilderImp } from "@/imp";
 import { OverpassParameterError } from "@/model";
 import { describe, expect } from "@jest/globals";
 import { symetryUtilsTests } from "./building";
@@ -22,8 +17,7 @@ describe("Compilation", () => {
 	describe("Query", () => {
 		const utils = new OverpassCompileUtils(NO_SANITIZER);
 		const tags = OverpassTagFilterBuilderImp.Build();
-		const evaluator = new OverpassItemEvaluatorBuilderImp();
-		const state = new OverpassStateImp(utils, tags, evaluator);
+		const state = new OverpassStateImp(utils, tags, null!);
 
 		expect(() => state.proxy.node.byTags({ name: null! as string })).toThrow(OverpassParameterError);
 	});

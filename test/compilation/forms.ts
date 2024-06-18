@@ -13,6 +13,15 @@ import {
 import { expect, it } from "@jest/globals";
 
 export function targetFormTests() {
+	it(`Should build around center for all targets`, () =>
+		CheckAllFormsOfStatement((target) => target.aroundCenter(100, { lat: 10, lon: 10 })));
+
+	it(`Should build around set for all targets`, () =>
+		CheckAllFormsOfStatement((target) => target.aroundSet(100, "set")));
+
+	it(`Should build around line for all targets`, () =>
+		CheckAllFormsOfStatement((target) => target.aroundLine(100, [[10, 2], { lat: 10, lon: 2 }])));
+
 	it(`Should build bbox for all targets`, () => CheckAllFormsOfStatement((target) => target.bbox(MDEO_BBOX)));
 
 	it(`Should build byTags for all targets`, () =>
@@ -33,19 +42,32 @@ export function targetFormTests() {
 
 	it(`Should build inside polygon for all targets`, () =>
 		CheckAllFormsOfStatement((target) => target.inside(PolygonFromBBox(MDEO_BBOX))));
+
+	it(`Should build in area for all targets`, () => CheckAllFormsOfStatement((target) => target.inArea("set")));
+
+	it(`Should build in area for ways and relations`, () =>
+		CheckAllFormsOfStatement((target) => target.pivot("set"), [ways, relations]));
 }
 
-const TARGETS: [OverpassQueryTargetString, OverpassQueryTarget][] = [
-	["relation", OverpassQueryTarget.Relation],
+type Targets = [OverpassQueryTargetString, OverpassQueryTarget];
+
+const ways: Targets = ["way", OverpassQueryTarget.Way];
+const relations: Targets = ["relation", OverpassQueryTarget.Relation];
+
+const TARGETS: Targets[] = [
 	["node", OverpassQueryTarget.Node],
-	["way", OverpassQueryTarget.Way],
+	ways,
+	relations,
 	["any", OverpassQueryTarget.NodeWayRelation],
 ];
 
-function CheckAllFormsOfStatement(callback: (state: OverpassTargetState) => OverpassStatement): void {
+function CheckAllFormsOfStatement(
+	callback: (state: OverpassTargetState) => OverpassStatement,
+	targets: Targets[] = TARGETS,
+): void {
 	const api: OverpassApiObject = BuildOverpassApi(null!, { interpreterUrl: NOT_AN_API });
 
-	TARGETS.forEach((subTargets) => {
+	targets.forEach((subTargets) => {
 		const forms = subTargets
 			.map((target) => [
 				api.buildQuery((s) => callback(s[target])),

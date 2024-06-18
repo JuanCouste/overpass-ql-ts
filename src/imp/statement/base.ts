@@ -108,7 +108,7 @@ export class OverpassSetStatement extends ComposableOverpassStatementBase {
 
 	compile(utils: CompileUtils): CompiledItem {
 		const statement1 = this.statement1.compile(utils);
-		return utils.template`${statement1}->.${utils.string(this.setName)}`;
+		return utils.template`${statement1}->.${utils.set(this.setName)}`;
 	}
 }
 
