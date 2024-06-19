@@ -9,14 +9,13 @@ function BuildBoolean(value: OverpassExpression<boolean>): CompiledItem<boolean>
 }
 
 export function parametersBooleanTests() {
-	it("Should be fine when booleans are fine", async () =>
-		await ExpectCompileResolves(BuildBoolean, [Symetric.Bool(true)]));
+	it("Should be fine when booleans are fine", () => ExpectCompileResolves(BuildBoolean, [Symetric.Bool(true)]));
 
-	it(`Should error when booleans are nullish`, async () => {
-		await ExpectCompileRejects(BuildBoolean, [Symetric.Bool(null!)]);
-		await ExpectCompileRejects(BuildBoolean, [Symetric.Bool(undefined!)]);
+	it(`Should error when booleans are nullish`, () => {
+		ExpectCompileRejects(BuildBoolean, [Symetric.Bool(null!)]);
+		ExpectCompileRejects(BuildBoolean, [Symetric.Bool(undefined!)]);
 	});
 
-	it("Should error when parameter is not a boolean", async () =>
-		await ExpectCompileRejects(BuildBoolean, [Symetric.Bool("" as unknown as boolean)]));
+	it("Should error when parameter is not a boolean", () =>
+		ExpectCompileRejects(BuildBoolean, [Symetric.Bool("" as unknown as boolean)]));
 }

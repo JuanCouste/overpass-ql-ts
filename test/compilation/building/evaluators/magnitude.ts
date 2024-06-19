@@ -5,43 +5,48 @@ import { expect, it } from "@jest/globals";
 import { CompileEvaluatorSymetric } from "./utils";
 
 export function compileMagnitudeEvaluatorsTests() {
-	it("Should compile number lower than", async () => {
+	it("Should compile number lower than", () => {
 		const [raw, withParams] = CompileEvaluatorSymetric(
 			(number) => OverpassNumberEvaluatorImp.From(1).lt(number),
 			[Symetric.Number(2)],
 		);
-		await expect(withParams).resolves.toEqual(await raw);
+
+		expect(withParams()).toEqual(raw());
 	});
 
-	it("Should compile number lower or equals", async () => {
+	it("Should compile number lower or equals", () => {
 		const [raw, withParams] = CompileEvaluatorSymetric(
 			(number) => OverpassNumberEvaluatorImp.From(1).le(number),
 			[Symetric.Number(2)],
 		);
-		await expect(withParams).resolves.toEqual(await raw);
+
+		expect(withParams()).toEqual(raw());
 	});
 
-	it("Should compile number greater or equals", async () => {
+	it("Should compile number greater or equals", () => {
 		const [raw, withParams] = CompileEvaluatorSymetric(
 			(number) => OverpassNumberEvaluatorImp.From(1).ge(number),
 			[Symetric.Number(2)],
 		);
-		await expect(withParams).resolves.toEqual(await raw);
+
+		expect(withParams()).toEqual(raw());
 	});
 
-	it("Should compile number greater than", async () => {
+	it("Should compile number greater than", () => {
 		const [raw, withParams] = CompileEvaluatorSymetric(
 			(number) => OverpassNumberEvaluatorImp.From(1).gt(number),
 			[Symetric.Number(2)],
 		);
-		await expect(withParams).resolves.toEqual(await raw);
+
+		expect(withParams()).toEqual(raw());
 	});
 
-	it("Should compile number comparisson", async () => {
+	it("Should compile number comparisson", () => {
 		const [raw, withParams] = CompileEvaluatorSymetric(
 			(number) => OverpassNumberEvaluatorImp.From(1).compare(OverpasComparissonOperator.Greater, number),
 			[Symetric.Number(2)],
 		);
-		await expect(withParams).resolves.toEqual(await raw);
+
+		expect(withParams()).toEqual(raw());
 	});
 }

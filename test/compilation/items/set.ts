@@ -9,14 +9,13 @@ function BuildSet(value: OverpassExpression<string>): CompiledItem<string> {
 }
 
 export function parametersSetTests() {
-	it("Should be fine when sets are fine", async () =>
-		await ExpectCompileResolves(BuildSet, [Symetric.String("aSet")]));
+	it("Should be fine when sets are fine", () => ExpectCompileResolves(BuildSet, [Symetric.String("aSet")]));
 
-	it(`Should error when sets are nullish`, async () => {
-		await ExpectCompileRejects(BuildSet, [Symetric.String(null!)]);
-		await ExpectCompileRejects(BuildSet, [Symetric.String(undefined!)]);
+	it(`Should error when sets are nullish`, () => {
+		ExpectCompileRejects(BuildSet, [Symetric.String(null!)]);
+		ExpectCompileRejects(BuildSet, [Symetric.String(undefined!)]);
 	});
 
-	it("Should error when parameter is not a set", async () =>
-		await ExpectCompileRejects(BuildSet, [Symetric.String(/name/ as unknown as string)]));
+	it("Should error when parameter is not a set", () =>
+		ExpectCompileRejects(BuildSet, [Symetric.String(/name/ as unknown as string)]));
 }

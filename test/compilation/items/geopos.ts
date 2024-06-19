@@ -10,28 +10,28 @@ function BuildGeoPos(value: OverpassExpression<OverpassGeoPos>): CompiledItem<st
 }
 
 export function parametersGeoPosTests() {
-	it("Should be fine when geopos are fine", async () =>
-		await ExpectCompileResolves(BuildGeoPos, [Symetric.GeoPos({ lat: 1, lon: 2 })]));
+	it("Should be fine when geopos are fine", () =>
+		ExpectCompileResolves(BuildGeoPos, [Symetric.GeoPos({ lat: 1, lon: 2 })]));
 
-	it(`Should error when geopos are nullish`, async () => {
-		await ExpectCompileRejects(BuildGeoPos, [Symetric.GeoPos(null!)]);
-		await ExpectCompileRejects(BuildGeoPos, [Symetric.GeoPos(undefined!)]);
+	it(`Should error when geopos are nullish`, () => {
+		ExpectCompileRejects(BuildGeoPos, [Symetric.GeoPos(null!)]);
+		ExpectCompileRejects(BuildGeoPos, [Symetric.GeoPos(undefined!)]);
 	});
 
-	it("Should error when parameter is not a geopos", async () =>
-		await ExpectCompileRejects(BuildGeoPos, [Symetric.GeoPos("name" as unknown as OverpassGeoPos)]));
+	it("Should error when parameter is not a geopos", () =>
+		ExpectCompileRejects(BuildGeoPos, [Symetric.GeoPos("name" as unknown as OverpassGeoPos)]));
 
 	const coords: (keyof OverpassGeoPos)[] = ["lat", "lon"];
 
-	it(`Should error when geopos coordinate is invalid`, async () => {
+	it(`Should error when geopos coordinate is invalid`, () => {
 		for (const coord of coords) {
 			for (const invalid of [NaN, Infinity, null!, undefined!]) {
-				await ExpectCompileRejects(BuildGeoPos, [Symetric.GeoPos({ lat: 1, lon: 1, [coord]: invalid })]);
+				ExpectCompileRejects(BuildGeoPos, [Symetric.GeoPos({ lat: 1, lon: 1, [coord]: invalid })]);
 			}
 		}
 	});
 
-	it(`Should error when geopos coord are out of range`, async () => {
+	it(`Should error when geopos coord are out of range`, () => {
 		const ranges: { [K in keyof OverpassGeoPos]: number } = {
 			lat: 90,
 			lon: 180,
@@ -40,9 +40,7 @@ export function parametersGeoPosTests() {
 		for (const coord of coords) {
 			for (const sign of [+1, -1]) {
 				const outOfRange = ranges[coord] + 1;
-				await ExpectCompileRejects(BuildGeoPos, [
-					Symetric.GeoPos({ lat: 1, lon: 1, [coord]: sign * outOfRange }),
-				]);
+				ExpectCompileRejects(BuildGeoPos, [Symetric.GeoPos({ lat: 1, lon: 1, [coord]: sign * outOfRange })]);
 			}
 		}
 	});

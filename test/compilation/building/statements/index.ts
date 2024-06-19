@@ -29,91 +29,102 @@ export function compileStatementsTests() {
 
 	const staticTarget = new OverpassStatementTargetImp(OverpassQueryTarget.Node, []);
 
-	it("Should compile statements", async () => {
-		const utils = new OverpassCompileUtils(NO_SANITIZER);
+	it("Should compile statements", () => {
+		const u = new OverpassCompileUtils(NO_SANITIZER);
 
-		const statements = [
-			new OverpassRawStatement((u) => u.raw("Foo")),
-			new OverpassRawStatement((u) => u.raw("Bar")),
-		];
+		const stms = [new OverpassRawStatement((u) => u.raw("Foo")), new OverpassRawStatement((u) => u.raw("Bar"))];
 
 		const [raw, withParams] = CompileSymetric(
 			() =>
-				utils.join(
-					statements.map((stm) => stm.compile(utils)),
+				u.join(
+					stms.map((stm) => stm.compile(u)),
 					" ",
 				),
 			[],
 		);
 
-		await expect(raw).resolves.toBeDefined();
+		const rawResult = raw();
 
-		await expect(withParams).resolves.toEqual(await raw);
+		expect(rawResult).toBeDefined();
+
+		expect(withParams()).toEqual(rawResult);
 	});
 
-	it("Should compile bbox statement", async () => {
+	it("Should compile bbox statement", () => {
 		const [raw, withParams] = CompileStatementsSymetric(
 			(bbox) => new OverpassBBoxStatement(staticTarget, null!, bbox),
 			[Symetric.BBox([1, 2, 3, 4])],
 		);
 
-		await expect(raw).resolves.toMatch(/\(\s*1\s*,\s*2\s*,\s*3\s*,\s*4\s*\)/);
+		const rawResult = raw();
 
-		await expect(withParams).resolves.toEqual(await raw);
+		expect(rawResult).toMatch(/\(\s*1\s*,\s*2\s*,\s*3\s*,\s*4\s*\)/);
+
+		expect(withParams()).toEqual(rawResult);
 	});
 
-	it("Should compile byId statement", async () => {
+	it("Should compile byId statement", () => {
 		const [raw, withParams] = CompileStatementsSymetric(
 			(id) => new OverpassByIdStatement(staticTarget, null!, id),
 			[Symetric.Number(1)],
 		);
 
-		await expect(raw).resolves.toMatch(/\(\s*1\s*\)/);
+		const rawResult = raw();
 
-		await expect(withParams).resolves.toEqual(await raw);
+		expect(rawResult).toMatch(/\(\s*1\s*\)/);
+
+		expect(withParams()).toEqual(rawResult);
 	});
 
-	it("Should compile inside statement", async () => {
+	it("Should compile inside statement", () => {
 		const [raw, withParams] = CompileStatementsSymetric(
 			(...polygon) => new OverpassInsidePolygonStatement(staticTarget, null!, polygon),
 			[Symetric.GeoPos({ lat: 1, lon: 2 })],
 		);
 
-		await expect(raw).resolves.toMatch(/\(\s*poly\s*:\s*"\s*1\s+2\s*"\s*\)/);
+		const rawResult = raw();
 
-		await expect(withParams).resolves.toEqual(await raw);
+		expect(rawResult).toMatch(/\(\s*poly\s*:\s*"\s*1\s+2\s*"\s*\)/);
+
+		expect(withParams()).toEqual(rawResult);
 	});
 
-	it("Should compile inside statement with many coords", async () => {
+	it("Should compile inside statement with many coords", () => {
 		const [raw, withParams] = CompileStatementsSymetric(
 			(...polygon) => new OverpassInsidePolygonStatement(staticTarget, null!, polygon),
 			[Symetric.GeoPos({ lat: 1, lon: 2 }), Symetric.GeoPos({ lat: 3, lon: 4 })],
 		);
 
-		await expect(raw).resolves.toMatch(/\(\s*poly\s*:\s*"\s*1\s+2\s+3\s+4\s*"\s*\)/);
+		const rawResult = raw();
 
-		await expect(withParams).resolves.toEqual(await raw);
+		expect(rawResult).toMatch(/\(\s*poly\s*:\s*"\s*1\s+2\s+3\s+4\s*"\s*\)/);
+
+		expect(withParams()).toEqual(rawResult);
 	});
 
-	it("Should compile area statement with set", async () => {
+	it("Should compile area statement with set", () => {
 		const [raw, withParams] = CompileStatementsSymetric<[string]>(
 			(set) => new OverpassAreaStatement(staticTarget, null!, set),
 			[Symetric.String("set")],
 		);
 
-		await expect(raw).resolves.toMatch(/\(\s*area\.set\s*\)/);
+		const rawResult = raw();
 
-		await expect(withParams).resolves.toEqual(await raw);
+		expect(rawResult).toMatch(/\(\s*area\.set\s*\)/);
+
+		expect(withParams()).toEqual(rawResult);
 	});
 
-	it("Should compile pivot statement with set", async () => {
+	it("Should compile pivot statement with set", () => {
 		const [raw, withParams] = CompileStatementsSymetric<[string]>(
 			(set) => new OverpassPivotStatement(staticTarget, null!, set),
 			[Symetric.String("set")],
 		);
 
-		await expect(raw).resolves.toMatch(/\(\s*pivot\.set\s*\)/);
+		const rawResult = raw();
 
-		await expect(withParams).resolves.toEqual(await raw);
+		expect(rawResult).toMatch(/\(\s*pivot\.set\s*\)/);
+
+		expect(withParams()).toEqual(rawResult);
 	});
 }

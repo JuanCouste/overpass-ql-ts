@@ -9,14 +9,13 @@ function BuildNumber(value: OverpassExpression<number>): CompiledItem<number> {
 }
 
 export function parametersNumberTests() {
-	it("Should be fine when numbers are fine", async () =>
-		await ExpectCompileResolves(BuildNumber, [Symetric.Number(1)]));
+	it("Should be fine when numbers are fine", () => ExpectCompileResolves(BuildNumber, [Symetric.Number(1)]));
 
-	it(`Should error when numbers are nullish`, async () => {
-		await ExpectCompileRejects(BuildNumber, [Symetric.Number(null!)]);
-		await ExpectCompileRejects(BuildNumber, [Symetric.Number(undefined!)]);
+	it(`Should error when numbers are nullish`, () => {
+		ExpectCompileRejects(BuildNumber, [Symetric.Number(null!)]);
+		ExpectCompileRejects(BuildNumber, [Symetric.Number(undefined!)]);
 	});
 
-	it("Should error when parameter is not a number", async () =>
-		await ExpectCompileRejects(BuildNumber, [Symetric.Number("1" as unknown as number)]));
+	it("Should error when parameter is not a number", () =>
+		ExpectCompileRejects(BuildNumber, [Symetric.Number("1" as unknown as number)]));
 }

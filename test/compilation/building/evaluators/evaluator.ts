@@ -4,35 +4,37 @@ import { expect, it } from "@jest/globals";
 import { CompileEvaluatorSymetric } from "./utils";
 
 export function compileEvaluatorsMiscTests() {
-	it("Should compile equals evaluator", async () => {
+	it("Should compile equals evaluator", () => {
 		const [raw, withParams] = CompileEvaluatorSymetric(
 			(boolean) => OverpassBooleanEvaluatorImp.From(true).eq(boolean),
 			[Symetric.Bool(true)],
 		);
-		await expect(withParams).resolves.toEqual(await raw);
+
+		expect(withParams()).toEqual(raw());
 	});
 
-	it("Should compile not equals evaluator", async () => {
+	it("Should compile not equals evaluator", () => {
 		const [raw, withParams] = CompileEvaluatorSymetric(
 			(boolean) => OverpassBooleanEvaluatorImp.From(true).neq(boolean),
 			[Symetric.Bool(true)],
 		);
-		await expect(withParams).resolves.toEqual(await raw);
+
+		expect(withParams()).toEqual(raw());
 	});
 
-	it("Should compile element has tag evaluator", async () => {
+	it("Should compile element has tag evaluator", () => {
 		const item = new OverpassItemEvaluatorBuilderImp();
 
 		const [raw, withParams] = CompileEvaluatorSymetric((tag) => item.hasTag(tag), [Symetric.String("tag")]);
 
-		await expect(withParams).resolves.toEqual(await raw);
+		expect(withParams()).toEqual(raw());
 	});
 
-	it("Should compile element get tag evaluator", async () => {
+	it("Should compile element get tag evaluator", () => {
 		const item = new OverpassItemEvaluatorBuilderImp();
 
 		const [raw, withParams] = CompileEvaluatorSymetric((tag) => item.getTag(tag), [Symetric.String("tag")]);
 
-		await expect(withParams).resolves.toEqual(await raw);
+		expect(withParams()).toEqual(raw());
 	});
 }

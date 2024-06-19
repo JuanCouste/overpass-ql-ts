@@ -6,20 +6,24 @@ import { OverpassQueryTarget, ParamType } from "@/index";
 import { expect, it } from "@jest/globals";
 
 export function compileTargetStatementTests() {
-	it("Should compile target", async () => {
+	it("Should compile target", () => {
 		const [raw, withParams] = CompileTargetSymetric(OverpassQueryTarget.Node);
 
-		await expect(raw).resolves.toMatch(/\bnode\b/);
+		const rawResult = raw();
 
-		await expect(withParams).resolves.toEqual(await raw);
+		expect(rawResult).toMatch(/\bnode\b/);
+
+		expect(withParams()).toEqual(rawResult);
 	});
 
-	it("Should compile target with sets", async () => {
+	it("Should compile target with sets", () => {
 		const [raw, withParams] = CompileTargetSymetric(OverpassQueryTarget.Node, "set1", "set2");
 
-		await expect(raw).resolves.toMatch(/\bnode.set1.set2\b/);
+		const rawResult = raw();
 
-		await expect(withParams).resolves.toEqual(await raw);
+		expect(rawResult).toMatch(/\bnode.set1.set2\b/);
+
+		expect(withParams()).toEqual(rawResult);
 	});
 }
 

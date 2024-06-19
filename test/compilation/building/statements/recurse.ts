@@ -5,36 +5,42 @@ import { expect, it } from "@jest/globals";
 import { CompileStatementsSymetric } from "./compile";
 
 export function compileRecurseStatementTests() {
-	it("Should compile recurse statement", async () => {
+	it("Should compile recurse statement", () => {
 		const [raw, withParams] = CompileStatementsSymetric(
 			(type) => new OverpassRecurseStatement(type),
 			[Symetric.Enum(ParamType.RecurseStm, OverpassRecurseStmType.Up)],
 		);
 
-		await expect(raw).resolves.toMatch(/\</);
+		const rawResult = raw();
 
-		await expect(withParams).resolves.toEqual(await raw);
+		expect(rawResult).toMatch(/\</);
+
+		expect(withParams()).toEqual(rawResult);
 	});
 
-	it("Should compile recurse statement with set", async () => {
+	it("Should compile recurse statement with set", () => {
 		const [raw, withParams] = CompileStatementsSymetric(
 			(input) => new OverpassRecurseStatement(OverpassRecurseStmType.Down, input),
 			[Symetric.String("someSet")],
 		);
 
-		await expect(raw).resolves.toMatch(/\.someSet\b\s*\>/);
+		const rawResult = raw();
 
-		await expect(withParams).resolves.toEqual(await raw);
+		expect(rawResult).toMatch(/\.someSet\b\s*\>/);
+
+		expect(withParams()).toEqual(rawResult);
 	});
 
-	it("Should compile recurse statement with set and type", async () => {
+	it("Should compile recurse statement with set and type", () => {
 		const [raw, withParams] = CompileStatementsSymetric<[OverpassRecurseStmType, string]>(
 			(type, input) => new OverpassRecurseStatement(type, input),
 			[Symetric.Enum(ParamType.RecurseStm, OverpassRecurseStmType.UpRelations), Symetric.String("someSet")],
 		);
 
-		await expect(raw).resolves.toMatch(/\.someSet\b\s*\<\</);
+		const rawResult = raw();
 
-		await expect(withParams).resolves.toEqual(await raw);
+		expect(rawResult).toMatch(/\.someSet\b\s*\<\</);
+
+		expect(withParams()).toEqual(rawResult);
 	});
 }

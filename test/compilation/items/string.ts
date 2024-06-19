@@ -10,14 +10,13 @@ function BuildString(value: OverpassExpression<string>): CompiledItem<string> {
 }
 
 export function parametersStringTests() {
-	it("Should be fine when strings are fine", async () =>
-		await ExpectCompileResolves(BuildString, [Symetric.String("aValue")]));
+	it("Should be fine when strings are fine", () => ExpectCompileResolves(BuildString, [Symetric.String("aValue")]));
 
-	it(`Should error when strings are nullish`, async () => {
-		await ExpectCompileRejects(BuildString, [Symetric.String(null!)]);
-		await ExpectCompileRejects(BuildString, [Symetric.String(undefined!)]);
+	it(`Should error when strings are nullish`, () => {
+		ExpectCompileRejects(BuildString, [Symetric.String(null!)]);
+		ExpectCompileRejects(BuildString, [Symetric.String(undefined!)]);
 	});
 
-	it("Should error when parameter is not a string", async () =>
-		await ExpectCompileRejects(BuildString, [Symetric.String(/name/ as unknown as string)]));
+	it("Should error when parameter is not a string", () =>
+		ExpectCompileRejects(BuildString, [Symetric.String(/name/ as unknown as string)]));
 }

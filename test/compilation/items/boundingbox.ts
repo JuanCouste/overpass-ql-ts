@@ -11,32 +11,29 @@ function BuildBBox(value: OverpassExpression<OverpassBoundingBox>): CompiledItem
 }
 
 export function parametersBoundingBoxTests() {
-	it("Should be fine when bboxs are fine", async () => {
-		await ExpectCompileResolves(BuildBBox, [Symetric.BBox([1, 2, 3, 4])]);
+	it("Should be fine when bboxs are fine", () => ExpectCompileResolves(BuildBBox, [Symetric.BBox([1, 2, 3, 4])]));
+
+	it(`Should error when bboxs are nullish`, () => {
+		ExpectCompileRejects(BuildBBox, [Symetric.BBox(null!)]);
+		ExpectCompileRejects(BuildBBox, [Symetric.BBox(undefined!)]);
 	});
 
-	it(`Should error when bboxs are nullish`, async () => {
-		await ExpectCompileRejects(BuildBBox, [Symetric.BBox(null!)]);
-		await ExpectCompileRejects(BuildBBox, [Symetric.BBox(undefined!)]);
-	});
-
-	it("Should error when parameter is not a bbox", async () => {
-		await ExpectCompileRejects(BuildBBox, [Symetric.BBox("name" as unknown as OverpassBoundingBox)]);
-	});
+	it("Should error when parameter is not a bbox", () =>
+		ExpectCompileRejects(BuildBBox, [Symetric.BBox("name" as unknown as OverpassBoundingBox)]));
 
 	const directions: CardinalDirection[] = ["south", "west", "north", "east"];
 
-	it(`Should error when bbox directions are invalid`, async () => {
+	it(`Should error when bbox directions are invalid`, () => {
 		for (let i = 0; i < directions.length; i++) {
 			for (const invalid of [NaN, Infinity, null!, undefined!]) {
 				const bbox: OverpassBoundingBox = [1, 1, 1, 1];
 				bbox[i] = invalid;
-				await ExpectCompileRejects(BuildBBox, [Symetric.BBox(bbox)]);
+				ExpectCompileRejects(BuildBBox, [Symetric.BBox(bbox)]);
 			}
 		}
 	});
 
-	it(`Should error when bbox directions are out of range`, async () => {
+	it(`Should error when bbox directions are out of range`, () => {
 		const ranges: { [K in CardinalDirection]: number } = {
 			south: 90,
 			west: 180,
@@ -49,7 +46,7 @@ export function parametersBoundingBoxTests() {
 				const outOfRange = ranges[directions[i]] + 1;
 				const bbox: OverpassBoundingBox = [1, 1, 1, 1];
 				bbox[i] = sign * outOfRange;
-				await ExpectCompileRejects(BuildBBox, [Symetric.BBox(bbox)]);
+				ExpectCompileRejects(BuildBBox, [Symetric.BBox(bbox)]);
 			}
 		}
 	});

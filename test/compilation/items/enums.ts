@@ -34,21 +34,20 @@ function enumTests<E extends OverpassEnum>(enumStr: string, enumObj: any) {
 	const BuildEnum = (value: OverpassExpression<E>) => new EnumParamCompiledItem<E>(paramType, value);
 	const BuildParmm = (value: number) => Symetric.Enum<E>(paramType, value as E);
 
-	it(`Should be fine when ${enumStr} is fine`, async () =>
-		await ExpectCompileResolves(BuildEnum, [BuildParmm(values[0])]));
+	it(`Should be fine when ${enumStr} is fine`, () => ExpectCompileResolves(BuildEnum, [BuildParmm(values[0])]));
 
-	it(`Should error when ${enumStr} is invalid`, async () => {
+	it(`Should error when ${enumStr} is invalid`, () => {
 		for (const invalid of [NaN, Infinity, null!, undefined!]) {
-			await ExpectCompileRejects<[E]>(BuildEnum, [BuildParmm(invalid)]);
+			ExpectCompileRejects<[E]>(BuildEnum, [BuildParmm(invalid)]);
 		}
 	});
 
-	it(`Should error when ${enumStr} is out of range`, async () => {
+	it(`Should error when ${enumStr} is out of range`, () => {
 		for (const outOfRange of [-1, Math.max(...values) + 1]) {
-			await ExpectCompileRejects<[E]>(BuildEnum, [BuildParmm(outOfRange)]);
+			ExpectCompileRejects<[E]>(BuildEnum, [BuildParmm(outOfRange)]);
 		}
 	});
 
-	it(`Should error when parameter is not a ${enumStr}`, async () =>
-		await ExpectCompileRejects(BuildEnum, [BuildParmm("1" as unknown as number)]));
+	it(`Should error when parameter is not a ${enumStr}`, () =>
+		ExpectCompileRejects(BuildEnum, [BuildParmm("1" as unknown as number)]));
 }

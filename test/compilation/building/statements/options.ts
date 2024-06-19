@@ -13,70 +13,84 @@ import {
 import { expect, it } from "@jest/globals";
 
 export function compileOutStatementTests() {
-	it("Should compile empty options", async () => {
+	it("Should compile empty options", () => {
 		const [raw, withParams] = CompileOutStmSymetric(() => ({}), []);
 
-		await expect(withParams).resolves.toEqual(await raw);
+		const rawResult = raw();
+
+		expect(withParams()).toEqual(rawResult);
 	});
 
-	it("Should compile options with limit", async () => {
+	it("Should compile options with limit", () => {
 		const [raw, withParams] = CompileOutStmSymetric((limit) => ({ limit }), [Symetric.Number(12345)]);
 
-		await expect(raw).resolves.toMatch(/\b12345\b/);
+		const rawResult = raw();
 
-		await expect(withParams).resolves.toEqual(await raw);
+		expect(rawResult).toMatch(/\b12345\b/);
+
+		expect(withParams()).toEqual(rawResult);
 	});
 
-	it("Should compile options with target", async () => {
+	it("Should compile options with target", () => {
 		const [raw, withParams] = CompileOutStmSymetric((targetSet) => ({ targetSet }), [Symetric.String("someSet")]);
 
-		await expect(raw).resolves.toMatch(/\.\bsomeSet\b/);
+		const rawResult = raw();
 
-		await expect(withParams).resolves.toEqual(await raw);
+		expect(rawResult).toMatch(/\.\bsomeSet\b/);
+
+		expect(withParams()).toEqual(rawResult);
 	});
 
-	it("Should compile options with bbox", async () => {
+	it("Should compile options with bbox", () => {
 		const [raw, withParams] = CompileOutStmSymetric(
 			(bbox) => ({ boundingBox: bbox }),
 			[Symetric.BBox([1, 2, 3, 4])],
 		);
 
-		await expect(raw).resolves.toMatch(/\(\s*1\s*,\s*2\s*,\s*3\s*,\s*4\s*\)/);
+		const rawResult = raw();
 
-		await expect(withParams).resolves.toEqual(await raw);
+		expect(rawResult).toMatch(/\(\s*1\s*,\s*2\s*,\s*3\s*,\s*4\s*\)/);
+
+		expect(withParams()).toEqual(rawResult);
 	});
 
-	it("Should compile options with verbosity", async () => {
+	it("Should compile options with verbosity", () => {
 		const [raw, withParams] = CompileOutStmSymetric(
 			(verbosity) => ({ verbosity }),
 			[Symetric.Enum(ParamType.Verbosity, OverpassOutputVerbosity.Metadata)],
 		);
 
-		await expect(raw).resolves.toMatch(/\bmeta\b/);
+		const rawResult = raw();
 
-		await expect(withParams).resolves.toEqual(await raw);
+		expect(rawResult).toMatch(/\bmeta\b/);
+
+		expect(withParams()).toEqual(rawResult);
 	});
 
-	it("Should compile options with sort order", async () => {
+	it("Should compile options with sort order", () => {
 		const [raw, withParams] = CompileOutStmSymetric(
 			(sortOrder) => ({ sortOrder }),
 			[Symetric.Enum(ParamType.SortOrder, OverpassSortOrder.QuadtileIndex)],
 		);
 
-		await expect(raw).resolves.toMatch(/\bqt\b/);
+		const rawResult = raw();
 
-		await expect(withParams).resolves.toEqual(await raw);
+		expect(rawResult).toMatch(/\bqt\b/);
+
+		expect(withParams()).toEqual(rawResult);
 	});
 
-	it("Should compile options with geo info", async () => {
+	it("Should compile options with geo info", () => {
 		const [raw, withParams] = CompileOutStmSymetric(
 			(geoInfo) => ({ geoInfo }),
 			[Symetric.Enum(ParamType.GeoInfo, OverpassOutputGeoInfo.Geometry)],
 		);
 
-		await expect(raw).resolves.toMatch(/\bgeom\b/);
+		const rawResult = raw();
 
-		await expect(withParams).resolves.toEqual(await raw);
+		expect(rawResult).toMatch(/\bgeom\b/);
+
+		expect(withParams()).toEqual(rawResult);
 	});
 }
 

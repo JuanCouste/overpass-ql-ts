@@ -4,47 +4,52 @@ import { expect, it } from "@jest/globals";
 import { CompileEvaluatorSymetric } from "./utils";
 
 export function compileBooleanEvaluatorsTests() {
-	it("Should compile boolean evaluator", async () => {
+	it("Should compile boolean evaluator", () => {
 		const [raw, withParams] = CompileEvaluatorSymetric(
 			(boolean) => OverpassBooleanEvaluatorImp.From(boolean),
 			[Symetric.Bool(true)],
 		);
-		await expect(withParams).resolves.toEqual(await raw);
+
+		expect(withParams()).toEqual(raw());
 	});
 
-	it("Should compile wrapped boolean evaluator", async () => {
+	it("Should compile wrapped boolean evaluator", () => {
 		const [raw, withParams] = CompileEvaluatorSymetric(
 			(boolean) => OverpassBooleanEvaluatorImp.From(OverpassBooleanEvaluatorImp.From(boolean)),
 			[Symetric.Bool(true)],
 		);
-		await expect(withParams).resolves.toEqual(await raw);
+
+		expect(withParams()).toEqual(raw());
 	});
 
-	it("Should compile not evaluator", async () => {
+	it("Should compile not evaluator", () => {
 		const [raw, withParams] = CompileEvaluatorSymetric(
 			(boolean) => OverpassBooleanEvaluatorImp.From(boolean).not(),
 			[Symetric.Bool(true)],
 		);
-		await expect(withParams).resolves.toEqual(await raw);
+
+		expect(withParams()).toEqual(raw());
 	});
 
-	it("Should compile or evaluator", async () => {
+	it("Should compile or evaluator", () => {
 		const [raw, withParams] = CompileEvaluatorSymetric(
 			(boolean) => OverpassBooleanEvaluatorImp.From(true).or(boolean),
 			[Symetric.Bool(true)],
 		);
-		await expect(withParams).resolves.toEqual(await raw);
+
+		expect(withParams()).toEqual(raw());
 	});
 
-	it("Should compile and evaluator", async () => {
+	it("Should compile and evaluator", () => {
 		const [raw, withParams] = CompileEvaluatorSymetric(
 			(boolean) => OverpassBooleanEvaluatorImp.From(true).and(boolean),
 			[Symetric.Bool(true)],
 		);
-		await expect(withParams).resolves.toEqual(await raw);
+
+		expect(withParams()).toEqual(raw());
 	});
 
-	it("Should compile then else evaluator", async () => {
+	it("Should compile then else evaluator", () => {
 		const [raw, withParams] = CompileEvaluatorSymetric(
 			(th, el) =>
 				OverpassBooleanEvaluatorImp.From(true)
@@ -52,10 +57,11 @@ export function compileBooleanEvaluatorsTests() {
 					.else(OverpassStringEvaluatorImp.From(el)),
 			[Symetric.String("then"), Symetric.String("else")],
 		);
-		await expect(withParams).resolves.toEqual(await raw);
+
+		expect(withParams()).toEqual(raw());
 	});
 
-	it("Should compile conditional evaluator", async () => {
+	it("Should compile conditional evaluator", () => {
 		const [raw, withParams] = CompileEvaluatorSymetric(
 			(th, el) =>
 				OverpassBooleanEvaluatorImp.From(true).conditional(
@@ -64,6 +70,7 @@ export function compileBooleanEvaluatorsTests() {
 				),
 			[Symetric.String("then"), Symetric.String("else")],
 		);
-		await expect(withParams).resolves.toEqual(await raw);
+
+		expect(withParams()).toEqual(raw());
 	});
 }
