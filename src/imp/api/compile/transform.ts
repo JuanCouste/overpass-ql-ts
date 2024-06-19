@@ -1,7 +1,10 @@
 import { CompiledItem } from "@/model";
 
 export class TransformCompiledItem<T> implements CompiledItem<string> {
-	constructor(private readonly item: CompiledItem<T>, private readonly callback: (raw: T) => string) {}
+	constructor(
+		private readonly item: CompiledItem<T>,
+		private readonly callback: (raw: T) => string,
+	) {}
 
 	isSimplifiable(): boolean {
 		return this.item.isSimplifiable();

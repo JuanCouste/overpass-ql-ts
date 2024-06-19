@@ -3,7 +3,10 @@ import { BaseParamCompiledItem } from "./base";
 import { Axis, isOutOfRange, isValidNumber } from "./utils";
 
 export class GeoPosParamCompiledItem extends BaseParamCompiledItem<OverpassGeoPos, number> {
-	constructor(value: OverpassExpression<OverpassGeoPos>, private readonly coord: keyof OverpassGeoPos) {
+	constructor(
+		value: OverpassExpression<OverpassGeoPos>,
+		private readonly coord: keyof OverpassGeoPos,
+	) {
 		super(value);
 	}
 

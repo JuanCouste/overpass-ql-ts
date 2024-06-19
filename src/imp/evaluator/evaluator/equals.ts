@@ -2,7 +2,10 @@ import { CompileUtils, CompiledItem, OverpassEvaluator } from "@/model";
 import { OverpassEvaluatorNodeImp } from "./node";
 
 export class OverpassEqualsEvaluatorNode<T> extends OverpassEvaluatorNodeImp<boolean> {
-	constructor(private readonly self: OverpassEvaluator<T>, private readonly other: OverpassEvaluator<T>) {
+	constructor(
+		private readonly self: OverpassEvaluator<T>,
+		private readonly other: OverpassEvaluator<T>,
+	) {
 		super();
 	}
 
@@ -12,7 +15,10 @@ export class OverpassEqualsEvaluatorNode<T> extends OverpassEvaluatorNodeImp<boo
 }
 
 export class OverpassNotEqualsEvaluatorNode<T> extends OverpassEvaluatorNodeImp<boolean> {
-	constructor(private readonly self: OverpassEvaluator<T>, private readonly other: OverpassEvaluator<T>) {
+	constructor(
+		private readonly self: OverpassEvaluator<T>,
+		private readonly other: OverpassEvaluator<T>,
+	) {
 		super();
 	}
 
