@@ -16,7 +16,7 @@ export class OverpassByIdStatement extends ChainableOverpassStatementBase {
 		super(target, chain);
 	}
 
-	compileChainable(u: CompileUtils): CompiledItem[] {
+	compileChainable(u: CompileUtils): CompiledItem<string>[] {
 		if (this.id instanceof Array) {
 			const ids = this.id.map((id) => u.number(id));
 			return [u.template`(id:${u.join(ids, ", ")})`];

@@ -2,19 +2,19 @@ import { CompileUtils, CompiledItem, OverpassEvaluator } from "@/model";
 import { OverpassEvaluatorNodeImp } from "./node";
 
 export class OverpassCountTagsEvaluatorNode extends OverpassEvaluatorNodeImp<number> {
-	compile(u: CompileUtils): CompiledItem {
+	compile(u: CompileUtils): CompiledItem<string> {
 		return u.raw("count_tags()");
 	}
 }
 
 export class OverpassCountMembersEvaluatorNode extends OverpassEvaluatorNodeImp<number> {
-	compile(u: CompileUtils): CompiledItem {
+	compile(u: CompileUtils): CompiledItem<string> {
 		return u.raw("count_members()");
 	}
 }
 
 export class OverpassCountMembersDistinctEvaluatorNode extends OverpassEvaluatorNodeImp<number> {
-	compile(u: CompileUtils): CompiledItem {
+	compile(u: CompileUtils): CompiledItem<string> {
 		return u.raw("count_distinct_members()");
 	}
 }
@@ -24,7 +24,7 @@ export class OverpassCountByRoleEvaluatorNode extends OverpassEvaluatorNodeImp<n
 		super();
 	}
 
-	compile(u: CompileUtils): CompiledItem {
+	compile(u: CompileUtils): CompiledItem<string> {
 		return u.template`count_by_role(${this.role.compile(u)})`;
 	}
 }
@@ -34,7 +34,7 @@ export class OverpassCountByRoleDistinctEvaluatorNode extends OverpassEvaluatorN
 		super();
 	}
 
-	compile(u: CompileUtils): CompiledItem {
+	compile(u: CompileUtils): CompiledItem<string> {
 		return u.template`count_distinct_by_role(${this.role.compile(u)})`;
 	}
 }

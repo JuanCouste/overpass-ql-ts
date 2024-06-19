@@ -23,7 +23,7 @@ export class OverpassStringEvaluatorNode extends OverpassEvaluatorNodeImp<string
 		super();
 	}
 
-	compile(u: CompileUtils): CompiledItem {
+	compile(u: CompileUtils): CompiledItem<string> {
 		return u.qString(this.expression);
 	}
 }

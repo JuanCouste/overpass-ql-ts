@@ -36,7 +36,7 @@ export abstract class OverpassEvaluatorImp<T> implements OverpassEvaluator<T> {
 		);
 	}
 
-	compile(utils: CompileUtils): CompiledItem {
+	compile(utils: CompileUtils): CompiledItem<string> {
 		return this.node.compile(utils);
 	}
 

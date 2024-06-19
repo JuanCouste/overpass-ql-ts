@@ -1,290 +1,97 @@
-import { enumObjectToArray } from "@/imp/api/enum";
 import {
-	ActualParamType,
 	CompileUtils,
 	CompiledItem,
 	CompiledOverpassBoundingBox,
 	CompiledOverpassGeoPos,
-	EnumParamType,
 	OverpassBoundingBox,
-	OverpassEnum,
 	OverpassExpression,
 	OverpassGeoPos,
 	OverpassOutputGeoInfo,
 	OverpassOutputVerbosity,
-	OverpassParameterError,
 	OverpassQueryTarget,
 	OverpassRecurseStmType,
 	OverpassSortOrder,
 	OverpassStringSanitizer,
-	ParamItem,
 	ParamType,
 } from "@/model";
-import { OverpassParamCompiledItem } from "./param";
-import { OverpassParentCompiledItem } from "./parent";
-
-const ENUM_STRINGS: { [K in EnumParamType]: string[] } = {
-	[ParamType.Target]: enumObjectToArray<OverpassQueryTarget, string>({
-		[OverpassQueryTarget.Node]: "node",
-		[OverpassQueryTarget.Way]: "way",
-		[OverpassQueryTarget.NodeWay]: "nw",
-		[OverpassQueryTarget.Relation]: "rel",
-		[OverpassQueryTarget.NodeRelation]: "nr",
-		[OverpassQueryTarget.WayRelation]: "wr",
-		[OverpassQueryTarget.NodeWayRelation]: "nwr",
-		[OverpassQueryTarget.Area]: "area",
-		[OverpassQueryTarget.Derived]: "derived",
-	}),
-
-	[ParamType.Verbosity]: enumObjectToArray<OverpassOutputVerbosity, string>({
-		[OverpassOutputVerbosity.Ids]: "ids",
-		[OverpassOutputVerbosity.Geometry]: "skel",
-		[OverpassOutputVerbosity.Body]: "body",
-		[OverpassOutputVerbosity.Tags]: "tags",
-		[OverpassOutputVerbosity.Metadata]: "meta",
-	}),
-
-	[ParamType.GeoInfo]: enumObjectToArray<OverpassOutputGeoInfo, string>({
-		[OverpassOutputGeoInfo.Geometry]: "geom",
-		[OverpassOutputGeoInfo.BoundingBox]: "bb",
-		[OverpassOutputGeoInfo.Center]: "center",
-	}),
-
-	[ParamType.SortOrder]: enumObjectToArray<OverpassSortOrder, string>({
-		[OverpassSortOrder.Ascending]: "asc",
-		[OverpassSortOrder.QuadtileIndex]: "qt",
-	}),
-
-	[ParamType.RecurseStm]: enumObjectToArray<OverpassRecurseStmType, string>({
-		[OverpassRecurseStmType.Up]: "<",
-		[OverpassRecurseStmType.Down]: ">",
-		[OverpassRecurseStmType.UpRelations]: "<<",
-		[OverpassRecurseStmType.DownRelations]: ">>",
-	}),
-};
-
-const BBOX_SEED: OverpassBoundingBox = [0, 0, 0, 0];
-
-const DIRECTIONS = ["south", "west", "north", "east"];
-
-enum Axis {
-	Lat,
-	Lon,
-}
-
-const AXIS_RANGE: { [K in Axis]: number } = { [Axis.Lat]: 90, [Axis.Lon]: 180 };
+import {
+	BBoxParamCompiledItem,
+	BooleanParamCompiledItem,
+	DateParamCompiledItem,
+	EnumParamCompiledItem,
+	GeoPosParamCompiledItem,
+	NumberParamCompiledItem,
+	RegExpParamCompiledItem,
+	SetParamCompiledItem,
+	StringParamCompiledItem,
+} from "./param";
+import { ParentCompiledItem } from "./parent";
 
 export class OverpassCompileUtils implements CompileUtils {
-	public readonly nl: CompiledItem;
-
-	private readonly trueEvaluator: CompiledItem;
-	private readonly falseEvaluator: CompiledItem;
+	public readonly nl: CompiledItem<string>;
 
 	constructor(private readonly sanitizer: OverpassStringSanitizer) {
 		this.nl = this.raw("\n");
-
-		this.trueEvaluator = this.raw("1");
-		this.falseEvaluator = this.raw("0");
 	}
 
-	private paramItem<T>(value: OverpassExpression<T>, callback: (item: T) => CompiledItem) {
-		if (this.isParam(value)) {
-			return new OverpassParamCompiledItem<T>(value, callback);
-		} else {
-			return callback(value);
-		}
+	qString(value: OverpassExpression<string>): CompiledItem<string> {
+		return new StringParamCompiledItem(this.sanitizer, value);
 	}
 
-	qString(value: OverpassExpression<string>): CompiledItem {
-		return this.paramItem(value, (string) => {
-			if (typeof string != "string") {
-				throw new OverpassParameterError(`Unexpected string value (${string})`);
-			}
-
-			const sanitized = this.sanitizer.sanitize(string);
-
-			return this.template`"${this.raw(sanitized)}"`;
-		});
+	number(value: OverpassExpression<number>): CompiledItem<number> {
+		return new NumberParamCompiledItem(value);
 	}
 
-	private isNumber(number: number): boolean {
-		return typeof number == "number" && !isNaN(number) && isFinite(number);
+	set(value: OverpassExpression<string>): CompiledItem<string> {
+		return new SetParamCompiledItem(value);
 	}
 
-	number(value: OverpassExpression<number>): CompiledItem {
-		return this.paramItem(value, (number) => {
-			if (!this.isNumber(number)) {
-				throw new OverpassParameterError(`Unexpected number value (${number})`);
-			}
-
-			return this.raw(number.toString());
-		});
+	target(value: OverpassExpression<OverpassQueryTarget>): CompiledItem<OverpassQueryTarget> {
+		return new EnumParamCompiledItem(ParamType.Target, value);
 	}
 
-	set(value: OverpassExpression<string>): CompiledItem {
-		return this.paramItem(value, (set) => {
-			if (typeof set != "string") {
-				throw new OverpassParameterError(`Unexpected set value (${set})`);
-			}
-
-			return this.raw(set);
-		});
+	geoInfo(value: OverpassExpression<OverpassOutputGeoInfo>): CompiledItem<OverpassOutputGeoInfo> {
+		return new EnumParamCompiledItem(ParamType.GeoInfo, value);
 	}
 
-	private getEnumObject(type: EnumParamType) {
-		switch (type) {
-			case ParamType.Target:
-				return OverpassQueryTarget;
-			case ParamType.Verbosity:
-				return OverpassOutputVerbosity;
-			case ParamType.GeoInfo:
-				return OverpassOutputGeoInfo;
-			case ParamType.SortOrder:
-				return OverpassSortOrder;
-			case ParamType.RecurseStm:
-				return OverpassRecurseStmType;
-		}
+	sortOrder(value: OverpassExpression<OverpassSortOrder>): CompiledItem<OverpassSortOrder> {
+		return new EnumParamCompiledItem(ParamType.SortOrder, value);
 	}
 
-	private enum<T extends OverpassEnum>(type: EnumParamType, value: OverpassExpression<T>): CompiledItem {
-		return this.paramItem(value, (enumValue) => {
-			if (!this.isNumber(enumValue)) {
-				throw new OverpassParameterError(`Unexpected target value (${enumValue})`);
-			}
-
-			const enumObject = this.getEnumObject(type);
-
-			if (!(enumValue in enumObject)) {
-				throw new OverpassParameterError(`Unexpected ${ParamType[type]} value (${enumValue})`);
-			}
-
-			return this.raw(ENUM_STRINGS[type][enumValue]);
-		});
+	verbosity(value: OverpassExpression<OverpassOutputVerbosity>): CompiledItem<OverpassOutputVerbosity> {
+		return new EnumParamCompiledItem(ParamType.Verbosity, value);
 	}
 
-	target(value: OverpassExpression<OverpassQueryTarget>): CompiledItem {
-		return this.enum(ParamType.Target, value);
+	recurse(value: OverpassExpression<OverpassRecurseStmType>): CompiledItem<OverpassRecurseStmType> {
+		return new EnumParamCompiledItem(ParamType.RecurseStm, value);
 	}
 
-	geoInfo(value: OverpassExpression<OverpassOutputGeoInfo>): CompiledItem {
-		return this.enum(ParamType.GeoInfo, value);
+	regExp(value: OverpassExpression<RegExp>): CompiledItem<RegExp> {
+		return new RegExpParamCompiledItem(value);
 	}
 
-	sortOrder(value: OverpassExpression<OverpassSortOrder>): CompiledItem {
-		return this.enum(ParamType.SortOrder, value);
-	}
-
-	verbosity(value: OverpassExpression<OverpassOutputVerbosity>): CompiledItem {
-		return this.enum(ParamType.Verbosity, value);
-	}
-
-	recurse(value: OverpassExpression<OverpassRecurseStmType>): CompiledItem {
-		return this.enum(ParamType.RecurseStm, value);
-	}
-
-	regExp(value: OverpassExpression<RegExp>): CompiledItem {
-		return this.paramItem(value, (regExp) => {
-			if (!(regExp instanceof RegExp)) {
-				throw new OverpassParameterError(`Unexpected RegExp value (${regExp})`);
-			}
-
-			return this.template`"${this.raw(regExp.source)}"`;
-		});
-	}
-
-	date(value: OverpassExpression<Date>): CompiledItem {
-		return this.paramItem(value, (date) => {
-			if (!(date instanceof Date)) {
-				throw new OverpassParameterError(`Unexpected Date value (${date})`);
-			}
-
-			if (isNaN(date.getTime())) {
-				throw new OverpassParameterError(`Invalid date (${date.getTime()})`);
-			}
-
-			return this.raw(date.toISOString());
-		});
-	}
-
-	private isOutOfRange(number: number, axis: Axis): boolean {
-		return Math.abs(number) > AXIS_RANGE[axis];
+	date(value: OverpassExpression<Date>): CompiledItem<Date> {
+		return new DateParamCompiledItem(value);
 	}
 
 	bbox(bboxExp: OverpassExpression<OverpassBoundingBox>): CompiledOverpassBoundingBox {
-		const bbox = BBOX_SEED.map((_, dirIndex) =>
-			this.paramItem(bboxExp, (bbox) => {
-				if (bbox == null) {
-					throw new OverpassParameterError(`Unexpected BoundingBox value (${bbox})`);
-				}
-
-				const value = bbox[dirIndex];
-
-				if (this.isOutOfRange(value, dirIndex % 2 == 0 ? Axis.Lat : Axis.Lon)) {
-					throw new OverpassParameterError(`BoundingBox ${DIRECTIONS[dirIndex]} out of range (${value})`);
-				}
-
-				return this.number(value);
-			}),
-		);
-
-		return bbox as CompiledOverpassBoundingBox;
-	}
-
-	private geoPosCoord(geoPosExp: OverpassExpression<OverpassGeoPos>, coord: keyof OverpassGeoPos): CompiledItem {
-		return this.paramItem(geoPosExp, (geoPos) => {
-			if (geoPos == null) {
-				throw new OverpassParameterError(`Unexpected GeoPos value (${geoPos})`);
-			}
-
-			const value = geoPos[coord];
-
-			if (this.isOutOfRange(value, coord == "lat" ? Axis.Lat : Axis.Lon)) {
-				throw new OverpassParameterError(`GeoPos ${coord} out of range (${value})`);
-			}
-
-			return this.number(value);
-		});
+		return BBoxParamCompiledItem.BBox(bboxExp);
 	}
 
 	geoPos(value: OverpassExpression<OverpassGeoPos>): CompiledOverpassGeoPos {
-		return {
-			lat: this.geoPosCoord(value, "lat"),
-			lon: this.geoPosCoord(value, "lon"),
-		};
+		return GeoPosParamCompiledItem.GeoPos(value);
 	}
 
-	boolean(value: OverpassExpression<boolean>): CompiledItem {
-		return this.paramItem(value, (boolean) => {
-			if (boolean == null) {
-				throw new OverpassParameterError(`Unexpected boolean value (${boolean})`);
-			}
-
-			if (typeof boolean != "boolean") {
-				throw new OverpassParameterError(`Unexpected boolean value (${boolean})`);
-			}
-
-			return boolean ? this.trueEvaluator : this.falseEvaluator;
-		});
+	boolean(value: OverpassExpression<boolean>): CompiledItem<boolean> {
+		return new BooleanParamCompiledItem(value);
 	}
 
-	isParam<T>(value: OverpassExpression<T>): value is ParamItem<T> {
-		if (typeof value == "object") {
-			return value != null && "type" in value && value.type in ParamType;
-		} else {
-			return false;
-		}
+	raw(string: string): CompiledItem<string> {
+		return new ParentCompiledItem([string]);
 	}
 
-	isSpecificParam<T>(value: any, type: ActualParamType<T>): value is ParamItem<T> {
-		return this.isParam(value) && value.type == type;
-	}
-
-	raw(string: string): CompiledItem {
-		return new OverpassParentCompiledItem([string]);
-	}
-
-	join(expressions: CompiledItem[], separator: string): CompiledItem {
-		return new OverpassParentCompiledItem(
+	join(expressions: CompiledItem<any>[], separator: string): CompiledItem<string> {
+		return new ParentCompiledItem(
 			expressions
 				.map((part) => [part, separator])
 				.flat()
@@ -292,8 +99,8 @@ export class OverpassCompileUtils implements CompileUtils {
 		);
 	}
 
-	template(strings: TemplateStringsArray, ...expr: CompiledItem[]): CompiledItem {
-		return new OverpassParentCompiledItem(
+	template(strings: TemplateStringsArray, ...expr: CompiledItem<any>[]): CompiledItem<string> {
+		return new ParentCompiledItem(
 			strings.raw
 				.map((part, i) => [part, expr[i]])
 				.flat()

@@ -6,7 +6,7 @@ export class OverpassIsNumberEvaluatorNode extends OverpassEvaluatorNodeImp<bool
 		super();
 	}
 
-	compile(u: CompileUtils): CompiledItem {
+	compile(u: CompileUtils): CompiledItem<string> {
 		return u.template`is_number(${this.self.compile(u)})`;
 	}
 }
@@ -16,7 +16,7 @@ export class OverpassParseNumberEvaluatorNode extends OverpassEvaluatorNodeImp<n
 		super();
 	}
 
-	compile(u: CompileUtils): CompiledItem {
+	compile(u: CompileUtils): CompiledItem<string> {
 		return u.template`number(${this.self.compile(u)})`;
 	}
 }

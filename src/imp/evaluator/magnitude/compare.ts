@@ -17,7 +17,7 @@ export class OverpassComparissonEvaluatorNode<T extends number | Date> extends O
 		super();
 	}
 
-	compile(u: CompileUtils): CompiledItem {
+	compile(u: CompileUtils): CompiledItem<string> {
 		const op = u.raw(COMPARISSON_OPERATORS[this.operator]);
 		return u.template`(${this.left.compile(u)} ${op} ${this.right.compile(u)})`;
 	}

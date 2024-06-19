@@ -6,26 +6,26 @@ import {
 	OverpassRecurseStmType,
 	OverpassSortOrder,
 } from "@/model/enum";
-import { ActualParamType, OverpassExpression, ParamItem } from "@/model/expression";
+import { OverpassExpression } from "@/model/expression";
 import { OverpassBoundingBox, OverpassGeoPos } from "@/model/types";
 
 export interface CompilableItem {
-	compile(utils: CompileUtils): CompiledItem;
+	compile(utils: CompileUtils): CompiledItem<string>;
 }
 
 export interface CompileUtils {
-	readonly nl: CompiledItem;
+	readonly nl: CompiledItem<string>;
 
 	/**
 	 * @param value A string that should be sanitized
 	 * @returns the prepared string with quotes included
 	 */
-	qString(value: OverpassExpression<string>): CompiledItem;
+	qString(value: OverpassExpression<string>): CompiledItem<string>;
 	/** @param value A number that should be sanitized */
-	number(value: OverpassExpression<number>): CompiledItem;
+	number(value: OverpassExpression<number>): CompiledItem<number>;
 	/** @param value A regexp that should be prepared */
-	regExp(value: OverpassExpression<RegExp>): CompiledItem;
-	date(value: OverpassExpression<Date>): CompiledItem;
+	regExp(value: OverpassExpression<RegExp>): CompiledItem<RegExp>;
+	date(value: OverpassExpression<Date>): CompiledItem<Date>;
 	/**
 	 * @param value A bbox that should be prepared
 	 * @returns the respective prepared parts [s, w, n, e]
@@ -37,36 +37,32 @@ export interface CompileUtils {
 	 */
 	geoPos(value: OverpassExpression<OverpassGeoPos>): CompiledOverpassGeoPos;
 	/** @param value A set name */
-	set(value: OverpassExpression<string>): CompiledItem;
+	set(value: OverpassExpression<string>): CompiledItem<string>;
 
 	/** @param value A boolean value for use inside an evaluator */
-	boolean(value: OverpassExpression<boolean>): CompiledItem;
+	boolean(value: OverpassExpression<boolean>): CompiledItem<boolean>;
 
 	/** @param value A target that should be prepared */
-	target(value: OverpassExpression<OverpassQueryTarget>): CompiledItem;
+	target(value: OverpassExpression<OverpassQueryTarget>): CompiledItem<OverpassQueryTarget>;
 	/** @param value A verbosity that should be prepared */
-	verbosity(value: OverpassExpression<OverpassOutputVerbosity>): CompiledItem;
+	verbosity(value: OverpassExpression<OverpassOutputVerbosity>): CompiledItem<OverpassOutputVerbosity>;
 	/** @param value A geoInfo that should be prepared */
-	geoInfo(value: OverpassExpression<OverpassOutputGeoInfo>): CompiledItem;
+	geoInfo(value: OverpassExpression<OverpassOutputGeoInfo>): CompiledItem<OverpassOutputGeoInfo>;
 	/** @param value A sortOrder that should be prepared */
-	sortOrder(value: OverpassExpression<OverpassSortOrder>): CompiledItem;
+	sortOrder(value: OverpassExpression<OverpassSortOrder>): CompiledItem<OverpassSortOrder>;
 	/** @param value A recurse type that should be prepared */
-	recurse(value: OverpassExpression<OverpassRecurseStmType>): CompiledItem;
-
-	isParam<T>(value: OverpassExpression<T>): value is ParamItem<T>;
-	/** @returns wheter {@link value} is a {@link ParamItem<T>} and it's type is {@link type} */
-	isSpecificParam<T>(value: OverpassExpression<any>, type: ActualParamType<T>): value is ParamItem<T>;
+	recurse(value: OverpassExpression<OverpassRecurseStmType>): CompiledItem<OverpassRecurseStmType>;
 
 	/** A string that should ve used as is */
-	raw(string: string): CompiledItem;
+	raw(string: string): CompiledItem<string>;
 	/** Join several expressions into one */
-	join(expressions: CompiledItem[], separator: string): CompiledItem;
+	join(expressions: CompiledItem<any>[], separator: string): CompiledItem<string>;
 	/**
 	 * Build an item with a template using other expressions
 	 * @example
 	 * 	u.template`node(${u.number(id)})`
 	 */
-	template(strings: TemplateStringsArray, ...expr: CompiledItem[]): CompiledItem;
+	template(strings: TemplateStringsArray, ...expr: CompiledItem<any>[]): CompiledItem<string>;
 }
 
-export type CompileFunction = (utils: CompileUtils) => CompiledItem;
+export type CompileFunction = (utils: CompileUtils) => CompiledItem<any>;

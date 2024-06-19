@@ -9,12 +9,12 @@ export class OverpassRecurseStatement extends ComposableOverpassStatementBase {
 		super();
 	}
 
-	compile(u: CompileUtils): CompiledItem {
+	compile(u: CompileUtils): CompiledItem<string> {
 		const recurse = u.recurse(this.recurseType);
 		if (this.set != null) {
 			return u.template`.${u.set(this.set)} ${recurse}`;
 		} else {
-			return recurse;
+			return recurse.asString();
 		}
 	}
 }

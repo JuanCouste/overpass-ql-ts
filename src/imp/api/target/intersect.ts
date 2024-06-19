@@ -24,7 +24,7 @@ export class OverpassChainableIntersectStatement
 		return new OverpassSetStatement(this, set);
 	}
 
-	compile(u: CompileUtils): CompiledItem {
+	compile(u: CompileUtils): CompiledItem<string> {
 		return this.target.compile(u);
 	}
 }

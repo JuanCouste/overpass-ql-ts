@@ -10,11 +10,11 @@ export class OverpassStatementTargetImp implements OverpassStatementTarget {
 		return new OverpassStatementTargetImp(this.target, [set1, ...sets]);
 	}
 
-	compile(u: CompileUtils): CompiledItem {
+	compile(u: CompileUtils): CompiledItem<string> {
 		const target = u.target(this.target);
 		if (this.sets.length == 0) {
 			// ie: node => node(id)
-			return target;
+			return target.asString();
 		} else {
 			// ie: node.set1.set2 => node.set1.set2(id)
 			const sets = this.sets.map((set) => u.set(set));

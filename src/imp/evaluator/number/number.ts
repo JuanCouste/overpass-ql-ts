@@ -18,8 +18,8 @@ export class OverpassNumberEvaluatorNode extends OverpassEvaluatorNodeImp<number
 		super();
 	}
 
-	compile(u: CompileUtils): CompiledItem {
-		return u.number(this.expression);
+	compile(u: CompileUtils): CompiledItem<string> {
+		return u.number(this.expression).asString();
 	}
 }
 

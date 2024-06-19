@@ -6,7 +6,7 @@ export class OverpassAsBooleanEvaluatorNode extends OverpassEvaluatorNodeImp<boo
 		super();
 	}
 
-	compile(u: CompileUtils): CompiledItem {
+	compile(u: CompileUtils): CompiledItem<string> {
 		return this.self.compile(u);
 	}
 }

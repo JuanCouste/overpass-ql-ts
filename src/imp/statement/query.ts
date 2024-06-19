@@ -16,7 +16,7 @@ export class OverpassByTagsStatement extends ChainableOverpassStatementBase {
 		super(target, chain);
 	}
 
-	compileChainable(u: CompileUtils): CompiledItem[] {
+	compileChainable(u: CompileUtils): CompiledItem<string>[] {
 		return this.tags.map((tag) => tag.compile(u));
 	}
 }

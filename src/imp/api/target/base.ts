@@ -31,6 +31,7 @@ import {
 	OverpassTagFilterBuilder,
 	OverpassTagFilterHelper,
 	OverpassTargetState,
+	ParamItem,
 	ParamType,
 } from "@/model";
 
@@ -49,18 +50,18 @@ export abstract class OverpassTargetStateBase implements OverpassTargetState {
 
 	private isRegExpTuple(tuple: OverpassQueryTagFilterTuple): tuple is OverpassQueryRegExpTagFilterTuple {
 		const prop = tuple[0];
-		return prop instanceof RegExp || this.utils.isSpecificParam<RegExp>(prop, ParamType.RegExp);
+		return prop instanceof RegExp || (prop instanceof ParamItem && prop.isType(ParamType.RegExp));
 	}
 
 	private anyFilterToHelper(anyTag: AnyOverpassTagFilter): OverpassTagFilterHelper {
 		if (anyTag == null) {
 			throw new OverpassParameterError(`Unexpected query filter value null`);
-		} else if (typeof anyTag == "string" || this.utils.isSpecificParam<string>(anyTag, ParamType.String)) {
+		} else if (typeof anyTag == "string" || (anyTag instanceof ParamItem && anyTag.isType(ParamType.String))) {
 			return this.tagBuilder.equals(anyTag);
-		} else if (anyTag instanceof RegExp || this.utils.isSpecificParam<RegExp>(anyTag, ParamType.RegExp)) {
+		} else if (anyTag instanceof RegExp || (anyTag instanceof ParamItem && anyTag.isType(ParamType.RegExp))) {
 			return this.tagBuilder.regExp(anyTag);
 		} else {
-			return anyTag;
+			return anyTag as OverpassTagFilterHelper;
 		}
 	}
 

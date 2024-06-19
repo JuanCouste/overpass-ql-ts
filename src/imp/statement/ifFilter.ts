@@ -16,7 +16,7 @@ export class OverpassIfFilterStatement extends ChainableOverpassStatementBase {
 		super(target, chain);
 	}
 
-	compileChainable(u: CompileUtils): CompiledItem[] {
+	compileChainable(u: CompileUtils): CompiledItem<string>[] {
 		return [u.template`(if: ${this.predicate.compile(u)})`];
 	}
 }

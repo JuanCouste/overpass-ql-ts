@@ -4,7 +4,7 @@ import { AnyParamValue, CompiledItem, OverpassParameterError } from "@/model";
 import { expect } from "@jest/globals";
 
 export async function ExpectCompileResolves<Args extends AnyParamValue[]>(
-	buildItem: (...args: SymetricArgsExpression<Args>) => CompiledItem,
+	buildItem: (...args: SymetricArgsExpression<Args>) => CompiledItem<any>,
 	args: SymetricArgumentsObject<Args>,
 ) {
 	const [raw, withParams] = CompileSymetric(buildItem, args);
@@ -15,7 +15,7 @@ export async function ExpectCompileResolves<Args extends AnyParamValue[]>(
 }
 
 export async function ExpectCompileRejects<Args extends AnyParamValue[]>(
-	buildItem: (...args: SymetricArgsExpression<Args>) => CompiledItem,
+	buildItem: (...args: SymetricArgsExpression<Args>) => CompiledItem<any>,
 	args: SymetricArgumentsObject<Args>,
 ) {
 	const [raw, withParams] = CompileSymetric(buildItem, args);

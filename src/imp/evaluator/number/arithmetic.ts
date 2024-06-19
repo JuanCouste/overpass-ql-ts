@@ -17,7 +17,7 @@ export class OverpassArithmeticEvaluatorNode extends OverpassEvaluatorNodeImp<nu
 		super();
 	}
 
-	compile(u: CompileUtils): CompiledItem {
+	compile(u: CompileUtils): CompiledItem<string> {
 		const op = u.raw(ARITHMETIC_OPERATORS[this.operator]);
 		return u.template`(${this.left.compile(u)} ${op} ${this.right.compile(u)})`;
 	}

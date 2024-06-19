@@ -64,7 +64,7 @@ export function apiMethodsTests() {
 	it("Should not allow params in execQuery", async () => {
 		const api: OverpassApiObject = BuildApi();
 
-		const param: ParamItem<number> = { index: 0, type: ParamType.Number };
+		const param = new ParamItem<number>(0, ParamType.Number);
 
 		const promise = api.execQuery((u) => u.number(param));
 
@@ -83,7 +83,7 @@ export function apiMethodsTests() {
 	it("Should not allow params in buildQuery", () => {
 		const api: OverpassApiObject = BuildApi();
 
-		const param: ParamItem<number> = { index: 0, type: ParamType.Number };
+		const param = new ParamItem<number>(0, ParamType.Number);
 
 		const fn = () => api.buildQuery((s) => s.statement((u) => u.number(param)));
 

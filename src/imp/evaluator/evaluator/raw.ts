@@ -6,7 +6,7 @@ export class OverpassRawEvaluatorNode<T> extends OverpassEvaluatorNodeImp<T> {
 		super();
 	}
 
-	compile(u: CompileUtils): CompiledItem {
-		return this.compileFn(u);
+	compile(u: CompileUtils): CompiledItem<string> {
+		return this.compileFn(u).asString().asString();
 	}
 }

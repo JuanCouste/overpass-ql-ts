@@ -22,6 +22,7 @@ import {
 	OverpassStatement,
 	OverpassStatus,
 	OverpassTagFilterBuilder,
+	ParamItem,
 } from "@/model";
 import { OverpassStateImp } from "./state";
 
@@ -91,7 +92,7 @@ export class OverpassApiObjectImp implements OverpassApiObject {
 		statements: OverpassStatement[],
 		options?: OverpassOutputOptions,
 		settings?: OverpassSettings,
-	): CompiledItem {
+	): CompiledItem<string> {
 		if (statements.length == 0) {
 			throw new Error(`You should provide at least 1 statement ... try node.byId(5431618355)`);
 		}
@@ -167,7 +168,7 @@ export class OverpassApiObjectImp implements OverpassApiObject {
 	}
 
 	public async execQuery(queryInput: string | CompileFunction): Promise<OverpassJsonOutput | string> {
-		const query = typeof queryInput == "string" ? queryInput : queryInput(this.compileUtils).compile([]);
+		const query = typeof queryInput == "string" ? queryInput : queryInput(this.compileUtils).asString().simplify();
 
 		const httpResponse = await this.doRequest(query);
 
@@ -224,7 +225,7 @@ export class OverpassApiObjectImp implements OverpassApiObject {
 		optionsInput?: O,
 		settingsInput?: S,
 	): OverpassApiFunction<Args, S, O> {
-		const types = argTypes.map((type, index) => ({ index, type })) as CreateFunctionArgs<Args>;
+		const types = argTypes.map((type, i) => new ParamItem<any>(i, type)) as CreateFunctionArgs<Args>;
 
 		const state = OverpassStateImp.Build(this.compileUtils, this.tagBuilder, this.evaluatorItemBuilder);
 

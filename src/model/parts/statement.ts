@@ -15,7 +15,7 @@ export interface ComposableOverpassStatement extends OverpassStatement {
 }
 
 export interface ChainableOverpassStatement extends ComposableOverpassStatement {
-	compileChainable(utils: CompileUtils): CompiledItem[];
+	compileChainable(utils: CompileUtils): CompiledItem<string>[];
 }
 
 export interface OverpassStatementTarget extends CompilableItem {

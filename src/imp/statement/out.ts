@@ -6,10 +6,10 @@ export class OverpassOutStatement extends OverpassStatementBase {
 		super();
 	}
 
-	compile(u: CompileUtils): CompiledItem {
+	compile(u: CompileUtils): CompiledItem<string> {
 		const { verbosity, geoInfo, boundingBox, sortOrder, limit, targetSet } = this.options;
 
-		const params: CompiledItem[] = [];
+		const params: CompiledItem<any>[] = [];
 
 		if (verbosity != null) {
 			params.push(u.verbosity(verbosity));

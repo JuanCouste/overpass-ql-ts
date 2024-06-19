@@ -1,56 +1,70 @@
 import { CompiledItem } from "@/model";
+import { TransformCompiledItem } from "./transform";
 
-type SubParts = string | CompiledItem;
+type SubParts = string | CompiledItem<any>;
+type StringParts = string | CompiledItem<string>;
 
-export class OverpassParentCompiledItem implements CompiledItem {
-	private readonly subParts: SubParts[];
+export class ParentCompiledItem implements CompiledItem<string> {
+	private readonly subParts: StringParts[];
 
-	constructor(
-		parts: SubParts[],
-		private readonly manipulation?: (raw: string) => string,
-	) {
-		this.subParts = parts
-			.map((part) => (part instanceof OverpassParentCompiledItem ? part.flatten() : [part]))
+	constructor(parts: SubParts[]) {
+		this.subParts = ParentCompiledItem.SimplifyAndFlatten(parts);
+	}
+
+	private static SimplifyAndFlatten(parts: SubParts[]): StringParts[] {
+		const subParts = parts
+			.map<StringParts[]>((part) => {
+				if (typeof part == "string") return [part];
+				else if (part instanceof ParentCompiledItem) return part.subParts;
+				else {
+					const strItem = part.asString();
+					return [strItem.isSimplifiable() ? strItem.simplify() : strItem];
+				}
+			})
 			.flat();
 
-		for (let i = this.subParts.length - 2; i >= 0; i--) {
-			const current = this.subParts[i];
-			const next = this.subParts[i + 1];
+		for (let i = subParts.length - 2; i >= 0; i--) {
+			const current = subParts[i];
+			const next = subParts[i + 1];
 			if (typeof current == "string") {
 				if (typeof next == "string") {
-					this.subParts.splice(i, 2, current + next);
+					subParts.splice(i, 2, current + next);
 				}
 			} else {
 				i--;
 			}
 		}
+
+		return subParts;
 	}
 
-	private flatten(): SubParts[] {
-		if (this.manipulation == null) {
-			return this.subParts;
-		} else if (this.subParts.length == 1) {
-			const [part] = this.subParts;
-			return [typeof part == "string" ? this.manipulation(part) : part.withManipulation(this.manipulation)];
-		} else {
-			return [this];
+	isSimplifiable(): boolean {
+		return this.subParts.every((part) => typeof part == "string" || part.isSimplifiable());
+	}
+
+	simplify(): string {
+		const unSimplifiable = this.subParts.find((part) => typeof part != "string");
+
+		if (unSimplifiable != null) {
+			throw new Error(`Unable to simplify expression ${unSimplifiable.constructor.name}`);
 		}
+
+		return this.subParts.join("");
 	}
 
-	withManipulation(manipulation: (raw: string) => string): CompiledItem {
-		const current = this.manipulation;
-		const partsCopy: SubParts[] = [...this.subParts];
-		return new OverpassParentCompiledItem(
-			partsCopy,
-			current != null ? (raw: string) => manipulation(current(raw)) : manipulation,
-		);
+	transform(callback: (raw: string) => string): CompiledItem<string> {
+		return new TransformCompiledItem<string>(this, callback);
+	}
+
+	asString(): CompiledItem<string> {
+		return this;
+	}
+
+	resolve(params: any[]): string {
+		return this.compile(params);
 	}
 
 	compile(params: any[]): string {
-		const raw = this.subParts
-			.map<string>((part) => (typeof part == "string" ? part : part.compile(params)))
-			.join("");
-
-		return this.manipulation != null ? this.manipulation(raw) : raw;
+		return this.subParts.map<string>((part) => (typeof part == "string" ? part : part.compile(params))).join("");
 	}
 }

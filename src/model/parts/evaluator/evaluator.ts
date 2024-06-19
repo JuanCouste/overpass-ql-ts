@@ -9,7 +9,7 @@ export interface OverpassEvaluatorNode<T> extends CompilableItem {
 	/** Just for typing prupposes */
 	readonly _$?: T | undefined;
 
-	compile(utils: CompileUtils): CompiledItem;
+	compile(utils: CompileUtils): CompiledItem<string>;
 }
 
 export interface OverpassEvaluator<T> extends CompilableItem {

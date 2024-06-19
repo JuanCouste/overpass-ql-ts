@@ -1,8 +1,15 @@
 import { NO_SANITIZER } from "?/compilation/nosanitizer";
 import { CompileSymetric } from "?/compilation/symetry";
 import { Symetric, SymetricArgsExpression, SymetricArgumentsObject } from "?/utils";
-import { OverpassCompileUtils, OverpassEqualsTagFilter, OverpassExistsTagFilter, OverpassRegExpTagFilter } from "@/imp";
-import { AnyParamValue, OverpassTagFilter } from "@/index";
+import {
+	OverpassCompileUtils,
+	OverpassEqualsTagFilter,
+	OverpassExistsTagFilter,
+	OverpassRegExpTagFilter,
+	OverpassTagFilterBuilderImp,
+} from "@/imp";
+import { OverpassTargetMapStateImp } from "@/imp/api/target";
+import { AnyParamValue, OverpassParameterError, OverpassTagFilter } from "@/index";
 import { expect, it } from "@jest/globals";
 
 export function compileFiltersTests() {
@@ -103,6 +110,13 @@ export function compileFiltersTests() {
 		await expect(raw).resolves.toMatch(/\[\s*~\s*"name"\s*~\s*"value"\s*\]/);
 
 		await expect(withParams).resolves.toEqual(await raw);
+	});
+
+	it("Should error when byTags filter is null", () => {
+		const tags = OverpassTagFilterBuilderImp.Build();
+		const target = new OverpassTargetMapStateImp(null!, null!, null!, tags, null!);
+
+		expect(() => target.byTags({ name: null! as string })).toThrow(OverpassParameterError);
 	});
 }
 

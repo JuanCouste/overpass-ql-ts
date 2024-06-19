@@ -50,7 +50,7 @@ export class OverpassSettingsStatement extends OverpassStatementBase {
 		return new OverpassSettingsStatement(settings);
 	}
 
-	private compileFormat(u: CompileUtils): CompiledItem {
+	private compileFormat(u: CompileUtils): CompiledItem<string> {
 		if (this.settings.format != OverpassFormat.CSV) {
 			return u.raw(`[out:${OP_FORMAT[this.settings.format!]}]`);
 		} else {
@@ -72,9 +72,9 @@ export class OverpassSettingsStatement extends OverpassStatementBase {
 		}
 	}
 
-	compile(u: CompileUtils): CompiledItem {
+	compile(u: CompileUtils): CompiledItem<string> {
 		const { timeout, maxSize, globalBoundingBox, date, diff } = this.settings;
-		const options: CompiledItem[] = [];
+		const options: CompiledItem<string>[] = [];
 
 		if (timeout != null) {
 			options.push(u.template`[timeout:${u.number(timeout)}]`);

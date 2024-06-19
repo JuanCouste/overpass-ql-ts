@@ -6,7 +6,7 @@ export class OverpassIsDateEvaluatorNode extends OverpassEvaluatorNodeImp<boolea
 		super();
 	}
 
-	compile(u: CompileUtils): CompiledItem {
+	compile(u: CompileUtils): CompiledItem<string> {
 		return u.template`is_date(${this.self.compile(u)})`;
 	}
 }
@@ -16,7 +16,7 @@ export class OverpassParseDateEvaluatorNode extends OverpassEvaluatorNodeImp<Dat
 		super();
 	}
 
-	compile(u: CompileUtils): CompiledItem {
+	compile(u: CompileUtils): CompiledItem<string> {
 		return u.template`date(${this.self.compile(u)})`;
 	}
 }

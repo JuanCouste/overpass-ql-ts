@@ -15,8 +15,8 @@ export class OverpassRawStatement extends OverpassStatementBase {
 		super();
 	}
 
-	compile(u: CompileUtils): CompiledItem {
-		return this.compileFn(u).withManipulation(removeLastSemicolon);
+	compile(u: CompileUtils): CompiledItem<string> {
+		return this.compileFn(u).asString().transform(removeLastSemicolon);
 	}
 }
 
@@ -25,7 +25,7 @@ export class OverpassComposableRawStatement extends ComposableOverpassStatementB
 		super();
 	}
 
-	compile(u: CompileUtils): CompiledItem {
-		return this.compileFn(u).withManipulation(removeLastSemicolon);
+	compile(u: CompileUtils): CompiledItem<string> {
+		return this.compileFn(u).asString().transform(removeLastSemicolon);
 	}
 }

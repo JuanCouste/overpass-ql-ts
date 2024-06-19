@@ -6,7 +6,7 @@ export class OverpassAbsEvaluatorNode extends OverpassEvaluatorNodeImp<number> {
 		super();
 	}
 
-	compile(u: CompileUtils): CompiledItem {
+	compile(u: CompileUtils): CompiledItem<string> {
 		return u.template`abs(${this.self.compile(u)})`;
 	}
 }

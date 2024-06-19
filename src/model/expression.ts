@@ -49,36 +49,54 @@ export type AnyParamValue =
 export type ActualEnumParamType<T extends OverpassEnum> = T extends OverpassQueryTarget
 	? ParamType.Target
 	: T extends OverpassOutputVerbosity
-		? ParamType.Verbosity
-		: T extends OverpassOutputGeoInfo
-			? ParamType.GeoInfo
-			: T extends OverpassSortOrder
-				? ParamType.SortOrder
-				: T extends OverpassRecurseStmType
-					? ParamType.RecurseStm
-					: never;
+	? ParamType.Verbosity
+	: T extends OverpassOutputGeoInfo
+	? ParamType.GeoInfo
+	: T extends OverpassSortOrder
+	? ParamType.SortOrder
+	: T extends OverpassRecurseStmType
+	? ParamType.RecurseStm
+	: never;
 
 export type ActualParamType<T> = T extends OverpassEnum
 	? ActualEnumParamType<T> | ParamType.Number
 	: T extends number
-		? ParamType.Number
-		: T extends boolean
-			? ParamType.Boolean
-			: T extends string
-				? ParamType.String
-				: T extends RegExp
-					? ParamType.RegExp
-					: T extends Date
-						? ParamType.Date
-						: T extends OverpassBoundingBox
-							? ParamType.BoundingBox
-							: T extends OverpassGeoPos
-								? ParamType.GeoPos
-								: never;
+	? ParamType.Number
+	: T extends boolean
+	? ParamType.Boolean
+	: T extends string
+	? ParamType.String
+	: T extends RegExp
+	? ParamType.RegExp
+	: T extends Date
+	? ParamType.Date
+	: T extends OverpassBoundingBox
+	? ParamType.BoundingBox
+	: T extends OverpassGeoPos
+	? ParamType.GeoPos
+	: never;
 
-export interface ParamItem<T> {
-	readonly index: number;
-	readonly type: ActualParamType<T>;
+export type ValueTypeFromParam = {
+	[ParamType.Number]: number;
+	[ParamType.String]: string;
+	[ParamType.RegExp]: RegExp;
+	[ParamType.BoundingBox]: OverpassBoundingBox;
+	[ParamType.GeoPos]: OverpassGeoPos;
+	[ParamType.Date]: Date;
+	[ParamType.Boolean]: boolean;
+	[ParamType.Target]: OverpassQueryTarget;
+	[ParamType.Verbosity]: OverpassOutputVerbosity;
+	[ParamType.GeoInfo]: OverpassOutputGeoInfo;
+	[ParamType.SortOrder]: OverpassSortOrder;
+	[ParamType.RecurseStm]: OverpassRecurseStmType;
+};
+
+export class ParamItem<T> {
+	constructor(public readonly index: number, public readonly type: ActualParamType<T>) {}
+
+	isType<P extends ParamType>(type: P): this is ParamItem<ValueTypeFromParam[P]> {
+		return (type as ParamType) == this.type;
+	}
 }
 
 export type OverpassExpression<T> = T | ParamItem<T>;

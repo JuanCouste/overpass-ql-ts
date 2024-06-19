@@ -10,7 +10,7 @@ export class OverpassConditionalEvaluatorNode<T, E extends OverpassEvaluator<T>>
 		super();
 	}
 
-	compile(u: CompileUtils): CompiledItem {
+	compile(u: CompileUtils): CompiledItem<string> {
 		return u.template`(${this.condition.compile(u)} ? ${this.ifTrue.compile(u)} : ${this.ifFalse.compile(u)})`;
 	}
 }

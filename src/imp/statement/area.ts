@@ -16,7 +16,7 @@ export class OverpassAreaStatement extends ChainableOverpassStatementBase {
 		super(target, chain);
 	}
 
-	compileChainable(u: CompileUtils): CompiledItem[] {
+	compileChainable(u: CompileUtils): CompiledItem<string>[] {
 		if (this.set != null) return [u.template`(area.${u.set(this.set)})`];
 		else return [u.raw("(area)")];
 	}
@@ -31,7 +31,7 @@ export class OverpassPivotStatement extends ChainableOverpassStatementBase {
 		super(target, chain);
 	}
 
-	compileChainable(u: CompileUtils): CompiledItem[] {
+	compileChainable(u: CompileUtils): CompiledItem<string>[] {
 		if (this.set != null) return [u.template`(pivot.${u.set(this.set)})`];
 		else return [u.raw("(pivot)")];
 	}

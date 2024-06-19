@@ -21,16 +21,13 @@ export class OverpassBooleanEvaluatorNode extends OverpassEvaluatorNodeImp<boole
 		super();
 	}
 
-	compile(u: CompileUtils): CompiledItem {
+	compile(u: CompileUtils): CompiledItem<string> {
 		return u.template`"${u.boolean(this.expression)}"`;
 	}
 }
 
 class OverpassBooleanEvaluatorThenImp<T, E extends OverpassEvaluator<T>> implements OverpassBooleanEvaluatorThen<T, E> {
-	constructor(
-		private readonly condition: OverpassBooleanEvaluator,
-		private readonly ifTrue: E,
-	) {}
+	constructor(private readonly condition: OverpassBooleanEvaluator, private readonly ifTrue: E) {}
 
 	else(ifFalse: E): E {
 		return this.condition.conditional(this.ifTrue, ifFalse);

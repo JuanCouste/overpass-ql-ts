@@ -7,7 +7,7 @@ export class OverpassEqualsTagFilter implements OverpassTagFilter {
 		private readonly negated: boolean,
 	) {}
 
-	compile(u: CompileUtils): CompiledItem {
+	compile(u: CompileUtils): CompiledItem<string> {
 		const op = u.raw(this.negated ? "!=" : "=");
 		return u.template`[${u.qString(this.prop)}${op}${u.qString(this.value)}]`;
 	}

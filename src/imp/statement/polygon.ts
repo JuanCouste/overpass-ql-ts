@@ -17,7 +17,7 @@ export class OverpassInsidePolygonStatement extends ChainableOverpassStatementBa
 		super(target, chain);
 	}
 
-	compileChainable(u: CompileUtils): CompiledItem[] {
+	compileChainable(u: CompileUtils): CompiledItem<string>[] {
 		const polygon = this.polygon.map((geoPos) => {
 			const { lat, lon } = u.geoPos(geoPos);
 			return u.template`${lat} ${lon}`;

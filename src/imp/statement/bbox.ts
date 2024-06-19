@@ -17,7 +17,7 @@ export class OverpassBBoxStatement extends ChainableOverpassStatementBase {
 		super(target, chain);
 	}
 
-	compileChainable(u: CompileUtils): CompiledItem[] {
+	compileChainable(u: CompileUtils): CompiledItem<string>[] {
 		const [south, west, north, east] = u.bbox(this.bbox);
 		return [u.template`(${south}, ${west}, ${north}, ${east})`];
 	}
