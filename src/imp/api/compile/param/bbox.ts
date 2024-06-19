@@ -13,7 +13,10 @@ const BBOX_SEED: OverpassBoundingBox = [0, 0, 0, 0];
 const DIRECTIONS = ["south", "west", "north", "east"];
 
 export class BBoxParamCompiledItem extends BaseParamCompiledItem<OverpassBoundingBox, number> {
-	constructor(value: OverpassExpression<OverpassBoundingBox>, private readonly dirIndex: number) {
+	constructor(
+		value: OverpassExpression<OverpassBoundingBox>,
+		private readonly dirIndex: number,
+	) {
 		super(value);
 	}
 

@@ -56,7 +56,10 @@ const ENUM_STRINGS: { [K in EnumParamType]: string[] } = {
 };
 
 export class EnumParamCompiledItem<T extends OverpassEnum> extends BaseParamCompiledItem<T, T> {
-	constructor(private readonly type: ActualEnumParamType<T>, value: OverpassExpression<T>) {
+	constructor(
+		private readonly type: ActualEnumParamType<T>,
+		value: OverpassExpression<T>,
+	) {
 		super(value);
 	}
 

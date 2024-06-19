@@ -2,7 +2,10 @@ import { OverpassExpression, OverpassParameterError, OverpassStringSanitizer } f
 import { BaseParamCompiledItem } from "./base";
 
 export class StringParamCompiledItem extends BaseParamCompiledItem<string, string> {
-	constructor(private readonly sanitizer: OverpassStringSanitizer, value: OverpassExpression<string>) {
+	constructor(
+		private readonly sanitizer: OverpassStringSanitizer,
+		value: OverpassExpression<string>,
+	) {
 		super(value);
 	}
 
