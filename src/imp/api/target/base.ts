@@ -10,6 +10,7 @@ import {
 	OverpassIfFilterStatement,
 	OverpassInsidePolygonStatement,
 	OverpassPivotStatement,
+	OverpassRecurseFilterStatementImp,
 } from "@/imp/statement";
 import {
 	AnyOverpassTagFilter,
@@ -26,6 +27,8 @@ import {
 	OverpassQueryTagFilterFunction,
 	OverpassQueryTagFilterTuple,
 	OverpassQueryTagFilters,
+	OverpassQueryTarget,
+	OverpassQueryTargetExpression,
 	OverpassStatementTarget,
 	OverpassTagFilter,
 	OverpassTagFilterBuilder,
@@ -33,7 +36,9 @@ import {
 	OverpassTargetState,
 	ParamItem,
 	ParamType,
+	RecurseFromPrimitiveType,
 } from "@/model";
+import { AnyTargetToQueryTarget } from "./utils";
 
 export abstract class OverpassTargetStateBase implements OverpassTargetState {
 	constructor(
@@ -162,5 +167,23 @@ export abstract class OverpassTargetStateBase implements OverpassTargetState {
 
 	pivot(set?: OverpassExpression<string> | undefined): ChainableOverpassStatementBase {
 		return new OverpassPivotStatement(this.target, this.chain, set);
+	}
+
+	recurseFrom(
+		anyType: RecurseFromPrimitiveType | ParamItem<OverpassQueryTarget>,
+		inSet?: OverpassExpression<string> | undefined,
+		withRole?: string | undefined,
+	): OverpassRecurseFilterStatementImp {
+		const type = AnyTargetToQueryTarget(anyType);
+		return new OverpassRecurseFilterStatementImp(this.target, this.chain, type, false, inSet, withRole);
+	}
+
+	recurseBackwards(
+		anyType: OverpassQueryTargetExpression,
+		inSet?: OverpassExpression<string> | undefined,
+		withRole?: string | undefined,
+	): OverpassRecurseFilterStatementImp {
+		const type = AnyTargetToQueryTarget(anyType);
+		return new OverpassRecurseFilterStatementImp(this.target, this.chain, type, true, inSet, withRole);
 	}
 }

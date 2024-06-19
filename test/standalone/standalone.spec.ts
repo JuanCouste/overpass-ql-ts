@@ -14,6 +14,7 @@ import { standaloneOutTests } from "./out";
 import { standalonePivotTests } from "./pivot";
 import { standalonePolygonTests } from "./polygon";
 import { standaloneRecurseTests } from "./recurse";
+import { standaloneRootRecurseTests } from "./rootRecurse";
 
 /** For information regarding tests see /test/README.md */
 
@@ -24,6 +25,7 @@ describe("Standalone statements", () => {
 	describe("Polygon", standalonePolygonTests);
 	describe("Intersect", standaloneIntersectTests);
 	describe("Any", standaloneAnyTests);
+	describe("Root Recurse", standaloneRootRecurseTests);
 	describe("Recurse", standaloneRecurseTests);
 	describe("IfFilter", standaloneIfFilterTests);
 	describe("Around", standaloneAroundTests);

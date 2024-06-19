@@ -28,6 +28,7 @@ import {
 	OverpassTargetState,
 } from "@/model";
 import { OverpassForEachBodyFunction } from "@/model/api/for";
+import { AnyTargetToQueryTarget, TARGETS } from "./target/utils";
 
 const STATEMENT_METHOD = (function () {
 	const enumObj: { [K in keyof OverpassTargetState]: true } = {
@@ -42,20 +43,11 @@ const STATEMENT_METHOD = (function () {
 		aroundSet: true,
 		inArea: true,
 		pivot: true,
+		recurseFrom: true,
+		recurseBackwards: true,
 	};
 	return Object.keys(enumObj);
 })();
-
-const TARGETS: { [K in OverpassQueryTargetString]: OverpassQueryTarget } = {
-	node: OverpassQueryTarget.Node,
-	way: OverpassQueryTarget.Way,
-	relation: OverpassQueryTarget.Relation,
-	any: OverpassQueryTarget.NodeWayRelation,
-};
-
-function AnyTargetToQueryTarget(anyTarget: OverpassQueryTargetExpression): OverpassExpression<OverpassQueryTarget> {
-	return typeof anyTarget == "string" ? TARGETS[anyTarget] : anyTarget;
-}
 
 const STRING_TARGETS: string[] = Object.keys(TARGETS);
 
