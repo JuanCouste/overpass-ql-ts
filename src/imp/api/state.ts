@@ -1,6 +1,7 @@
 import { OverpassChainableIntersectStatement, OverpassTargetMapStateImp } from "@/imp/api/target";
 import {
 	OverpassComposableRawStatement,
+	OverpassForEachStatement,
 	OverpassOutStatement,
 	OverpassRawStatement,
 	OverpassRecurseStatement,
@@ -26,6 +27,8 @@ import {
 	OverpassTargetMapState,
 	OverpassTargetState,
 } from "@/model";
+import { OverpassForEachBodyFunction } from "@/model/api/for";
+import { AnyTargetToQueryTarget, TARGETS } from "./target/utils";
 
 const STATEMENT_METHOD = (function () {
 	const enumObj: { [K in keyof OverpassTargetState]: true } = {
@@ -40,20 +43,11 @@ const STATEMENT_METHOD = (function () {
 		aroundSet: true,
 		inArea: true,
 		pivot: true,
+		recurseFrom: true,
+		recurseBackwards: true,
 	};
 	return Object.keys(enumObj);
 })();
-
-const TARGETS: { [K in OverpassQueryTargetString]: OverpassQueryTarget } = {
-	node: OverpassQueryTarget.Node,
-	way: OverpassQueryTarget.Way,
-	relation: OverpassQueryTarget.Relation,
-	any: OverpassQueryTarget.NodeWayRelation,
-};
-
-function AnyTargetToQueryTarget(anyTarget: OverpassQueryTargetExpression): OverpassExpression<OverpassQueryTarget> {
-	return typeof anyTarget == "string" ? TARGETS[anyTarget] : anyTarget;
-}
 
 const STRING_TARGETS: string[] = Object.keys(TARGETS);
 
@@ -191,5 +185,35 @@ export class OverpassStateImp implements OverpassStateMethods {
 
 	out(options: OverpassOutputOptions): OverpassStatement {
 		return new OverpassOutStatement(options);
+	}
+
+	forEach(body: OverpassForEachBodyFunction): OverpassStatement;
+	forEach(set: OverpassExpression<string>, body: OverpassForEachBodyFunction): OverpassStatement;
+	forEach(
+		set: OverpassExpression<string> | null,
+		item: OverpassExpression<string>,
+		body: OverpassForEachBodyFunction,
+	): OverpassStatement;
+	forEach(
+		setOrBody: OverpassExpression<string> | null | OverpassForEachBodyFunction,
+		itemOrBody?: OverpassExpression<string> | OverpassForEachBodyFunction,
+		maybeBody?: OverpassForEachBodyFunction,
+	): OverpassStatement {
+		let body: OverpassForEachBodyFunction;
+		let set: OverpassExpression<string> | null;
+		let item: OverpassExpression<string> | undefined;
+		if (maybeBody instanceof Function) {
+			body = maybeBody;
+			set = setOrBody as OverpassExpression<string> | null;
+			item = itemOrBody as OverpassExpression<string>;
+		} else if (itemOrBody instanceof Function) {
+			body = itemOrBody;
+			set = setOrBody as OverpassExpression<string>;
+		} else {
+			body = setOrBody as OverpassForEachBodyFunction;
+			set = null;
+		}
+
+		return new OverpassForEachStatement(body, set, item);
 	}
 }

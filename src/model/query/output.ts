@@ -29,4 +29,7 @@ export interface OverpassOutputOptions {
 
 	/** A non-negative integer, which limits the output to a maximum of the given number. */
 	readonly limit?: OverpassExpression<number>;
+
+	/** Wheter to not include an out at the end of a query, only works on top level options */
+	readonly noGlobalOut?: OverpassExpression<boolean>;
 }

@@ -1,5 +1,5 @@
 import { OverpassQueryTarget, OverpassRecurseStmType } from "@/model/enum";
-import { OverpassExpression } from "@/model/expression";
+import { OverpassExpression, ParamItem } from "@/model/expression";
 import {
 	ChainableOverpassStatement,
 	CompileFunction,
@@ -10,15 +10,10 @@ import {
 import { OverpassOutputOptions } from "@/model/query";
 import { OverpassBoundingBox, OverpassGeoPos } from "@/model/types";
 import { OverpassItemEvaluatorBuilder } from "./evaluator";
+import { OverpassForEachBodyFunction } from "./for";
 import { OverpassQueryTagFilterFunction, OverpassQueryTagFilters } from "./query";
-
-export type OverpassQueryTargetString = "any" | "node" | "way" | "relation";
-
-export type AnyOverpassQueryTarget = OverpassQueryTarget | OverpassQueryTargetString;
-
-export type OverpassPositionLiteralExpression = [number, number] | OverpassExpression<OverpassGeoPos>;
-
-export type OverpassQueryTargetExpression = AnyOverpassQueryTarget | OverpassExpression<OverpassQueryTarget>;
+import { RecurseFromPrimitiveType } from "./recurse";
+import { AnyOverpassQueryTarget, OverpassPositionLiteralExpression, OverpassQueryTargetExpression } from "./target";
 
 export interface AndChainableOverpassStatement {
 	and(
@@ -29,6 +24,12 @@ export interface AndChainableOverpassStatement {
 }
 
 export type OverpassTargetStateStatement = AndChainableOverpassStatement & ComposableOverpassStatement;
+
+export interface OverpassRecurseFilterStatement extends OverpassTargetStateStatement {
+	inSet(set: OverpassExpression<string>): OverpassRecurseFilterStatement;
+	withRole(role: OverpassExpression<string>): OverpassRecurseFilterStatement;
+	withoutRole(): OverpassRecurseFilterStatement;
+}
 
 export interface OverpassTargetState {
 	/**
@@ -80,6 +81,30 @@ export interface OverpassTargetState {
 	 * @param set if unspecified asumes the default set
 	 */
 	pivot(set?: OverpassExpression<string>): OverpassTargetStateStatement;
+	/**
+	 * Select child nodes, ways or relations from {@link type}
+	 * Relations have all types of elements.
+	 * Ways have nodes.
+	 * @param inSet wether to use a specific set for the source elements
+	 * @param withRole wether to filter elements from a relation of a specific role
+	 */
+	recurseFrom(
+		type: RecurseFromPrimitiveType | ParamItem<OverpassQueryTarget>,
+		inSet?: OverpassExpression<string>,
+		withRole?: string,
+	): OverpassRecurseFilterStatement;
+	/**
+	 * Select parent ways or relations from {@link type}
+	 * Relations have all types of elements.
+	 * Ways have nodes.
+	 * @param inSet wether to use a specific set for the source elements
+	 * @param withRole wether to filter elements from a relation of a specific role
+	 */
+	recurseBackwards(
+		type: OverpassQueryTargetExpression,
+		inSet?: OverpassExpression<string>,
+		withRole?: string,
+	): OverpassRecurseFilterStatement;
 }
 
 /** Runs the statement for the specified {@link target} */
@@ -143,6 +168,20 @@ export interface OverpassStateMethods {
 	): ComposableOverpassStatement;
 
 	out(options: OverpassOutputOptions): OverpassStatement;
+
+	/** Iterate over the elements of the default set */
+	forEach(body: OverpassForEachBodyFunction): OverpassStatement;
+	/** Iterate over the elements of {@link set} */
+	forEach(set: OverpassExpression<string>, body: OverpassForEachBodyFunction): OverpassStatement;
+	/**
+	 * Iterate over the elements of {@link set} with a variable for {@link item}
+	 * @param set if null uses the default set
+	 */
+	forEach(
+		set: OverpassExpression<string> | null,
+		item: OverpassExpression<string>,
+		body: OverpassForEachBodyFunction,
+	): OverpassStatement;
 }
 
 /**

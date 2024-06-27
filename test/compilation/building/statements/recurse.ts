@@ -1,46 +1,101 @@
+import { NO_SANITIZER } from "?/compilation/nosanitizer";
 import { Symetric } from "?/utils";
-import { OverpassRecurseStatement } from "@/imp";
-import { OverpassRecurseStmType, ParamType } from "@/index";
+import { OverpassCompileUtils, OverpassRecurseFilterStatementImp, OverpassStatementTargetImp } from "@/imp";
+import { OverpassParameterError, OverpassQueryTarget, ParamType } from "@/index";
 import { expect, it } from "@jest/globals";
 import { CompileStatementsSymetric } from "./compile";
 
 export function compileRecurseStatementTests() {
-	it("Should compile recurse statement", () => {
-		const [raw, withParams] = CompileStatementsSymetric(
-			(type) => new OverpassRecurseStatement(type),
-			[Symetric.Enum(ParamType.RecurseStm, OverpassRecurseStmType.Up)],
+	const staticTarget = new OverpassStatementTargetImp(OverpassQueryTarget.Node, []);
+	const node = OverpassQueryTarget.Node;
+
+	it("Should compile recurse statement with target", () => {
+		const [raw, withParams] = CompileStatementsSymetric<[OverpassQueryTarget]>(
+			(target) => new OverpassRecurseFilterStatementImp(staticTarget, null!, target, false, undefined, undefined),
+			[Symetric.Enum(ParamType.Target, OverpassQueryTarget.Node)],
 		);
 
 		const rawResult = raw();
 
-		expect(rawResult).toMatch(/\</);
+		expect(rawResult).toMatch(/\(\s*n\s*\)/);
 
 		expect(withParams()).toEqual(rawResult);
 	});
 
 	it("Should compile recurse statement with set", () => {
-		const [raw, withParams] = CompileStatementsSymetric(
-			(input) => new OverpassRecurseStatement(OverpassRecurseStmType.Down, input),
-			[Symetric.String("someSet")],
+		const [raw, withParams] = CompileStatementsSymetric<[string]>(
+			(set) => new OverpassRecurseFilterStatementImp(staticTarget, null!, node, false, set, undefined),
+			[Symetric.String("set")],
 		);
 
 		const rawResult = raw();
 
-		expect(rawResult).toMatch(/\.someSet\b\s*\>/);
+		expect(rawResult).toMatch(/\(\s*n\.set\s*\)/);
 
 		expect(withParams()).toEqual(rawResult);
 	});
 
-	it("Should compile recurse statement with set and type", () => {
-		const [raw, withParams] = CompileStatementsSymetric<[OverpassRecurseStmType, string]>(
-			(type, input) => new OverpassRecurseStatement(type, input),
-			[Symetric.Enum(ParamType.RecurseStm, OverpassRecurseStmType.UpRelations), Symetric.String("someSet")],
+	it("Should compile recurse statement with role", () => {
+		const [raw, withParams] = CompileStatementsSymetric<[string]>(
+			(role) => new OverpassRecurseFilterStatementImp(staticTarget, null!, node, false, undefined, role),
+			[Symetric.String("role")],
 		);
 
 		const rawResult = raw();
 
-		expect(rawResult).toMatch(/\.someSet\b\s*\<\</);
+		expect(rawResult).toMatch(/\(\s*n\s*:\s*\"role\"\s*\)/);
 
 		expect(withParams()).toEqual(rawResult);
+	});
+
+	it("Should compile recurse statement with set & role", () => {
+		const [raw, withParams] = CompileStatementsSymetric<[string, string]>(
+			(set, role) => new OverpassRecurseFilterStatementImp(staticTarget, null!, node, false, set, role),
+			[Symetric.String("set"), Symetric.String("role")],
+		);
+
+		const rawResult = raw();
+
+		expect(rawResult).toMatch(/\(\s*n\.set\s*:\s*\"role\"\s*\)/);
+
+		expect(withParams()).toEqual(rawResult);
+	});
+
+	it("Should compile backwards recurse statement", () => {
+		const utils = new OverpassCompileUtils(NO_SANITIZER);
+		const recurse = new OverpassRecurseFilterStatementImp(staticTarget, null!, node, true, undefined, undefined);
+
+		expect(recurse.compile(utils).simplify()).toMatch(/\(\s*bn\s*\)/);
+	});
+
+	it("Should compile recurse statement with chained properties", () => {
+		const utils = new OverpassCompileUtils(NO_SANITIZER);
+		const recurse = new OverpassRecurseFilterStatementImp(staticTarget, null!, node, false, undefined, undefined);
+
+		expect(recurse.inSet("set").withRole("role").compile(utils).simplify()).toMatch(
+			/\(\s*n\.set\s*:\s*\"role\"\s*\)/,
+		);
+	});
+
+	it("Should compile recurse statement with empty role", () => {
+		const utils = new OverpassCompileUtils(NO_SANITIZER);
+		const recurse = new OverpassRecurseFilterStatementImp(staticTarget, null!, node, false, undefined, undefined);
+
+		expect(recurse.withoutRole().compile(utils).simplify()).toMatch(/\(\s*n\s*:\s*\"\"\s*\)/);
+	});
+
+	it("Should compile backwards recurse statement", () => {
+		const utils = new OverpassCompileUtils(NO_SANITIZER);
+
+		const recurse = new OverpassRecurseFilterStatementImp(
+			staticTarget,
+			null!,
+			OverpassQueryTarget.Area,
+			false,
+			undefined,
+			undefined,
+		);
+
+		expect(() => recurse.compile(utils)).toThrowError(OverpassParameterError);
 	});
 }
