@@ -6,6 +6,7 @@ import {
 	OverpassRawStatement,
 	OverpassRecurseStatement,
 	OverpassStatementTargetImp,
+	OverpassUnionStatement,
 } from "@/imp/statement";
 import {
 	AnyOverpassQueryTarget,
@@ -215,5 +216,9 @@ export class OverpassStateImp implements OverpassStateMethods {
 		}
 
 		return new OverpassForEachStatement(body, set, item);
+	}
+
+	union(...statements: ComposableOverpassStatement[]): ComposableOverpassStatement {
+		return OverpassUnionStatement.Flatten(statements);
 	}
 }

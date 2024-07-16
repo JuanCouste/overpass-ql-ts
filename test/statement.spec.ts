@@ -134,4 +134,35 @@ describe("Statement", () => {
 		expect(element.id).toEqual(MDEO_ID);
 		expect(element.type).toBe("node");
 	});
+
+	it("Should allow unions with many elements", async () => {
+		const api: OverpassApiObject = BuildApi();
+
+		const { elements } = await api.execJson(
+			(s) => s.union(s.node.byId(MDEO_ID), s.relation.byId(URUGUAY_ID)),
+			ONLY_IDS,
+		);
+
+		expect(elements.length).toBe(2);
+
+		const ids = elements.map((el) => el.id);
+		ids.sort();
+
+		expect(ids).toEqual([URUGUAY_ID, MDEO_ID]);
+	});
+
+	it("Should flatten nested unions", () => {
+		const api: OverpassApiObject = BuildApi();
+
+		const query = api.buildQuery((s) => {
+			const noParenthesesStm = s.composableStatement("stm");
+
+			return noParenthesesStm
+				.union(noParenthesesStm, noParenthesesStm)
+				.union(noParenthesesStm, noParenthesesStm)
+				.union(noParenthesesStm);
+		});
+
+		expect(query.lastIndexOf("(")).toEqual(query.indexOf("("));
+	});
 });

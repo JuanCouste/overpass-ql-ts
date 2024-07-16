@@ -5,8 +5,8 @@ import { CompilableItem, CompileUtils } from "./compilable";
 export interface OverpassStatement extends CompilableItem {}
 
 export interface ComposableOverpassStatement extends OverpassStatement {
-	/** Join the elements of the current statement with those of {@link statement} */
-	union(statement: ComposableOverpassStatement): ComposableOverpassStatement;
+	/** Join the elements of the current statement with those of {@link statements} */
+	union(...statements: ComposableOverpassStatement[]): ComposableOverpassStatement;
 	/** Keep the elements that are in the current statement, but not in {@link statement} */
 	difference(statement: ComposableOverpassStatement): ComposableOverpassStatement;
 
