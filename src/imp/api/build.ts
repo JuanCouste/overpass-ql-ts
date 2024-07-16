@@ -77,11 +77,13 @@ function PrivateBuildOverPassApi(adapter: RequestAdapter, options: OverpassApiOb
 export function InterpreterUrlFrom(interpreterUrlInput?: string | URL): URL {
 	return typeof interpreterUrlInput == "string"
 		? new URL(interpreterUrlInput)
-		: interpreterUrlInput ?? OverpassApiObjectImp.MAIN_INSTANCE;
+		: (interpreterUrlInput ?? OverpassApiObjectImp.MAIN_INSTANCE);
 }
 
 export function StatusUrlFrom(interpreterUrl: URL, statusUrl?: string | URL): URL {
-	return typeof statusUrl == "string" ? new URL(statusUrl) : statusUrl ?? StatusUrlFromInterpreterUrl(interpreterUrl);
+	return typeof statusUrl == "string"
+		? new URL(statusUrl)
+		: (statusUrl ?? StatusUrlFromInterpreterUrl(interpreterUrl));
 }
 
 export function StatusUrlFromInterpreterUrl(interpreterUrl: URL): URL {

@@ -121,9 +121,9 @@ export class OverpassUnionStatement extends ComposableOverpassStatementBase {
 		return new OverpassUnionStatement(
 			stms.some((stm) => stm instanceof OverpassUnionStatement)
 				? stms
-						.map<ComposableOverpassStatement[]>((stm) =>
-							stm instanceof OverpassUnionStatement ? stm.statements : [stm],
-						)
+						.map<
+							ComposableOverpassStatement[]
+						>((stm) => (stm instanceof OverpassUnionStatement ? stm.statements : [stm]))
 						.flat()
 				: stms,
 		);
