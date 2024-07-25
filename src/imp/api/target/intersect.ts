@@ -12,8 +12,8 @@ export class OverpassChainableIntersectStatement
 	extends OverpassTargetStateBase
 	implements ComposableOverpassStatement, OverpassTargetState
 {
-	union(statement: ComposableOverpassStatement): ComposableOverpassStatement {
-		return new OverpassUnionStatement(this, statement);
+	union(...statements: ComposableOverpassStatement[]): ComposableOverpassStatement {
+		return OverpassUnionStatement.From(this, statements);
 	}
 
 	difference(statement: ComposableOverpassStatement): ComposableOverpassStatement {

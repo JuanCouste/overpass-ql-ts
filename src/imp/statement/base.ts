@@ -19,8 +19,8 @@ export abstract class ComposableOverpassStatementBase
 	extends OverpassStatementBase
 	implements ComposableOverpassStatement
 {
-	union(statement: ComposableOverpassStatement): ComposableOverpassStatement {
-		return new OverpassUnionStatement(this, statement);
+	union(...statements: ComposableOverpassStatement[]): ComposableOverpassStatement {
+		return OverpassUnionStatement.From(this, statements);
 	}
 
 	difference(statement: ComposableOverpassStatement): ComposableOverpassStatement {
@@ -113,16 +113,31 @@ export class OverpassSetStatement extends ComposableOverpassStatementBase {
 }
 
 export class OverpassUnionStatement extends ComposableOverpassStatementBase {
-	constructor(
-		private readonly statement1: ComposableOverpassStatement,
-		private readonly statement2: ComposableOverpassStatement,
-	) {
+	private constructor(private readonly statements: ComposableOverpassStatement[]) {
 		super();
 	}
 
-	compile(utils: CompileUtils): CompiledItem<string> {
-		const statement1 = this.statement1.compile(utils);
-		const statement2 = this.statement2.compile(utils);
-		return utils.template`(${statement1}; ${statement2};)`;
+	public static Flatten(stms: ComposableOverpassStatement[]): OverpassUnionStatement {
+		return new OverpassUnionStatement(
+			stms.some((stm) => stm instanceof OverpassUnionStatement)
+				? stms
+						.map<
+							ComposableOverpassStatement[]
+						>((stm) => (stm instanceof OverpassUnionStatement ? stm.statements : [stm]))
+						.flat()
+				: stms,
+		);
+	}
+
+	public static From(
+		initial: ComposableOverpassStatement,
+		aditional: ComposableOverpassStatement[],
+	): OverpassUnionStatement {
+		return OverpassUnionStatement.Flatten([initial, ...aditional]);
+	}
+
+	compile(u: CompileUtils): CompiledItem<string> {
+		const statements = this.statements.map((stm) => u.template`${stm.compile(u)};`);
+		return u.template`(${u.join(statements, " ")})`;
 	}
 }

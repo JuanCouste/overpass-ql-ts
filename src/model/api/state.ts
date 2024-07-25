@@ -182,6 +182,9 @@ export interface OverpassStateMethods {
 		item: OverpassExpression<string>,
 		body: OverpassForEachBodyFunction,
 	): OverpassStatement;
+
+	/** Join the elements of {@link statements} together */
+	union(...statements: ComposableOverpassStatement[]): ComposableOverpassStatement;
 }
 
 /**
